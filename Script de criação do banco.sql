@@ -9,7 +9,7 @@ create table Colaborador(
 create table Empregado(
 	dataAdmissao date, 
 	funcao varchar(10),
-	numeroPis varchar(10),
+	numeroPis varchar(11),
 	salario double,
 	id varchar (12) PRIMARY KEY,
 	foreign key(id) references Colaborador(id)
