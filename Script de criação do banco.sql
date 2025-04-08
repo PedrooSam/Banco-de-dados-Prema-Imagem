@@ -7,7 +7,7 @@ create table Colaborador(
 );
 
 create table Empregado(
-	data_admissao date, 
+	dataAdmissao date, 
 	funcao varchar(10),
 	numeroPis int,
 	salario double,
@@ -71,8 +71,9 @@ CREATE TABLE Pagamento(
 	valorPago double,
 	parcelas int,
 	id varchar(12),
-	idAgenda varchar(12),
-	FOREIGN KEY (idAgenda) REFERENCES Agenda(id)
+	idAgendaExame varchar(12),
+	dataPagamento date,
+	FOREIGN KEY (idAgenda) REFERENCES AgendaExame(id)
 );
 
 CREATE TABLE Fornecedor(
@@ -96,6 +97,7 @@ CREATE TABLE Venda(
 	idFornecedor varchar (12),
 	idProduto varchar (12),
 	idSocio varchar (12),
+	id varchar (12) primary key,
 	FOREIGN KEY (idFornecedor) REFERENCES Agenda(id),
 	FOREIGN KEY (idProduto) REFERENCES Agenda(id),
 	FOREIGN KEY (idSocio) REFERENCES Agenda(id)
