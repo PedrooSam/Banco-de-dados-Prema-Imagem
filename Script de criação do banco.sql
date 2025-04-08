@@ -92,7 +92,7 @@ CREATE TABLE Produto(
 );
 
 CREATE TABLE Venda(
-	data_venda date,
+	dataVenda date,
 	idFornecedor varchar (12),
 	idProduto varchar (12),
 	idSocio varchar (12),
