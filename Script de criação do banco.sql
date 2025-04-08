@@ -9,7 +9,7 @@ create table Colaborador(
 create table Empregado(
 	dataAdmissao date, 
 	funcao varchar(10),
-	numeroPis int,
+	numeroPis varchar(10),
 	salario double,
 	id varchar (12) PRIMARY KEY,
 	foreign key(id) references Colaborador(id)
@@ -40,6 +40,7 @@ CREATE TABLE Paciente(
 	nome varchar(45),
 	cpf varchar(11),
 	rg varchar(8),
+	dataNascimento date,
 	cep varchar(8),
 	numeroEndereco varchar(5),
 	complementoEndereco varchar(15),
@@ -70,14 +71,14 @@ CREATE TABLE Pagamento(
 	notaFiscal varchar(30),
 	valorPago double,
 	parcelas int,
-	id varchar(12),
-	idAgendaExame varchar(12),
+	id varchar(12) primary key,
 	dataPagamento date,
-	FOREIGN KEY (idAgenda) REFERENCES AgendaExame(id)
+	idAgendaExame varchar(12),
+	FOREIGN KEY (idAgendaExame) REFERENCES AgendaExame(id)
 );
 
 CREATE TABLE Fornecedor(
-	id varchar(12),
+	id varchar(12) primary key,
 	nome varchar(45),
 	cnpj varchar(14),
 	telefone1 varchar(11),
@@ -89,7 +90,7 @@ CREATE TABLE Produto(
 	nome varchar (45),
 	preco double,
 	quantidade int,
-	id varchar (12)
+	id varchar (12) primary key
 );
 
 CREATE TABLE Venda(
@@ -98,7 +99,10 @@ CREATE TABLE Venda(
 	idProduto varchar (12),
 	idSocio varchar (12),
 	id varchar (12) primary key,
-	FOREIGN KEY (idFornecedor) REFERENCES Agenda(id),
-	FOREIGN KEY (idProduto) REFERENCES Agenda(id),
-	FOREIGN KEY (idSocio) REFERENCES Agenda(id)
+	FOREIGN KEY (idFornecedor) REFERENCES Fornecedor(id),
+	FOREIGN KEY (idProduto) REFERENCES Produto(id),
+	FOREIGN KEY (idSocio) REFERENCES Socio(id)
 );
+
+
+
