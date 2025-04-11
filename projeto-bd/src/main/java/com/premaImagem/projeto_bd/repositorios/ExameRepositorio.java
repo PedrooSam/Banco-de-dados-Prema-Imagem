@@ -10,15 +10,15 @@ public class ExameRepositorio{
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Exame buscarLista(){
+    public List<Exame> buscarLista(){
         String sql = "SELECT * FROM Exame";
-        List<Exame> exames = jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Funcionario.class));
+        List<Exame> exames = jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Exame.class));
         return exames;
     }
 
     public Exame buscar(String nomeExame){
         String sql = "SELECT * FROM Exame WHERE Exame.nome = ?";
-        return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(Funcionario.class), nomeExame);
+        return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(Exame.class), nomeExame);
     }
 
     public int criar(Exame exame){
