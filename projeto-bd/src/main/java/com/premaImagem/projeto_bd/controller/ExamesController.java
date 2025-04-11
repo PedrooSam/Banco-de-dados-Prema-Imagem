@@ -7,8 +7,19 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController 
 @RequestMapping("/exames")
 public class ExamesController {
-	@GetMapping
-	public String HelloWorld() {
-		return "Hello World";
+
+	private final ExameRepositorio repositorio;
+
+	@Autowired
+	public ExamesController(ExameRepositorio repositorio) {
+		this.repositorio = repositorio;
 	}
+
+	@GetMapping
+	public List<Exame> listar(){
+		return repositorio.buscarLista();
+	}
+
+	@PostMapping
+	public String criar
 }
