@@ -1,6 +1,6 @@
 package com.premaImagem.projeto_bd.entidades;
 
-public class Colaborador extends EntidadeGeral {
+public class Colaborador{
 
     private String cpf;
     private String nome;

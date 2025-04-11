@@ -1,6 +1,6 @@
 package com.premaImagem.projeto_bd.entidades;
 
-public class Socio extends EntidadeGeral{
+public class Socio{
 
     private double proLabore;
 

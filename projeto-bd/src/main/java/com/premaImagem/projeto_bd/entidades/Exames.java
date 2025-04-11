@@ -1,6 +1,6 @@
 package com.premaImagem.projeto_bd.entidades;
 
-public class Exames extends EntidadeGeral {
+public class Exames{
 
     private String preparo;
     private String nomeExame;

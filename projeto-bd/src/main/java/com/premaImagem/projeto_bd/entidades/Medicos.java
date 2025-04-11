@@ -1,6 +1,6 @@
 package com.premaImagem.projeto_bd.entidades;
 
-public class Medicos extends EntidadeGeral{
+public class Medicos{
     private String crm;
     private String especialidade;
 

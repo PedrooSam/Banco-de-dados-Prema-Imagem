@@ -2,7 +2,7 @@ package com.premaImagem.projeto_bd.entidades;
 
 import java.util.Date;
 
-public class Empregado extends EntidadeGeral{
+public class Empregado{
 
     private Date dataAdmissao;
     private String numeroPis;
