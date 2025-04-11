@@ -51,9 +51,9 @@ public class ExamesController {
         return "Erro ao deletar exame";
     }
 
-    // PUT: atualiza exame
-    @PutMapping
-    public String atualizar(@RequestBody Exames exame) {
+    @PutMapping("/{id}")
+    public String atualizar(@PathVariable long id, @RequestBody Exames exame) {
+        exame.setId(id); // garante que o ID vem da URL
         int retorno = repositorio.editar(exame);
 
         if (retorno == 1) return "Exame atualizado com sucesso!";

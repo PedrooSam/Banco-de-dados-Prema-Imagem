@@ -7,6 +7,9 @@ public class Exames{
     private String nome;
     private double preco;
 
+    public Exames() {
+    }
+    
     public Exames(String preparo, String nome, double preco) {
         this.preparo = preparo;
         this.nome = nome;
@@ -16,6 +19,11 @@ public class Exames{
     public long getId() {
         return id;
     }
+    
+    public void setId(Long id) {
+    	this.id = id;
+    }
+    
     public String getNome() {
         return nome;
     }
