@@ -2,16 +2,26 @@ package com.premaImagem.projeto_bd.entidades;
 
 public class Exames{
 
+    private long id;
     private String preparo;
-    private String nomeExame;
+    private String nome;
     private double preco;
 
-    public String getNomeExame() {
-        return nomeExame;
+    public Exames(String preparo, String nome, double preco) {
+        this.preparo = preparo;
+        this.nome = nome;
+        this.preco = preco;
     }
 
-    public void setNomeExame(String nomeExame) {
-        this.nomeExame = nomeExame;
+    public long getId() {
+        return id;
+    }
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
     }
 
     public String getPreparo() {
