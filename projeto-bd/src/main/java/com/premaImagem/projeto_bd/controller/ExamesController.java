@@ -1,74 +1,63 @@
 package com.premaImagem.projeto_bd.controller;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
 import com.premaImagem.projeto_bd.repositorios.ExameRepositorio;
+import com.premaImagem.projeto_bd.entidades.Exames;
 
-@RestController 
+@RestController
 @RequestMapping("/exames")
 public class ExamesController {
 
-	private final ExameRepositorio repositorio;
+    private final ExameRepositorio repositorio;
 
-	@Autowired
-	public ExamesController(ExameRepositorio repositorio) {
-		this.repositorio = repositorio;
-	}
+    @Autowired
+    public ExamesController(ExameRepositorio repositorio) {
+        this.repositorio = repositorio;
+    }
 
-	@GetMapping
-	public List<Exame> listar(){
+    // GET: lista todos os exames
+    @GetMapping
+    public List<Exames> listar() {
+        return repositorio.buscarLista();
+    }
 
-		return repositorio.buscarLista();
-	}
+    // GET: busca um exame pelo nome (ou ID, dependendo do tipo)
+    @GetMapping("/{id}")
+    public Exames buscarPorId(@PathVariable("id") long id) {
+        return repositorio.buscar(id);
+    }
 
-	@getMapping
-	public Exame buscarPorNome(long nome){
+    // POST: cria novo exame
+    @PostMapping
+    public String criar(@RequestBody Exames exame) {
+        int retorno = repositorio.criar(exame);
 
-		return repositorio.buscar(nome);
-	}
+        if (retorno == 1) return "Exame adicionado com sucesso!";
+        if (retorno > 1) return "Conflito com dados no banco";
+        return "Erro ao adicionar exame.";
+    }
 
-	@PostMapping
-	public String criar(Exame exame){
+    // DELETE: remove um exame pelo ID
+    @DeleteMapping("/{id}")
+    public String deletar(@PathVariable long id) {
+        int retorno = repositorio.deletar(id);
 
-		retorno = repositorio.criar(exame);
+        if (retorno == 1) return "Exame deletado com sucesso!";
+        if (retorno > 1) return "Conflito com dados do banco";
+        return "Erro ao deletar exame";
+    }
 
-		if (retorno == 1){
-			return "Exame adicionado com sucesso!";
-		}
-		else if (retorno > 1){
-			return "Conflito com dados no banco";
-		}
-		return "Erro ao adicionar exame.";
-	}
+    // PUT: atualiza exame
+    @PutMapping
+    public String atualizar(@RequestBody Exames exame) {
+        int retorno = repositorio.editar(exame);
 
-	@PostMapping
-	public String deletar(long id){
-
-		retorno = repositorio.deletar(id);
-
-		if (retorno == 1){
-			return "Exame deletado com sucesso!";
-		}
-		else if (retorno > 1){
-			return "Conflito com dados do banco";
-		}
-		return "Erro ao deletar exame";
-	}
-
-	@PostMapping
-	public String atualizar(Exame exame){
-		
-		retorno = repositorio.editar(exame);
-
-		if (retorno == 1){
-			return "Exame atualizado com sucesso!";
-		}
-		else if (retorno > 1){
-			return "Conflito com dados do banco";
-		}
-		return "Erro ao atualizar exame.";
-	}
-
+        if (retorno == 1) return "Exame atualizado com sucesso!";
+        if (retorno > 1) return "Conflito com dados do banco";
+        return "Erro ao atualizar exame.";
+    }
 }
