@@ -1,65 +1,65 @@
 create database PremaImagem;
 
 create table Colaborador(
-	id varchar (12) primary key,
-	nome varchar(45),
-	cpf varchar(11) UNIQUE
+	id BIGINT AUTO_INCREMENT primary key,
+	nome varchar(45) not null,
+	cpf varchar(11) unique not null
 );
 
 create table Empregado(
-	dataAdmissao date, 
-	funcao varchar(10),
-	numeroPis varchar(11) UNIQUE,
-	salario double,
-	id varchar (12) PRIMARY KEY,
+	dataAdmissao date not null, 
+	funcao varchar(10) not null,
+	numeroPis varchar(11) unique not null,
+	salario double not null,
+	id BIGINT PRIMARY KEY,
 	foreign key(id) references Colaborador(id)
 );
 
 create table Medico(
-	especialidade varchar(10),
-	crm varchar(45) UNIQUE,
-	id varchar (12) PRIMARY KEY,
+	especialidade varchar(10) not null,
+	crm varchar(8) unique not null,
+	id BIGINT PRIMARY KEY,
 	foreign key(id) references Colaborador(id)
 );
 
 create table Socio(
-	proLabore double,
-	id varchar (12) PRIMARY KEY,
+	proLabore double not null,
+	id BIGINT PRIMARY KEY,
 	foreign key(id) references Colaborador(id)
 );
 
 CREATE TABLE Exame(
-	id varchar (12) PRIMARY KEY,
-	nome varchar(50),
-	preparo varchar(100),
-	preco double
+	id BIGINT AUTO_INCREMENT PRIMARY KEY,
+	nome varchar(50) not null,
+	preparo varchar(100) not null,
+	preco double not null
 );
 
 CREATE TABLE Paciente(
-	id varchar (12) PRIMARY KEY,
-	nome varchar(45),
-	cpf varchar(11) UNIQUE,
-	rg varchar(8) UNIQUE,
-	dataNascimento date,
-	cep varchar(8),
-	numeroEndereco varchar(5),
-	complementoEndereco varchar(15),
-	telefone1 varchar(11),
-	telefone2 varchar(11),
-	email varchar(50) UNIQUE,
-	nomeMae varchar(45),
-	pacienteIndicador varchar (12),
+	id BIGINT AUTO_INCREMENT PRIMARY KEY,
+	nome varchar(45) not null,
+	cpf varchar(11) unique not null,
+	rg varchar(8) unique not null,
+	dataNascimento date not null,
+	cep varchar(8) not null,
+	numeroEndereco varchar(5) not null,
+	complementoEndereco varchar(15) not null,
+	telefone1 varchar(11) not null,
+	telefone2 varchar(11) default null,
+	email varchar(50) unique not null,
+	nomeMae varchar(45) not null,
+	pacienteIndicador BIGINT default null,
 	FOREIGN KEY (pacienteIndicador) REFERENCES Paciente(id)
 );
 
 CREATE TABLE AgendaExame(
-	dataHoraRealizacao date,
-	medicoRequisitante varchar(45),
-	laudo varchar(1000),
-	status varchar(10),
-	idPaciente varchar(12),
-	idMedico  varchar(12),
-	idExame varchar(12),
+	dataHoraRealizacao DATETIME,
+	medicoRequisitante varchar(45) not null,
+	laudo varchar(1000) not null,
+	status varchar(10) not null,
+	idPaciente BIGINT,
+	idMedico  BIGINT,
+	idExame BIGINT,
 	PRIMARY KEY (dataHoraRealizacao, idPaciente, idMedico, idExame),
 	FOREIGN key(idPaciente) REFERENCES Paciente(id),
 	FOREIGN KEY(idMedico) REFERENCES Medico(id),
@@ -67,39 +67,42 @@ CREATE TABLE AgendaExame(
 );
 
 CREATE TABLE Pagamento(
-	formaPagamento varchar(21),
-	notaFiscal varchar(30) UNIQUE,
-	valorPago double,
-	parcelas int,
-	id varchar(12),
-	dataPagamento date,
-	idAgendaExame varchar(12),
-	PRIMARY KEY (id, idAgendaExame),
-	FOREIGN KEY (idAgendaExame) REFERENCES AgendaExame(id)
+	formaPagamento varchar(21) not null,
+	notaFiscal varchar(30) unique not null,
+	valorPago double not null,
+	parcelas int not null,
+	id BIGINT AUTO_INCREMENT,
+	dataPagamento DATETIME DEFAULT CURRENT_TIMESTAMP,
+	agendaExameDataHora DATETIME,
+	agendaExamePaciente BIGINT,
+	agendaExameMedico BIGINT,
+	agendaExameExame BIGINT,
+	PRIMARY KEY (id, agendaExameExame,agendaExameDataHora,agendaExamePaciente, agendaExameMedico),
+	FOREIGN KEY (agendaExameDataHora,agendaExamePaciente, agendaExameMedico,agendaExameExame) REFERENCES AgendaExame(dataHoraRealizacao, idPaciente, idMedico, idExame)
 );
 
 CREATE TABLE Fornecedor(
-	id varchar(12) primary key,
-	nome varchar(45),
-	cnpj varchar(14) UNIQUE,
-	telefone1 varchar(11),
-	telefone2 varchar(11),
-	email varchar(50) UNIQUE
+	id BIGINT AUTO_INCREMENT primary key,
+	nome varchar(45) not null,
+	cnpj varchar(14) unique not null,
+	telefone1 varchar(11) not null,
+	telefone2 varchar(11) default null,
+	email varchar(50) unique not null
 );
 
 CREATE TABLE Produto(
-	nome varchar (45),
-	preco double,
-	quantidade int,
-	id varchar (12) primary key
+	nome varchar (45) not null,
+	preco double not null,
+	quantidade int not null,
+	id BIGINT AUTO_INCREMENT primary key
 );
 
 CREATE TABLE Venda(
-	dataHoraVenda date,
-	quantidade int,
-	idFornecedor varchar (12),
-	idProduto varchar (12),
-	idSocio varchar (12),
+	dataHoraVenda DATETIME DEFAULT CURRENT_TIMESTAMP,
+	quantidade int not null,
+	idFornecedor BIGINT,
+	idProduto BIGINT,
+	idSocio BIGINT,
 	PRIMARY KEY (dataHoraVenda, idFornecedor, idProduto, idSocio),
 	FOREIGN KEY (idFornecedor) REFERENCES Fornecedor(id),
 	FOREIGN KEY (idProduto) REFERENCES Produto(id),
