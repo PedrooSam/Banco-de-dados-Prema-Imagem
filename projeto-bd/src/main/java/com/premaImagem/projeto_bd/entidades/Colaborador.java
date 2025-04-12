@@ -1,23 +1,40 @@
 package com.premaImagem.projeto_bd.entidades;
 
-public class Colaborador{
-
+public class Colaborador {
+    private String id;
     private String cpf;
     private String nome;
 
-    public String getCpf(){
-        return this.cpf;
+    public Colaborador() {
     }
 
-    public String getNome(){
-        return this.nome;
+    public Colaborador(String id, String cpf, String nome) {
+        this.id = id;
+        this.cpf = cpf;
+        this.nome = nome;
     }
 
-    public void setCpf(String cpf){
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getCpf() {
+        return cpf;
+    }
+
+    public void setCpf(String cpf) {
         this.cpf = cpf;
     }
 
-    public void setNome(String nome){
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
         this.nome = nome;
     }
 }
