@@ -34,7 +34,7 @@ public class SocioRepositorio {
         return jdbcTemplate.update(sql, socio.getId(), socio.getProLabore());
     }
 
-    public int editar(Socio socio) {
+    public int atualizar(Socio socio) {
         String sql = "UPDATE Socio SET proLabore = ? WHERE id = ?";
         return jdbcTemplate.update(sql, socio.getProLabore(), socio.getId());
     }

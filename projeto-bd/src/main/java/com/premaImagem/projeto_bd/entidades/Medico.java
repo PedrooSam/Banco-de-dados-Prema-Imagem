@@ -1,6 +1,6 @@
 package com.premaImagem.projeto_bd.entidades;
 
-public class Medicos{
+public class Medico{
     private String crm;
     private String especialidade;
 

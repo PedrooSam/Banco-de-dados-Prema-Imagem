@@ -34,7 +34,7 @@ public class ColaboradorRepositorio {
         return jdbcTemplate.update(sql, colaborador.getId(), colaborador.getCpf(), colaborador.getNome());
     }
 
-    public int editar(Colaborador colaborador) {
+    public int atualizar(Colaborador colaborador) {
         String sql = "UPDATE Colaborador SET cpf = ?, nome = ? WHERE id = ?";
         return jdbcTemplate.update(sql, colaborador.getCpf(), colaborador.getNome(), colaborador.getId());
     }

@@ -40,7 +40,7 @@ public class ColaboradorController {
     @PutMapping("/{id}")
     public String atualizar(@PathVariable String id, @RequestBody Colaborador colaborador) {
         colaborador.setId(id);
-        int retorno = repositorio.editar(colaborador);
+        int retorno = repositorio.atualizar(colaborador);
         if (retorno == 1) return "Colaborador atualizado com sucesso!";
         if (retorno > 1) return "Conflito com dados do banco";
         return "Erro ao atualizar colaborador.";

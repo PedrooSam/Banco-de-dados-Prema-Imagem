@@ -1,16 +1,16 @@
 package com.premaImagem.projeto_bd.entidades;
 
-public class Exames{
+public class Exame{
 
     private long id;
     private String preparo;
     private String nome;
     private double preco;
 
-    public Exames() {
+    public Exame() {
     }
     
-    public Exames(String preparo, String nome, double preco) {
+    public Exame(String preparo, String nome, double preco) {
         this.preparo = preparo;
         this.nome = nome;
         this.preco = preco;

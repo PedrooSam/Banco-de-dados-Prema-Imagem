@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-import com.premaImagem.projeto_bd.entidades.Exames;
+import com.premaImagem.projeto_bd.entidades.Exame;
 @Repository
 public class ExameRepositorio{
 
@@ -17,23 +17,23 @@ public class ExameRepositorio{
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public List<Exames> buscarLista(){
+    public List<Exame> buscarLista(){
         String sql = "SELECT * FROM Exame";
-        List<Exames> exames = jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Exames.class));
+        List<Exame> exames = jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Exame.class));
         return exames;
     }
 
-    public Exames buscar(long nomeExame){
+    public Exame buscar(long nomeExame){
         String sql = "SELECT * FROM Exame WHERE Exame.nome = ?";
-        return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(Exames.class), nomeExame);
+        return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(Exame.class), nomeExame);
     }
 
-    public int criar(Exames exame){
+    public int criar(Exame exame){
         String sql = "INSERT INTO Exame (nome, preparo, preco) VALUES (?,?,?)";
         return jdbcTemplate.update(sql, exame.getNome(), exame.getPreparo(), exame.getPreco());
     }
 
-    public int editar(Exames exame){
+    public int atualizar(Exame exame){
         String sql = "UPDATE Exame SET Exame.nome = ?, Exame.preparo = ?, Exame.preco = ? WHERE id = ?";
         return jdbcTemplate.update(sql, exame.getNome(), exame.getPreparo(), exame.getPreco(), exame.getId());
     }

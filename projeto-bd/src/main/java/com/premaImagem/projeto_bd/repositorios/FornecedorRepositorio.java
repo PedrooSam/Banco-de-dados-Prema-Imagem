@@ -35,7 +35,7 @@ public class FornecedorRepositorio {
                 fornecedor.getTelefone1(), fornecedor.getTelefone2(), fornecedor.getEmail());
     }
 
-    public int editar(Fornecedor fornecedor) {
+    public int atualizar(Fornecedor fornecedor) {
         String sql = "UPDATE Fornecedor SET nome = ?, cnpj = ?, telefone1 = ?, telefone2 = ?, email = ? WHERE id = ?";
         return jdbcTemplate.update(sql, fornecedor.getNome(), fornecedor.getCnpj(), fornecedor.getTelefone1(),
                 fornecedor.getTelefone2(), fornecedor.getEmail(), fornecedor.getId());

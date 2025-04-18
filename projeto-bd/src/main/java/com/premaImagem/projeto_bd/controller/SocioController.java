@@ -40,7 +40,7 @@ public class SocioController {
     @PutMapping("/{id}")
     public String atualizar(@PathVariable long id, @RequestBody Socio socio) {
         socio.setId(id);
-        int retorno = repositorio.editar(socio);
+        int retorno = repositorio.atualizar(socio);
         if (retorno == 1) return "Sócio atualizado com sucesso!";
         if (retorno > 1) return "Conflito com dados no banco.";
         return "Erro ao atualizar sócio.";
