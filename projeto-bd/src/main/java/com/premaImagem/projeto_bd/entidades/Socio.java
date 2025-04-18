@@ -1,24 +1,17 @@
 package com.premaImagem.projeto_bd.entidades;
 
-public class Socio {
+public class Socio extends Colaborador {
 
-    private long id;
     private double proLabore;
 
-    public Socio() {
-    }
-
-    public Socio(long id, double proLabore) {
-        this.id = id;
+    public Socio(String cpf, String nome, double proLabore) {
+        super(cpf, nome);
         this.proLabore = proLabore;
     }
 
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
+    public Socio(long id, String cpf, String nome, double proLabore) {
+        super(id, cpf, nome);
+        this.proLabore = proLabore;
     }
 
     public double getProLabore() {

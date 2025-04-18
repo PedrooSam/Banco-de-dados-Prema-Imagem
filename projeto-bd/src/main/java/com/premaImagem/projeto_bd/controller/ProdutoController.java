@@ -3,15 +3,20 @@ package com.premaImagem.projeto_bd.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.premaImagem.projeto_bd.entidades.Produto;
 import com.premaImagem.projeto_bd.repositorios.ProdutoRepositorio;
 
+@Controller
+@RequestMapping("/produtos")
 public class ProdutoController {
 
     private final ProdutoRepositorio repositorio;
@@ -27,12 +32,12 @@ public class ProdutoController {
     }
 
     @GetMapping("/{id}")
-    public Produto buscar(long id){
+    public Produto buscar(@PathVariable("id") long id){
         return repositorio.buscarPorId(id);
     }
 
     @GetMapping("/{nome}")
-    public Produto buscar(String nome){
+    public Produto buscar(@PathVariable("nome") String nome){
         return repositorio.buscarPorNome(nome);
     }
 

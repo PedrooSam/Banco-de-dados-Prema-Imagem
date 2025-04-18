@@ -38,6 +38,7 @@ CREATE TABLE Exame(
 CREATE TABLE Paciente(
 	id BIGINT AUTO_INCREMENT PRIMARY KEY,
 	nome varchar(45) not null,
+	nomeSocial varchar(45) default null,
 	cpf varchar(11) unique not null,
 	rg varchar(8) unique not null,
 	dataNascimento date not null,

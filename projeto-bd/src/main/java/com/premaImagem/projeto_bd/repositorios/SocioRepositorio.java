@@ -25,7 +25,7 @@ public class SocioRepositorio {
     }
 
     public Socio buscar(long id) {
-        String sql = "SELECT * FROM Socio WHERE id = ?";
+        String sql = "SELECT id, cpf, nome, proLabore FROM Socio INNER JOIN Colaborador ON Socio.id = Colaborador.id  WHERE id = ?";
         return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(Socio.class), id);
     }
 
@@ -34,7 +34,7 @@ public class SocioRepositorio {
         return jdbcTemplate.update(sql, socio.getId(), socio.getProLabore());
     }
 
-    public int editar(Socio socio) {
+    public int atualizar(Socio socio) {
         String sql = "UPDATE Socio SET proLabore = ? WHERE id = ?";
         return jdbcTemplate.update(sql, socio.getProLabore(), socio.getId());
     }

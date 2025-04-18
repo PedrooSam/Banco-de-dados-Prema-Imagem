@@ -2,12 +2,26 @@ package com.premaImagem.projeto_bd.entidades;
 
 import java.util.Date;
 
-public class Empregado{
+public class Empregado extends Colaborador{
 
     private Date dataAdmissao;
     private String numeroPis;
     private double salario;
     private String funcao;
+
+    public Empregado (String cpf, String nome, String numeroPis, double salario, String funcao){
+        super(cpf, nome);
+        this.numeroPis = numeroPis;
+        this.salario = salario;
+        this.funcao = funcao;
+    }
+
+    public Empregado(long id, String cpf, String nome, String numeroPis, double salario, String funcao){
+        super(id, cpf, nome);
+        this.numeroPis = numeroPis;
+        this.salario = salario;
+        this.funcao = funcao;
+    }
 
     public Date getDataAdmissao() {
         return dataAdmissao;

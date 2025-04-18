@@ -39,7 +39,7 @@ public class ProdutoRepositorio {
         return jdbcTemplate.update(sql, produto.getId(), produto.getNome(), produto.getPreco());
     }
 
-    public int editar(Produto produto){
+    public int atualizar(Produto produto){
         String sql = "UPDATE Produto SET nome = ?, preco = ? WHERE Produto.id = ?";
         return jdbcTemplate.update(sql, produto.getNome(), produto.getPreco(), produto.getId());
     }

@@ -55,7 +55,7 @@ public class FornecedorController {
     @PutMapping("/{id}")
     public String atualizar(@PathVariable String id, @RequestBody Fornecedor fornecedor) {
         fornecedor.setId(id); // garante que o ID vem da URL
-        int retorno = repositorio.editar(fornecedor);
+        int retorno = repositorio.atualizar(fornecedor);
 
         if (retorno == 1) return "Fornecedor atualizado com sucesso!";
         if (retorno > 1) return "Conflito com dados do banco";
