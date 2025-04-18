@@ -10,12 +10,12 @@ import com.premaImagem.projeto_bd.entidades.Exames;
 
 @RestController
 @RequestMapping("/exames")
-public class ExamesController {
+public class ExameController {
 
     private final ExameRepositorio repositorio;
 
     @Autowired
-    public ExamesController(ExameRepositorio repositorio) {
+    public ExameController(ExameRepositorio repositorio) {
         this.repositorio = repositorio;
     }
 
