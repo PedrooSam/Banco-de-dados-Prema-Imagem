@@ -6,7 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-import com.premaImagem.projeto_bd.entidades.Exames;
+import com.premaImagem.projeto_bd.entidades.Medico;
+
+//CORRIGIR PRA HERANÇA NOVA (NÃO SEI COMO FAZER AINDA)
+
 @Repository
 public class MedicoRepositorio{
 
@@ -17,9 +20,9 @@ public class MedicoRepositorio{
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public List<Medicos> buscarLista(){
+    public List<Medico> buscarLista(){
         String sql = "SELECT * FROM Medico";
-        List<Medicos> medicos = jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Medicos.class));
+        List<Medico> medicos = jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Medico.class));
         return medicos;
     }
 

@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import com.premaImagem.projeto_bd.repositorios.ExameRepositorio;
-import com.premaImagem.projeto_bd.entidades.Exames;
+import com.premaImagem.projeto_bd.entidades.Exame;
 
 @RestController
 @RequestMapping("/exames")
@@ -21,19 +21,19 @@ public class ExameController {
 
     // GET: lista todos os exames
     @GetMapping
-    public List<Exames> listar() {
+    public List<Exame> listar() {
         return repositorio.buscarLista();
     }
 
     // GET: busca um exame pelo nome (ou ID, dependendo do tipo)
     @GetMapping("/{id}")
-    public Exames buscarPorId(@PathVariable("id") long id) {
+    public Exame buscarPorId(@PathVariable("id") long id) {
         return repositorio.buscar(id);
     }
 
     // POST: cria novo exame
     @PostMapping
-    public String criar(@RequestBody Exames exame) {
+    public String criar(@RequestBody Exame exame) {
         int retorno = repositorio.criar(exame);
 
         if (retorno == 1) return "Exame adicionado com sucesso!";
@@ -52,9 +52,9 @@ public class ExameController {
     }
 
     @PutMapping("/{id}")
-    public String atualizar(@PathVariable long id, @RequestBody Exames exame) {
+    public String atualizar(@PathVariable long id, @RequestBody Exame exame) {
         exame.setId(id); // garante que o ID vem da URL
-        int retorno = repositorio.editar(exame);
+        int retorno = repositorio.atualizar(exame);
 
         if (retorno == 1) return "Exame atualizado com sucesso!";
         if (retorno > 1) return "Conflito com dados do banco";
