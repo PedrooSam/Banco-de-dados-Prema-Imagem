@@ -10,11 +10,11 @@ import java.util.List;
 import java.time.LocalDateTime;
 
 @Repository
-class VendaRepositorio{
+public class VendaRepositorio{
 
     private final JdbcTemplate jdbcTemplate;
 
-    @Autorwired
+    @Autowired
     public VendaRepositorio(JdbcTemplate jdbcTemplate){
         this.jdbcTemplate = jdbcTemplate;
     }
@@ -26,28 +26,28 @@ class VendaRepositorio{
 
     public Venda buscarPorDataHora(LocalDateTime dataHoraVenda){
         String sqlVenda = "SELECT * FROM Venda WHERE dataHoraVenda = ?";
-        return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(Venda.class), dataHoraVenda);
+        return jdbcTemplate.queryForObject(sqlVenda, new BeanPropertyRowMapper<>(Venda.class), dataHoraVenda);
     }
 
     //buscar por produto
-    public Venda buscarPorProduto(String produto){
-        String sqlVenda = "SELECT v.dataHoraVenda, v.quantidade, p.nome, p.preco, p.quantidade, p.idProduto FROM Venda v INNER JOIN Produto p ON v.dataHoraVenda = p.idProduto";
-        return jdbcTemplate.query(sqlVenda, new BeanPropertyRowMapper<>(Venda.class));
+    public List<Venda> buscarPorProduto(String nome){
+        String sqlVenda = "SELECT v.dataHoraVenda, v.quantidade, v.idFornecedor, v.idProduto, v.idSocio FROM Venda v INNER JOIN Produto p ON v.idProduto = p.id WHERE p.nome = ?";
+        return jdbcTemplate.query(sqlVenda, new BeanPropertyRowMapper<>(Venda.class), nome);
     }
 
     public int criar(Venda venda){
         String sql = "INSERT INTO Venda (dataHoraVenda, quantidade, idFornecedor, idProduto, idSocio) VALUES (?, ?, ?, ?, ?)";
-        return jdbcTemplate.update(sql,venda.getDataHoraVenda(), venda.getQuantidade(), venda.getIdFornecedor(), venda.getIdProduto(), venda.getIdSocio());
+        return jdbcTemplate.update(sql,Timestamp.valueOf(venda.getDataHoraVenda()), venda.getQuantidade(), venda.getIdFornecedor(), venda.getIdProduto(), venda.getIdSocio());
     }
 
     public int atualizar (Venda venda){
         String sql = "UPDATE Venda SET quantidade = ?, idFornecedor = ?, idProduto = ?, idSocio = ? WHERE dataHoraVenda = ?";
-        return jdbcTemplate.update(sql,  venda.getQuantidade(), venda.getIdFornecedor(), venda.getIdProduto(), venda.getIdSocio(), venda.getDataHoraVenda());
+        return jdbcTemplate.update(sql,  venda.getQuantidade(), venda.getIdFornecedor(), venda.getIdProduto(), venda.getIdSocio(), Timestamp.valueOf(venda.getDataHoraVenda()));
     }
 
-    public int deletar (Venda dataHoraVenda){
+    public int deletar (LocalDateTime dataHoraVenda){
         String sql = "DELETE FROM Venda WHERE dataHoraVenda = ?";
-        return jdbcTemplate.update(sql, dataHoraVenda);
+        return jdbcTemplate.update(sql, Timestamp.valueOf(dataHoraVenda));
     }
 
 }
