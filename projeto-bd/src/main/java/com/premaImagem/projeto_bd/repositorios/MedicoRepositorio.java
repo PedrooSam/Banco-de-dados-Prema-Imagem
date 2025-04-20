@@ -52,7 +52,7 @@ public class MedicoRepositorio{
         jdbcTemplate.update(sqlColaborador, medico.getNome(), medico.getCpf(), medico.getId());
 
         String sqlMedico = "UPDATE Medico SET Medico.crm = ?, Medico.especialidade = ? Where Medico.id = ?";
-        return jdbcTemplate.update(sqlMedico, medico.getCrm(), medico.getEspecialidade, medico.getId());
+        return jdbcTemplate.update(sqlMedico, medico.getCrm(), medico.getEspecialidade(), medico.getId());
     }
 
     @Transactional
