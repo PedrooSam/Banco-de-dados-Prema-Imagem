@@ -23,7 +23,7 @@ public class MedicoRepositorio{
 
     public List<Medico> buscarLista(){
         String sqlMedico = "SELECT c.id, c.nome, c.cpf, m.crm, m.especialidade FROM Colaborador c INNER JOIN Medico m ON c.id = m.id";
-        return jdbcTemplate.queryForObject(sqlMedico, new BeanPropertyRowMapper<>(Medico.class));
+        return jdbcTemplate.query(sqlMedico, new BeanPropertyRowMapper<>(Medico.class));
     }
 
     public Medico buscarPorNome(String nome){

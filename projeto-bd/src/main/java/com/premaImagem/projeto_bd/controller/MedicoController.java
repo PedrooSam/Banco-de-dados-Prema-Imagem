@@ -54,7 +54,7 @@ public class MedicoController{
             return "Médico atualizado com sucesso!";
         }
         else{
-            return return "Erro ao atualizar médico.";
+            return "Erro ao atualizar médico.";
         }
     }
 
