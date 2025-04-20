@@ -22,25 +22,19 @@ public class MedicoRepositorio{
     }
 
     public List<Medico> buscarLista(){
-        String sql = "SELECT c.id, c.nome, c.cpf, m.crm, m.especialidade FROM Colaborador c INNER JOIN Medico m ON c.id = m.id";
-        return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(Medico.class), id);
+        String sqlMedico = "SELECT c.id, c.nome, c.cpf, m.crm, m.especialidade FROM Colaborador c INNER JOIN Medico m ON c.id = m.id";
+        return jdbcTemplate.queryForObject(sqlMedico, new BeanPropertyRowMapper<>(Medico.class));
     }
 
-    public Medico buscarNome(String nome){
+    public Medico buscarPorNome(String nome){
         String sqlMedico = "SELECT c.id, c.nome, c.cpf, m.crm, m.especialidade FROM Colaborador c INNER JOIN Medico m ON c.id = m.id WHERE c.nome = ?";
-        return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(Medico.class), nome);
+        return jdbcTemplate.queryForObject(sqlMedico, new BeanPropertyRowMapper<>(Medico.class), nome);
     }
 
     //buscar por id
-    public Medico buscarId(long id){
+    public Medico buscarPorId(long id){
         String sqlMedico = "SELECT c.id, c.nome, c.cpf, m.crm, m.especialidade FROM Colaborador c INNER JOIN Medico m ON c.id = m.id WHERE c.id = ?";
-        return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(Medico.class), id);
-    }
-
-    //buscar por crm
-    public Medico buscarCrm(String crm){
-        String sqlMedico = "SELECT c.id, c.nome, c.cpf, m.crm, m.especialidade FROM Colaborador c INNER JOIN Medico m ON c.id = m.id WHERE m.crm = ?";
-        return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(Medico.class), crm);
+        return jdbcTemplate.queryForObject(sqlMedico, new BeanPropertyRowMapper<>(Medico.class), id);
     }
 
     @Transactional
@@ -48,18 +42,16 @@ public class MedicoRepositorio{
         String sqlColaborador = "INSERT INTO Colaborador (cpf, nome) VALUES (?, ?)";
         jdbcTemplate.update(sqlColaborador, medico.getCpf(), medico.getNome());
 
-        long id = jdbcTemplate.queryForObject("SELECT LAST_INSERT_ID()", Long.class);
-
         String sqlMedico = "INSERT INTO Medico (id, crm, especialidade) VALUES (?, ?, ?)";
         return jdbcTemplate.update(sqlMedico, medico.getId(),medico.getCrm(), medico.getEspecialidade());
     }
 
     @Transactional
-    public int editar(Medico medico){
-        String sqlColaborador = "UPDATE Colaborador SET Colaborador.nome = ?,  cpf = ? WHERE id = ?";
-        jdbcTemplate.update(sqlColaborador, medico.getNome(), Medico.getCpf(), medico.getId());
+    public int atualizar(Medico medico){
+        String sqlColaborador = "UPDATE Colaborador SET Colaborador.nome = ?, Colaborador.cpf = ? WHERE id = ?";
+        jdbcTemplate.update(sqlColaborador, medico.getNome(), medico.getCpf(), medico.getId());
 
-        String sql Medico = "UPDATE Medico SET Medico.crm = ?, Medico.especialidade = ? Where Medico.id = ?";
+        String sqlMedico = "UPDATE Medico SET Medico.crm = ?, Medico.especialidade = ? Where Medico.id = ?";
         return jdbcTemplate.update(sqlMedico, medico.getCrm(), medico.getEspecialidade, medico.getId());
     }
 

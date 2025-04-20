@@ -26,17 +26,12 @@ public class MedicoController{
 
     @GetMapping("/{id}")
     public Medico buscar(@PathVariable long id){
-        return repositorio.buscarId(id);
+        return repositorio.buscarPorId(id);
     }
 
     @GetMapping("/{nome}")
     public Medico buscar(@PathVariable String nome){
-        return repositorio.buscarNome(nome);
-    }
-
-    @GetMapping("/{crm}")
-    public Medico buscar(@PathVariable String crm){
-        return repositorio.buscarCrm(crm);
+        return repositorio.buscarPorNome(nome);
     }
 
     @PostMapping
