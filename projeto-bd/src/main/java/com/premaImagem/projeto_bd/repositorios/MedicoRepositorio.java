@@ -38,11 +38,11 @@ public class MedicoRepositorio{
     }
 
     //buscar por crm
-    public Medico buscarNome(String crm){
+    public Medico buscarCrm(String crm){
         String sqlMedico = "SELECT c.id, c.nome, c.cpf, m.crm, m.especialidade FROM Colaborador c INNER JOIN Medico m ON c.id = m.id WHERE m.crm = ?";
         return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(Medico.class), crm);
     }
-    
+
     @Transactional
     public int criar(Medico medico){
         String sqlColaborador = "INSERT INTO Colaborador (cpf, nome) VALUES (?, ?)";
