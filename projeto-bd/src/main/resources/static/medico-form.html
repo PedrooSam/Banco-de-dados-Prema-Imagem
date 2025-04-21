@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Cadastro de Médico</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 0; /* Removi padding do body para controle do container */
+            background-color: #f9f9f9;
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column; /* Organiza a navbar acima do container */
+            align-items: center; /* Centraliza os itens horizontalmente */
+        }
+
+        .navbar {
+            background-color: #1976d2;
+            padding: 10px 20px; /* Adicionei padding horizontal para melhor visualização */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.1); /* Adicionei uma pequena sombra */
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+            padding: 8px 16px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .navbar a:hover {
+            background-color: #125aa0;
+        }
+
+        .navbar .brand {
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .links {
+            display: flex;
+            gap: 10px; /* Adicionei um pequeno espaçamento entre os links */
+        }
+
+        .container {
+            width: 100%;
+            max-width: 500px;
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-top: 20px; /* Adicionei margem superior para separar da navbar */
+            margin-bottom: 20px; /* Adicionei margem inferior */
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+
+        label {
+            display: block;
+            margin-top: 15px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        input {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 14px;
+        }
+
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #1976d2;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        button:hover {
+            background-color: #125aa0;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="navbar">
+        <div class="brand">
+            <a href="home.html">PremaImagem</a>
+        </div>
+        <div class="links">
+            <a href="empregado-lista.html">Empregados</a>
+            <a href="medico-lista.html">Médicos</a>
+            <a href="exame-lista.html">Exames</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <h1 id="titulo">Cadastrar Médico</h1>
+
+        <form id="medicoForm">
+            <input type="hidden" id="id">
+
+            <label for="nome">Nome:</label>
+            <input type="text" id="nome" name="nome" required>
+
+            <label for="cpf">CPF:</label>
+            <input type="text" id="cpf" name="cpf" required maxlength="11">
+
+            <label for="crm">CRM:</label>
+            <input type="text" id="crm" name="crm" required maxlength="8">
+
+            <label for="especialidade">Especialidade:</label>
+            <input type="text" id="especialidade" name="especialidade" required maxlength="50">
+
+            <button type="submit">Salvar</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('medicoForm').addEventListener('submit', async function (event) {
+            event.preventDefault();
+
+            const nome = document.getElementById('nome').value;
+            const cpf = document.getElementById('cpf').value;
+            const crm = document.getElementById('crm').value;
+            const especialidade = document.getElementById('especialidade').value;
+
+            try {
+                // Criação do colaborador
+                const colabResp = await fetch('http://localhost:8080/colaboradores', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ nome, cpf })
+                });
+
+                if (!colabResp.ok) throw new Error('Erro ao criar colaborador');
+
+                // Busca o colaborador pelo CPF
+                const colaboradorRes = await fetch(`http://localhost:8080/colaboradores/cpf/${cpf}`);
+                const colaborador = await colaboradorRes.json();
+
+                // Cria o médico com ID do colaborador
+                const medico = {
+                    id: colaborador.id,
+                    nome: colaborador.nome,
+                    cpf: colaborador.cpf,
+                    crm,
+                    especialidade
+                };
+
+                const medicoResp = await fetch('http://localhost:8080/medicos', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(medico)
+                });
+
+                if (!medicoResp.ok) throw new Error('Erro ao criar médico');
+
+                alert('Médico cadastrado com sucesso!');
+                window.location.href = 'medico-lista.html';
+
+            } catch (error) {
+                console.error(error);
+                alert('Erro ao cadastrar médico.');
+            }
+        });
+
+        // Preenche os campos caso esteja editando
+        const params = new URLSearchParams(window.location.search);
+        const medicoId = params.get("id");
+
+        if (medicoId) {
+            document.getElementById("titulo").textContent = "Editar Médico";
+            fetch(`http://localhost:8080/medicos/id/${medicoId}`)
+                .then(response => response.json())
+                .then(medico => {
+                    document.getElementById("id").value = medico.id;
+                    document.getElementById("nome").value = medico.nome;
+                    document.getElementById("cpf").value = medico.cpf;
+                    document.getElementById("crm").value = medico.crm;
+                    document.getElementById("especialidade").value = medico.especialidade;
+                })
+                .catch(err => alert('Erro ao carregar dados do médico.'));
+        }
+    </script>
+
+</body>
+</html>

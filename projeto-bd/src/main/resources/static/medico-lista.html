@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lista de Médicos</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 40px;
+      background-color: #f9f9f9;
+    }
+
+    h1 {
+      color: #333;
+    }
+
+    .navbar {
+      background-color: #1976d2;
+      padding: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .navbar a {
+      color: white;
+      text-decoration: none;
+      font-size: 16px;
+      padding: 8px 16px;
+      border-radius: 5px;
+      transition: background-color 0.3s;
+    }
+
+    .navbar a:hover {
+      background-color: #125aa0;
+    }
+
+    .navbar .brand {
+      font-weight: bold;
+      font-size: 18px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background-color: white;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      margin-top: 20px;
+    }
+
+    th, td {
+      padding: 12px;
+      border-bottom: 1px solid #ddd;
+      text-align: left;
+    }
+
+    th {
+      background-color: #eeeeee;
+    }
+
+    tr:hover {
+      background-color: #f1f1f1;
+    }
+
+    .button-bar {
+      margin: 20px 0;
+    }
+
+    .button-bar button {
+      margin-right: 10px;
+      padding: 10px 18px;
+      font-size: 14px;
+      cursor: pointer;
+      border-radius: 5px;
+      border: none;
+      background-color: #1976d2;
+      color: white;
+      transition: background-color 0.3s ease;
+    }
+
+    .button-bar button:hover {
+      background-color: #125aa0;
+    }
+
+    .actions button {
+      margin-right: 5px;
+      padding: 6px 12px;
+      font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="navbar">
+    <div class="brand">
+      <a href="home.html">PremaImagem</a>
+    </div>
+    <div class="links">
+      <a href="colaborador-lista.html">Colaboradores</a>
+      <a href="empregado-lista.html">Empregados</a>
+      <a href="medico-lista.html">Médicos</a>
+      <a href="exame-lista.html">Exames</a>
+    </div>
+  </div>
+
+  <h1>Lista de Médicos</h1>
+
+  <div class="button-bar">
+    <button onclick="location.href='medico-form.html'">Cadastrar Novo Médico</button>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Nome</th>
+        <th>CPF</th>
+        <th>CRM</th>
+        <th>Especialidade</th>
+        <th>Ações</th>
+      </tr>
+    </thead>
+    <tbody id="medicosTableBody">
+      <!-- Conteúdo inserido via JavaScript -->
+    </tbody>
+  </table>
+
+  <script>
+    async function carregarMedicos() {
+      const response = await fetch('http://localhost:8080/medicos');
+      const tbody = document.getElementById('medicosTableBody');
+      tbody.innerHTML = '';
+
+      if (response.ok) {
+        const medicos = await response.json();
+        medicos.forEach(medico => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td>${medico.nome}</td>
+            <td>${medico.cpf}</td>
+            <td>${medico.crm}</td>
+            <td>${medico.especialidade}</td>
+            <td class="actions">
+              <button onclick="location.href='medico-detalhes.html?id=${medico.id}'">Ver</button>
+              <button onclick="location.href='medico-form.html?id=${medico.id}'">Editar</button>
+            </td>
+          `;
+          tbody.appendChild(tr);
+        });
+      } else {
+        alert('Erro ao carregar médicos.');
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', carregarMedicos);
+  </script>
+
+</body>
+</html>
