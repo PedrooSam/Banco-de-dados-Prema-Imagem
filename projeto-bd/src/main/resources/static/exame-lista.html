@@ -93,7 +93,6 @@
             <a href="home.html">PremaImagem</a>
         </div>
         <div class="links">
-            <a href="colaborador-lista.html">Colaboradores</a>
             <a href="empregado-lista.html">Empregados</a>
             <a href="medico-lista.html">Médicos</a>
             <a href="exame-lista.html">Exames</a>
@@ -116,7 +115,6 @@
             </tr>
         </thead>
         <tbody id="examesTableBody">
-            <!-- A tabela será preenchida dinamicamente com JavaScript -->
         </tbody>
     </table>
 
@@ -132,7 +130,6 @@
                 exames.forEach(exame => {
                     const tr = document.createElement('tr');
                     tr.innerHTML = `
-                        <td>${exame.id}</td>
                         <td>${exame.nome}</td>
                         <td>R$ ${exame.preco.toFixed(2)}</td>
                         <td>${exame.preparo}</td>

@@ -4,6 +4,10 @@ public class Medico extends Colaborador{
     private String crm;
     private String especialidade;
 
+    public Medico() {
+        super();
+    }
+
     public Medico(String cpf, String nome, double proLabore, String crm, String especialidade) {
         super(cpf, nome);
         this.crm = crm;
