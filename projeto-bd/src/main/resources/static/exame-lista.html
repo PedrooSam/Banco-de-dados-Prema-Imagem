@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Exames</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 40px;
+            background-color: #f9f9f9;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        /* Estilo da Navbar */
+        .navbar {
+            background-color: #1976d2;
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+            padding: 8px 16px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .navbar a:hover {
+            background-color: #125aa0;
+        }
+
+        .navbar .brand {
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        /* Estilo da Tabela */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        th, td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+            text-align: left;
+        }
+
+        th {
+            background-color: #eeeeee;
+        }
+
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        .button-bar {
+            margin-bottom: 20px;
+        }
+
+        .button-bar button {
+            margin-right: 10px;
+            padding: 10px 18px;
+            font-size: 14px;
+            cursor: pointer;
+            border-radius: 5px;
+            border: none;
+            background-color: #1976d2;
+            color: white;
+            transition: background-color 0.3s ease;
+        }
+
+        .button-bar button:hover {
+            background-color: #125aa0;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <div class="navbar">
+        <div class="brand">
+            <a href="home.html">PremaImagem</a>
+        </div>
+        <div class="links">
+            <a href="colaborador-lista.html">Colaboradores</a>
+            <a href="empregado-lista.html">Empregados</a>
+            <a href="medico-lista.html">Médicos</a>
+            <a href="exame-lista.html">Exames</a>
+        </div>
+    </div>
+
+    <h1>Lista de Exames</h1>
+
+    <div class="button-bar">
+        <button onclick="location.href='exame-form.html'">Cadastrar Novo Exame</button>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Preço</th>
+                <th>Preparo</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody id="examesTableBody">
+            <!-- A tabela será preenchida dinamicamente com JavaScript -->
+        </tbody>
+    </table>
+
+    <script>
+        // Função para carregar exames via fetch da API
+        async function carregarExames() {
+            const response = await fetch('http://localhost:8080/exames');
+            const tbody = document.getElementById('examesTableBody');
+            tbody.innerHTML = '';
+
+            if (response.ok) {
+                const exames = await response.json();
+                exames.forEach(exame => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>${exame.id}</td>
+                        <td>${exame.nome}</td>
+                        <td>R$ ${exame.preco.toFixed(2)}</td>
+                        <td>${exame.preparo}</td>
+                        <td>
+                            <button onclick="location.href='exame-detalhes.html?id=${exame.id}'">Ver</button>
+                            <button onclick="location.href='exame-form.html?id=${exame.id}'">Editar</button>
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            } else {
+                alert('Erro ao carregar exames.');
+            }
+        }
+
+        // Carregar exames assim que a página for carregada
+        document.addEventListener('DOMContentLoaded', carregarExames);
+    </script>
+
+</body>
+</html>

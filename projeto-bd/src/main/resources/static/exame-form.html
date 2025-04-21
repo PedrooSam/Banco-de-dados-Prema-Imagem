@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Formulário de Exame</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 40px;
+      background-color: #f9f9f9;
+    }
+
+    .navbar {
+      background-color: #1976d2;
+      padding: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .navbar a {
+      color: white;
+      text-decoration: none;
+      font-size: 16px;
+      padding: 8px 16px;
+      border-radius: 5px;
+      transition: background-color 0.3s;
+    }
+
+    .navbar a:hover {
+      background-color: #125aa0;
+    }
+
+    .navbar .brand {
+      font-weight: bold;
+      font-size: 18px;
+    }
+
+    h1 {
+      color: #333;
+    }
+
+    form {
+      background-color: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      max-width: 500px;
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
+      color: #555;
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 10px 18px;
+      font-size: 14px;
+      cursor: pointer;
+      border-radius: 5px;
+      border: none;
+      color: white;
+      background-color: #1976d2;
+    }
+
+    button:hover {
+      background-color: #125aa0;
+    }
+
+    .container {
+  max-width: 500px;
+  margin: 40px auto;
+  background-color: white;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+  </style>
+</head>
+<body>
+
+  <div class="navbar">
+    <div class="brand">
+      <a href="home.html">PremaImagem</a>
+    </div>
+    <div class="links">
+      <a href="colaborador-lista.html">Colaboradores</a>
+      <a href="empregado-lista.html">Empregados</a>
+      <a href="medico-lista.html">Médicos</a>
+      <a href="exame-lista.html">Exames</a>
+    </div>
+  </div>
+
+  <div class="container">
+  <h1 id="titulo">Novo Exame</h1>
+
+  <form id="exameForm">
+    <input type="hidden" id="id">
+
+    <label for="nome">Nome do Exame:</label>
+    <input type="text" id="nome" required>
+
+    <label for="preco">Preço:</label>
+    <input type="number" id="preco" step="0.01" required>
+
+    <label for="preparo">Preparo:</label>
+    <textarea id="preparo" rows="4" required></textarea>
+
+    <button type="submit">Salvar</button>
+  </form>
+  </div>
+
+  <script>
+    const form = document.getElementById("exameForm");
+    const idInput = document.getElementById("id");
+    const nomeInput = document.getElementById("nome");
+    const precoInput = document.getElementById("preco");
+    const preparoInput = document.getElementById("preparo");
+    const titulo = document.getElementById("titulo");
+
+    const params = new URLSearchParams(window.location.search);
+    const exameId = params.get("id");
+
+    if (exameId) {
+      titulo.textContent = "Editar Exame";
+      fetch(`http://localhost:8080/exames/${exameId}`)
+        .then(resp => resp.json())
+        .then(exame => {
+          idInput.value = exame.id;
+          nomeInput.value = exame.nome;
+          precoInput.value = exame.preco;
+          preparoInput.value = exame.preparo;
+        })
+        .catch(() => alert("Erro ao carregar exame"));
+    }
+
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+
+      const exame = {
+        nome: nomeInput.value,
+        preco: parseFloat(precoInput.value),
+        preparo: preparoInput.value
+      };
+
+      const method = exameId ? "PUT" : "POST";
+      const url = exameId ? `http://localhost:8080/exames/${exameId}` : `http://localhost:8080/exames`;
+
+      const response = await fetch(url, {
+        method: method,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(exame)
+      });
+
+      if (response.ok) {
+        alert("Exame salvo com sucesso!");
+        window.location.href = "exame-lista.html";
+      } else {
+        alert("Erro ao salvar exame");
+      }
+    });
+  </script>
+</body>
+</html>
