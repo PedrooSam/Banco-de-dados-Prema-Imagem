@@ -7,6 +7,7 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import com.premaImagem.projeto_bd.entidades.AgendaExame;
+import java.time.LocalDateTime;
 
 @Repository
 public class AgendaExameRepositorio {
@@ -23,41 +24,42 @@ public class AgendaExameRepositorio {
         return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(AgendaExame.class));
     }
 
-    public AgendaExame buscar(long idExame) {
-        String sql = "SELECT * FROM AgendaExame WHERE idExame = ?";
-        return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(AgendaExame.class), idExame);
+    public AgendaExame buscar(LocalDateTime dataHoraRealizacao, long idPaciente, long idMedico, long idExame) {
+        String sql = "SELECT * FROM AgendaExame WHERE dataHoraRealizacao = ? AND idPaciente = ? AND idMedico = ? AND idExame = ?";
+        return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(AgendaExame.class),
+                dataHoraRealizacao, idPaciente, idMedico, idExame);
     }
 
     public int criar(AgendaExame agendaExame) {
         String sql = "INSERT INTO AgendaExame (dataHoraRealizacao, medicoRequisitante, laudo, status, idPaciente, idMedico, idExame) " +
                      "VALUES (?, ?, ?, ?, ?, ?, ?)";
         return jdbcTemplate.update(sql,
-            agendaExame.getDataHoraRealizacao(),
-            agendaExame.getMedicoRequisitante(),
-            agendaExame.getLaudo(),
-            agendaExame.getStatus(),
-            agendaExame.getIdPaciente(),
-            agendaExame.getIdMedico(),
-            agendaExame.getIdExame()
+                agendaExame.getDataHoraRealizacao(),
+                agendaExame.getMedicoRequisitante(),
+                agendaExame.getLaudo(),
+                agendaExame.getStatus(),
+                agendaExame.getIdPaciente(),
+                agendaExame.getIdMedico(),
+                agendaExame.getIdExame()
         );
     }
 
     public int atualizar(AgendaExame agendaExame) {
-        String sql = "UPDATE AgendaExame SET dataHoraRealizacao = ?, medicoRequisitante = ?, laudo = ?, status = ?, " +
-                     "idPaciente = ?, idMedico = ? WHERE idExame = ?";
+        String sql = "UPDATE AgendaExame SET medicoRequisitante = ?, laudo = ?, status = ? " +
+                     "WHERE dataHoraRealizacao = ? AND idPaciente = ? AND idMedico = ? AND idExame = ?";
         return jdbcTemplate.update(sql,
-            agendaExame.getDataHoraRealizacao(),
-            agendaExame.getMedicoRequisitante(),
-            agendaExame.getLaudo(),
-            agendaExame.getStatus(),
-            agendaExame.getIdPaciente(),
-            agendaExame.getIdMedico(),
-            agendaExame.getIdExame()
+                agendaExame.getMedicoRequisitante(),
+                agendaExame.getLaudo(),
+                agendaExame.getStatus(),
+                agendaExame.getDataHoraRealizacao(),
+                agendaExame.getIdPaciente(),
+                agendaExame.getIdMedico(),
+                agendaExame.getIdExame()
         );
     }
 
-    public int deletar(long idExame) {
-        String sql = "DELETE FROM AgendaExame WHERE idExame = ?";
-        return jdbcTemplate.update(sql, idExame);
+    public int deletar(LocalDateTime dataHoraRealizacao, long idPaciente, long idMedico, long idExame) {
+        String sql = "DELETE FROM AgendaExame WHERE dataHoraRealizacao = ? AND idPaciente = ? AND idMedico = ? AND idExame = ?";
+        return jdbcTemplate.update(sql, dataHoraRealizacao, idPaciente, idMedico, idExame);
     }
 }
