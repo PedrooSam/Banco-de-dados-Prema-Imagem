@@ -2,6 +2,7 @@ package com.premaImagem.projeto_bd.repositorios;
 
 import java.util.List;
 
+import com.premaImagem.projeto_bd.entidades.Colaborador;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -9,12 +10,13 @@ import org.springframework.stereotype.Repository;
 import com.premaImagem.projeto_bd.entidades.Medico;
 import org.springframework.transaction.annotation.Transactional;
 
-//CORRIGIR PRA HERANÇA NOVA (NÃO SEI COMO FAZER AINDA)
+
 
 @Repository
 public class MedicoRepositorio{
 
     private final JdbcTemplate jdbcTemplate;
+
 
     @Autowired
     public MedicoRepositorio(JdbcTemplate jdbcTemplate) {
@@ -38,18 +40,48 @@ public class MedicoRepositorio{
     }
 
     @Transactional
-    public int criar(Medico medico){
-        String sqlColaborador = "INSERT INTO Colaborador (cpf, nome) VALUES (?, ?)";
-        jdbcTemplate.update(sqlColaborador, medico.getCpf(), medico.getNome());
+    public int criar(Medico medico) {
+        // Primeiro tenta buscar colaborador pelo CPF
+        Colaborador colaboradorExistente = null;
+        try {
+            String sqlBuscaColaborador = "SELECT * FROM Colaborador WHERE cpf = ?";
+            colaboradorExistente = jdbcTemplate.queryForObject(
+                    sqlBuscaColaborador,
+                    new BeanPropertyRowMapper<>(Colaborador.class),
+                    medico.getCpf()
+            );
+        } catch (Exception e) {
+            // Se não encontrar, ignora o erro e segue com a criação
+        }
 
+        long id;
+
+        if (colaboradorExistente != null) {
+            // Colaborador já existe, usa o ID dele
+            id = colaboradorExistente.getId();
+        } else {
+            // Cria novo colaborador
+            String sqlColaborador = "INSERT INTO Colaborador (cpf, nome) VALUES (?, ?)";
+            jdbcTemplate.update(sqlColaborador, medico.getCpf(), medico.getNome());
+
+            // Pega o ID recém-gerado
+            Number idNumber = jdbcTemplate.queryForObject("SELECT LAST_INSERT_ID()", Number.class);
+            id = idNumber.longValue();
+        }
+
+        // Define o ID no médico
+        medico.setId(id);
+
+        // Agora insere o médico
         String sqlMedico = "INSERT INTO Medico (id, crm, especialidade) VALUES (?, ?, ?)";
-        return jdbcTemplate.update(sqlMedico, medico.getId(),medico.getCrm(), medico.getEspecialidade());
+        return jdbcTemplate.update(sqlMedico, medico.getId(), medico.getCrm(), medico.getEspecialidade());
     }
 
     @Transactional
     public int atualizar(Medico medico){
         String sqlColaborador = "UPDATE Colaborador SET Colaborador.nome = ?, Colaborador.cpf = ? WHERE id = ?";
         jdbcTemplate.update(sqlColaborador, medico.getNome(), medico.getCpf(), medico.getId());
+
 
         String sqlMedico = "UPDATE Medico SET Medico.crm = ?, Medico.especialidade = ? Where Medico.id = ?";
         return jdbcTemplate.update(sqlMedico, medico.getCrm(), medico.getEspecialidade(), medico.getId());

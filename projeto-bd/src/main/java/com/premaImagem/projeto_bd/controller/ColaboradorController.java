@@ -24,7 +24,7 @@ public class ColaboradorController {
 
     @PostMapping
     public String criarColaborador(@RequestBody Colaborador dto) {
-        colaboradorRepositorio.criar(dto.getNome(), dto.getCpf());
+        colaboradorRepositorio.criar(dto);
         return "Colaborador criado com sucesso!";
     }
 

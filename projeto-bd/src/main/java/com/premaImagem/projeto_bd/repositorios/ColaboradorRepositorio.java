@@ -16,9 +16,9 @@ public class ColaboradorRepositorio {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public void criar(String nome, String cpf) {
-        String sql = "INSERT INTO Colaborador (nome, cpf) VALUES (?, ?)";
-        jdbcTemplate.update(sql, nome, cpf);
+    public void criar(Colaborador colaborador) {
+        String sqlColaborador = "INSERT INTO Colaborador (nome, cpf) VALUES (?, ?)";
+        jdbcTemplate.update(sqlColaborador, colaborador.getNome(), colaborador.getCpf());
     }
 
     public Colaborador buscarPorCpf(String cpf) {
