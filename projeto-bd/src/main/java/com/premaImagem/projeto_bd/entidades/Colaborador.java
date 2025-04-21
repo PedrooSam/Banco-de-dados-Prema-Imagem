@@ -5,6 +5,9 @@ abstract class Colaborador {
     private String cpf;
     private String nome;
 
+    public Colaborador() {
+    }
+
     public Colaborador(String cpf, String nome) {
         this.cpf = cpf;
         this.nome = nome;
