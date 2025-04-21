@@ -47,10 +47,22 @@ def post_Exame():
 def post_Paciente():
     url = 'http://localhost:8080/pacientes'
 
-    json = {"id": 1,
-            "nome": "Endoscopia",
-            "preparo": "cu limpo",
-            "preco": 10}
+    json = {
+            "nome": "João Silva",
+            "nomeSocial": "Joãozinho",
+            "cpf": "12345678900",
+            "rg": "12345678",
+            "dataNascimento": "1990-05-10",
+            "cep": "12345678",
+            "numeroEndereco": "123",
+            "complementoEndereco": "Apto 202",
+            "telefone1": "11999999999",
+            "telefone2": "11988888888",
+            "email": "joao.silva@example.com",
+            "nomeMae": "Maria Silva",
+            "pacienteIndicador": None
+            }
+
 
     response = requests.post(url, json=json)
 
@@ -65,4 +77,5 @@ def post_Paciente():
 print("===============TESTES===============")
 
 #post_Exame()
-post_AgendaExame()
+#post_AgendaExame()
+post_Paciente()
