@@ -24,12 +24,12 @@ public class MedicoController{
         return repositorio.buscarLista();
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/id/{id}")
     public Medico buscar(@PathVariable long id){
         return repositorio.buscarPorId(id);
     }
 
-    @GetMapping("/{nome}")
+    @GetMapping("/nome/{nome}")
     public Medico buscar(@PathVariable String nome){
         return repositorio.buscarPorNome(nome);
     }
