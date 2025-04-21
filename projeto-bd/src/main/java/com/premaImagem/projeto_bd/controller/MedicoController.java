@@ -3,6 +3,7 @@ package com.premaImagem.projeto_bd.controller;
 import com.premaImagem.projeto_bd.entidades.Medico;
 import com.premaImagem.projeto_bd.repositorios.MedicoRepositorio;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,8 +26,14 @@ public class MedicoController{
     }
 
     @GetMapping("/id/{id}")
-    public Medico buscarPorId(@PathVariable long id) {
-        return repositorio.buscarPorId(id);
+    public ResponseEntity<Medico> buscarPorId(@PathVariable long id) {
+        Medico medico = repositorio.buscarPorId(id);
+        if(medico != null){
+            return ResponseEntity.ok(medico);
+        }
+        else{
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @GetMapping("/nome/{nome}")
