@@ -7,6 +7,7 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import com.premaImagem.projeto_bd.entidades.Exame;
+
 @Repository
 public class ExameRepositorio{
 
