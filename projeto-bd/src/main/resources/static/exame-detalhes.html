@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Detalhes do Exame</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 40px;
+      background-color: #f9f9f9;
+    }
+
+    .navbar {
+      background-color: #1976d2;
+      padding: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .navbar a {
+      color: white;
+      text-decoration: none;
+      font-size: 16px;
+      padding: 8px 16px;
+      border-radius: 5px;
+      transition: background-color 0.3s;
+    }
+
+    .navbar a:hover {
+      background-color: #125aa0;
+    }
+
+    .navbar .brand {
+      font-weight: bold;
+      font-size: 18px;
+    }
+
+    h1 {
+      color: #333;
+    }
+
+    .card {
+      background-color: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      max-width: 500px;
+    }
+
+    .info {
+      margin-bottom: 10px;
+    }
+
+    .label {
+      font-weight: bold;
+      color: #555;
+    }
+
+    .actions {
+      margin-top: 20px;
+    }
+
+    .actions button {
+      padding: 10px 18px;
+      font-size: 14px;
+      cursor: pointer;
+      border-radius: 5px;
+      border: none;
+      margin-right: 10px;
+      color: white;
+      background-color: #1976d2;
+    }
+
+    .actions button:hover {
+      background-color: #125aa0;
+    }
+    .container {
+  max-width: 500px;
+  margin: 40px auto;
+  background-color: white;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <div class="navbar">
+    <div class="brand">
+      <a href="home.html">PremaImagem</a>
+    </div>
+    <div class="links">
+      <a href="colaborador-lista.html">Colaboradores</a>
+      <a href="empregado-lista.html">Empregados</a>
+      <a href="medico-lista.html">Médicos</a>
+      <a href="exame-lista.html">Exames</a>
+    </div>
+  </div>
+
+  <h1>Detalhes do Exame</h1>
+
+  <div class="container">
+  <div class="card" id="exameDetalhes">
+    <div class="info"><span class="label">Nome:</span> <span id="exameNome"></span></div>
+    <div class="info"><span class="label">Preço:</span> <span id="examePreco"></span></div>
+    <div class="info"><span class="label">Preparo:</span> <span id="examePreparo"></span></div>
+  </div>
+
+  <div class="actions">
+    <button onclick="window.location.href='exame-form.html?id=' + exameId">Editar</button>
+    <button onclick="deletarExame()">Excluir</button>
+    <button onclick="window.location.href='exame-lista.html'">Voltar</button>
+  </div>
+</div>
+
+
+  <script>
+    let exameId = null;
+
+    async function carregarDetalhes() {
+      const params = new URLSearchParams(window.location.search);
+      exameId = params.get("id");
+
+      if (!exameId) {
+        alert("ID do exame não informado.");
+        return;
+      }
+
+      const response = await fetch(`http://localhost:8080/exames/${exameId}`);
+
+      if (response.ok) {
+        const exame = await response.json();
+        document.getElementById("exameNome").textContent = exame.nome;
+        document.getElementById("examePreco").textContent = "R$ " + exame.preco.toFixed(2);
+        document.getElementById("examePreparo").textContent = exame.preparo;
+      } else {
+        alert("Erro ao buscar dados do exame.");
+      }
+    }
+
+    async function deletarExame() {
+      if (confirm("Deseja realmente excluir este exame?")) {
+        const response = await fetch(`http://localhost:8080/exames/${exameId}`, {
+          method: "DELETE",
+        });
+
+        if (response.ok) {
+          alert("Exame deletado com sucesso.");
+          window.location.href = "exame-lista.html";
+        } else {
+          alert("Erro ao deletar exame.");
+        }
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", carregarDetalhes);
+  </script>
+</body>
+</html>
