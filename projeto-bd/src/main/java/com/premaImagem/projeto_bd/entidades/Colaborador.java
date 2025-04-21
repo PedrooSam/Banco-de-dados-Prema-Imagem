@@ -1,6 +1,6 @@
 package com.premaImagem.projeto_bd.entidades;
 
-public abstract class Colaborador {
+abstract class Colaborador {
     private long id;
     private String cpf;
     private String nome;
