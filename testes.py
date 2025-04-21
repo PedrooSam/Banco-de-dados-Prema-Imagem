@@ -44,6 +44,25 @@ def post_Exame():
     
     print("Sucesso!")
 
+def post_Paciente():
+    url = 'http://localhost:8080/pacientes'
+
+    json = {"id": 1,
+            "nome": "Endoscopia",
+            "preparo": "cu limpo",
+            "preco": 10}
+
+    response = requests.post(url, json=json)
+
+    print(response.status_code)
+
+    if response.status_code != 200:
+        print(response.json()['error'])
+        return
+    
+    print("Sucesso!")
+
 print("===============TESTES===============")
 
-post_Exame()
+#post_Exame()
+post_AgendaExame()
