@@ -74,8 +74,45 @@ def post_Paciente():
     
     print("Sucesso!")
 
+def POST_Colaborador():
+
+    url = 'http://localhost:8080/colaboradores'
+
+    json = {"nome": "nome",
+            "cpf": "cpf"}
+    
+    response = requests.post(url, json=json)
+
+    print(response.status_code)
+
+    if response.status_code != 200:
+        print(response.json()['error'])
+        return
+    
+    print("Sucesso!")
+
+def GET_colaborador():
+
+    cpf = 'cpf'
+
+    url = f'http://localhost:8080/colaboradores/{cpf}'
+
+    response = requests.get(url)
+
+    print(response.status_code)
+
+    if response.status_code != 200:
+        print(response.json()['error'])
+        return
+    
+    print("Sucesso!")
+
+
+
 print("===============TESTES===============")
 
 #post_Exame()
 #post_AgendaExame()
-post_Paciente()
+#post_Paciente()
+POST_Colaborador()
+GET_colaborador()
