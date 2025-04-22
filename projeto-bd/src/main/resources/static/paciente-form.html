@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Formulário de Paciente</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 40px;
+      background-color: #f9f9f9;
+    }
+
+    .navbar {
+      background-color: #1976d2;
+      padding: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .navbar a {
+      color: white;
+      text-decoration: none;
+      font-size: 16px;
+      padding: 8px 16px;
+      border-radius: 5px;
+      transition: background-color 0.3s;
+    }
+
+    .navbar a:hover {
+      background-color: #125aa0;
+    }
+
+    .navbar .brand {
+      font-weight: bold;
+      font-size: 18px;
+    }
+
+    h1 {
+      color: #333;
+    }
+
+    form {
+      background-color: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      max-width: 600px;
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
+      color: #555;
+    }
+
+    input, textarea, select {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 10px 18px;
+      font-size: 14px;
+      cursor: pointer;
+      border-radius: 5px;
+      border: none;
+      color: white;
+      background-color: #1976d2;
+    }
+
+    button:hover {
+      background-color: #125aa0;
+    }
+
+    .container {
+      max-width: 700px;
+      margin: 40px auto;
+      background-color: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="navbar">
+    <div class="brand">
+      <a href="home.html">PremaImagem</a>
+    </div>
+    <div class="links">
+      <a href="paciente-lista.html">Pacientes</a>
+      <a href="medico-lista.html">Médicos</a>
+      <a href="exame-lista.html">Exames</a>
+    </div>
+  </div>
+
+  <div class="container">
+    <h1 id="titulo">Novo Paciente</h1>
+
+    <form id="pacienteForm">
+      <input type="hidden" id="id">
+
+      <label for="nome">Nome:</label>
+      <input type="text" id="nome" required>
+
+      <label for="nomeSocial">Nome Social:</label>
+      <input type="text" id="nomeSocial">
+
+      <label for="cpf">CPF:</label>
+      <input type="text" id="cpf" required>
+
+      <label for="rg">RG:</label>
+      <input type="text" id="rg" required>
+
+      <label for="dataNascimento">Data de Nascimento:</label>
+      <input type="date" id="dataNascimento" required>
+
+      <label for="cep">CEP:</label>
+      <input type="text" id="cep" required>
+
+      <label for="numeroEndereco">Número:</label>
+      <input type="text" id="numeroEndereco" required>
+
+      <label for="complementoEndereco">Complemento:</label>
+      <input type="text" id="complementoEndereco" required>
+
+      <label for="telefone1">Telefone 1:</label>
+      <input type="text" id="telefone1" required>
+
+      <label for="telefone2">Telefone 2:</label>
+      <input type="text" id="telefone2">
+
+      <label for="email">E-mail:</label>
+      <input type="email" id="email" required>
+
+      <label for="nomeMae">Nome da Mãe:</label>
+      <input type="text" id="nomeMae" required>
+
+      <label for="pacienteIndicador">Paciente Indicador:</label>
+      <select id="pacienteIndicador">
+        <option value="">Nenhum</option>
+      </select>
+
+      <button type="submit">Salvar</button>
+    </form>
+  </div>
+
+  <script>
+    const form = document.getElementById("pacienteForm");
+    const params = new URLSearchParams(window.location.search);
+    const pacienteId = params.get("id");
+    const titulo = document.getElementById("titulo");
+
+    // Preencher o select com os pacientes existentes
+    fetch("http://localhost:8080/pacientes")
+      .then(resp => resp.json())
+      .then(pacientes => {
+        const select = document.getElementById("pacienteIndicador");
+        pacientes.forEach(p => {
+          const option = document.createElement("option");
+          option.value = p.id;
+          option.textContent = `${p.nome} (ID ${p.id})`;
+          select.appendChild(option);
+        });
+      });
+
+    // Carregar paciente para edição
+    if (pacienteId) {
+      titulo.textContent = "Editar Paciente";
+      fetch(`http://localhost:8080/pacientes/id/${pacienteId}`)
+        .then(resp => resp.json())
+        .then(p => {
+          document.getElementById("id").value = p.id;
+          document.getElementById("nome").value = p.nome;
+          document.getElementById("nomeSocial").value = p.nomeSocial || "";
+          document.getElementById("cpf").value = p.cpf;
+          document.getElementById("rg").value = p.rg;
+          document.getElementById("dataNascimento").value = p.dataNascimento;
+          document.getElementById("cep").value = p.cep;
+          document.getElementById("numeroEndereco").value = p.numeroEndereco;
+          document.getElementById("complementoEndereco").value = p.complementoEndereco;
+          document.getElementById("telefone1").value = p.telefone1;
+          document.getElementById("telefone2").value = p.telefone2 || "";
+          document.getElementById("email").value = p.email;
+          document.getElementById("nomeMae").value = p.nomeMae;
+          if (p.pacienteIndicador) {
+            document.getElementById("pacienteIndicador").value = p.pacienteIndicador.id;
+          }
+        });
+    }
+
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+
+      const paciente = {
+        nome: document.getElementById("nome").value,
+        nomeSocial: document.getElementById("nomeSocial").value,
+        cpf: document.getElementById("cpf").value,
+        rg: document.getElementById("rg").value,
+        dataNascimento: document.getElementById("dataNascimento").value,
+        cep: document.getElementById("cep").value,
+        numeroEndereco: document.getElementById("numeroEndereco").value,
+        complementoEndereco: document.getElementById("complementoEndereco").value,
+        telefone1: document.getElementById("telefone1").value,
+        telefone2: document.getElementById("telefone2").value,
+        email: document.getElementById("email").value,
+        nomeMae: document.getElementById("nomeMae").value,
+        pacienteIndicador: document.getElementById("pacienteIndicador").value 
+          ? { id: document.getElementById("pacienteIndicador").value } 
+          : null
+      };
+
+      const method = pacienteId ? "PUT" : "POST";
+      const url = pacienteId 
+        ? `http://localhost:8080/pacientes/id/${pacienteId}` 
+        : "http://localhost:8080/pacientes";
+
+      const response = await fetch(url, {
+        method: method,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(paciente)
+      });
+
+      if (response.ok) {
+    alert("Paciente salvo com sucesso!");
+    window.location.href = "paciente-lista.html";
+} else {
+    const error = await response.json();  // Captura o erro retornado pela API
+    alert("Erro ao salvar paciente: " + (error.message || 'Verifique o console para mais detalhes'));
+    console.error("Detalhes do erro:", error);
+}
+
+    });
+  </script>
+
+</body>
+</html>
