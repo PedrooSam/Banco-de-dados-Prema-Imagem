@@ -8,7 +8,7 @@ create table Colaborador(
 
 create table Empregado(
 	dataAdmissao date not null, 
-	funcao varchar(10) not null,
+	funcao varchar(100) not null,
 	numeroPis varchar(11) unique not null,
 	salario double not null,
 	id BIGINT PRIMARY KEY,
