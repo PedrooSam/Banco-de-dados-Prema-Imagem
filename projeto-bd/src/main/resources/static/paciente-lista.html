@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lista de Exames</title>
+    <title>Lista de Pacientes</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -99,54 +99,54 @@
         </div>
     </div>
 
-    <h1>Lista de Exames</h1>
+    <h1>Lista de Pacientes</h1>
 
     <div class="button-bar">
-        <button onclick="location.href='exame-form.html'">Cadastrar Novo Exame</button>
+        <button onclick="location.href='paciente-form.html'">Cadastrar Novo Paciente</button>
     </div>
 
     <table>
         <thead>
             <tr>
                 <th>Nome</th>
-                <th>Preço</th>
-                <th>Preparo</th>
+                <th>CPF</th>
+                <th>Telefone</th>
                 <th>Ações</th>
             </tr>
         </thead>
-        <tbody id="examesTableBody">
+        <tbody id="pacientesTableBody">
         </tbody>
     </table>
 
     <script>
-        // Função para carregar exames via fetch da API
-        async function carregarExames() {
-            const response = await fetch('http://localhost:8080/exames');
-            const tbody = document.getElementById('examesTableBody');
+        // Função para carregar pacientes via fetch da API
+        async function carregarPacientes() {
+            const response = await fetch('http://localhost:8080/pacientes');
+            const tbody = document.getElementById('pacientesTableBody');
             tbody.innerHTML = '';
 
             if (response.ok) {
-                const exames = await response.json();
-                exames.forEach(exame => {
+                const pacientes = await response.json();
+                pacientes.forEach(paciente => {
                     const tr = document.createElement('tr');
                     tr.innerHTML = `
-                        <td>${exame.nome}</td>
-                        <td>R$ ${exame.preco.toFixed(2)}</td>
-                        <td>${exame.preparo}</td>
+                        <td>${paciente.nome}</td>
+                        <td>${paciente.cpf}</td>
+                        <td>${paciente.telefone1}</td>
                         <td>
-                            <button onclick="location.href='exame-detalhes.html?id=${exame.id}'">Ver</button>
-                            <button onclick="location.href='exame-form.html?id=${exame.id}'">Editar</button>
+                            <button onclick="location.href='paciente-detalhes.html?id=${paciente.id}'">Ver</button>
+                            <button onclick="location.href='paciente-form.html?id=${paciente.id}'">Editar</button>
                         </td>
                     `;
                     tbody.appendChild(tr);
                 });
             } else {
-                alert('Erro ao carregar exames.');
+                alert('Erro ao carregar pacientes.');
             }
         }
 
-        // Carregar exames assim que a página for carregada
-        document.addEventListener('DOMContentLoaded', carregarExames);
+        // Carregar pacientes assim que a página for carregada
+        document.addEventListener('DOMContentLoaded', carregarPacientes);
     </script>
 
 </body>

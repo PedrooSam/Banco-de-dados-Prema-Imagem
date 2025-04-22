@@ -65,7 +65,7 @@ public class MedicoController{
         }
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/id/{id}")
     public String deletar(@PathVariable long id){
         int retorno = repositorio.deletar(id);
         if(retorno ==1){

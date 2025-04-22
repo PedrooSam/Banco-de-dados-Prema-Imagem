@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalhes do Paciente</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 40px;
+            background-color: #f9f9f9;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .navbar {
+            background-color: #1976d2;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+            padding: 8px 16px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .navbar a:hover {
+            background-color: #125aa0;
+        }
+
+        .navbar .brand {
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .links {
+            display: flex;
+            gap: 10px;
+        }
+
+        .container {
+            background-color: white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            margin-top: 30px;
+            border-radius: 10px;
+            width: 100%;
+            max-width: 700px;
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .detail-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 10px;
+            align-items: baseline;
+        }
+
+        .detail-row strong {
+            font-size: 16px;
+            color: #555;
+            width: 150px;
+            flex-shrink: 0;
+        }
+
+        .detail-row span {
+            font-size: 16px;
+            color: #333;
+        }
+
+        .actions {
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .actions button {
+            padding: 10px 18px;
+            font-size: 14px;
+            cursor: pointer;
+            border-radius: 5px;
+            border: none;
+            background-color: #1976d2;
+            color: white;
+            transition: background-color 0.3s ease;
+            margin: 0 10px;
+        }
+
+        .actions button:hover {
+            background-color: #125aa0;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="navbar">
+        <div class="brand">
+            <a href="home.html">PremaImagem</a>
+        </div>
+        <div class="links">
+            <a href="paciente-lista.html">Pacientes</a>
+            <a href="medico-lista.html">Médicos</a>
+            <a href="exame-lista.html">Exames</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <h1 id="titulo">Detalhes do Paciente</h1>
+
+        <div class="details">
+            <div class="detail-row">
+                <strong>Nome:</strong> <span id="pacienteNome"></span>
+            </div>
+            <div class="detail-row">
+                <strong>Nome Social:</strong> <span id="pacienteNomeSocial"></span>
+            </div>
+            <div class="detail-row">
+                <strong>CPF:</strong> <span id="pacienteCpf"></span>
+            </div>
+            <div class="detail-row">
+                <strong>RG:</strong> <span id="pacienteRg"></span>
+            </div>
+            <div class="detail-row">
+                <strong>Data de Nascimento:</strong> <span id="pacienteDataNascimento"></span>
+            </div>
+            <div class="detail-row">
+                <strong>CEP:</strong> <span id="pacienteCep"></span>
+            </div>
+            <div class="detail-row">
+                <strong>Número:</strong> <span id="pacienteNumeroEndereco"></span>
+            </div>
+            <div class="detail-row">
+                <strong>Complemento:</strong> <span id="pacienteComplementoEndereco"></span>
+            </div>
+            <div class="detail-row">
+                <strong>Telefone 1:</strong> <span id="pacienteTelefone1"></span>
+            </div>
+            <div class="detail-row">
+                <strong>Telefone 2:</strong> <span id="pacienteTelefone2"></span>
+            </div>
+            <div class="detail-row">
+                <strong>E-mail:</strong> <span id="pacienteEmail"></span>
+            </div>
+            <div class="detail-row">
+                <strong>Nome da Mãe:</strong> <span id="pacienteNomeMae"></span>
+            </div>
+            <div class="detail-row">
+                <strong>Paciente Indicador:</strong> <span id="pacienteIndicadorNome"></span> (<span id="pacienteIndicadorId"></span>)
+            </div>
+        </div>
+
+        <div class="actions">
+            <button onclick="editarPaciente()">Editar</button>
+            <button onclick="excluirPaciente()">Excluir</button>
+            <button onclick="window.location.href='paciente-lista.html'">Voltar</button>
+        </div>
+    </div>
+
+    <script>
+        let pacienteId;
+
+        async function carregarDetalhesPaciente() {
+            const params = new URLSearchParams(window.location.search);
+            pacienteId = params.get('id');
+            const response = await fetch(`http://localhost:8080/pacientes/id/${pacienteId}`);
+
+            if (response.ok) {
+                const paciente = await response.json();
+                document.getElementById('pacienteNome').innerText = paciente.nome;
+                document.getElementById('pacienteNomeSocial').innerText = paciente.nomeSocial || '-';
+                document.getElementById('pacienteCpf').innerText = paciente.cpf;
+                document.getElementById('pacienteRg').innerText = paciente.rg;
+                document.getElementById('pacienteDataNascimento').innerText = paciente.dataNascimento;
+                document.getElementById('pacienteCep').innerText = paciente.cep;
+                document.getElementById('pacienteNumeroEndereco').innerText = paciente.numeroEndereco;
+                document.getElementById('pacienteComplementoEndereco').innerText = paciente.complementoEndereco || '-';
+                document.getElementById('pacienteTelefone1').innerText = paciente.telefone1;
+                document.getElementById('pacienteTelefone2').innerText = paciente.telefone2 || '-';
+                document.getElementById('pacienteEmail').innerText = paciente.email;
+                document.getElementById('pacienteNomeMae').innerText = paciente.nomeMae;
+                if (paciente.pacienteIndicador) {
+                    document.getElementById('pacienteIndicadorNome').innerText = paciente.pacienteIndicador.nome;
+                    document.getElementById('pacienteIndicadorId').innerText = paciente.pacienteIndicador.id;
+                } else {
+                    document.getElementById('pacienteIndicadorNome').innerText = '-';
+                    document.getElementById('pacienteIndicadorId').innerText = '-';
+                }
+            } else {
+                alert('Erro ao carregar os detalhes do paciente.');
+            }
+        }
+
+        function editarPaciente() {
+            window.location.href = `paciente-form.html?id=${pacienteId}`;
+        }
+
+        async function excluirPaciente() {
+            if (confirm("Deseja realmente excluir este paciente?")) {
+                const response = await fetch(`http://localhost:8080/pacientes/${pacienteId}`, {
+                    method: "DELETE",
+                });
+
+                if (response.ok) {
+                    alert("Paciente excluído com sucesso.");
+                    window.location.href = "paciente-lista.html";
+                } else {
+                    alert("Erro ao excluir paciente.");
+                }
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', carregarDetalhesPaciente);
+    </script>
+
+</body>
+</html>

@@ -26,12 +26,12 @@ public class PacienteController {
     }
 
     // GET: busca um paciente pelo ID
-    @GetMapping("/{id}")
+    @GetMapping("/id/{id}")
     public Paciente buscar(@PathVariable("id") long id) {
         return repositorio.buscarPorId(id);
     }
 
-    @GetMapping("/{cpf}")
+    @GetMapping("/cpf/{cpf}")
     public Paciente buscar(@PathVariable("cpf") String cpf) {
         return repositorio.buscarPorCpf(cpf);
     }
@@ -57,7 +57,7 @@ public class PacienteController {
     }
 
     // PUT: atualiza um paciente existente
-    @PutMapping("/{id}")
+    @PutMapping("/id/{id}")
     public String atualizar(@PathVariable long id, @RequestBody Paciente paciente) {
         paciente.setId(id); // garante que o ID vem da URL
         int retorno = repositorio.atualizar(paciente);
