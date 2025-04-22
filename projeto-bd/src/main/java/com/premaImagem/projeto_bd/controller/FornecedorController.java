@@ -19,19 +19,19 @@ public class FornecedorController {
         this.repositorio = repositorio;
     }
 
-    // GET: lista todos os fornecedores
+
     @GetMapping
     public List<Fornecedor> listar() {
         return repositorio.buscarLista();
     }
 
-    // GET: busca um fornecedor pelo ID
+
     @GetMapping("/{id}")
     public Fornecedor buscarPorId(@PathVariable("id") String id) {
         return repositorio.buscar(id);
     }
 
-    // POST: cria novo fornecedor
+
     @PostMapping
     public String criar(@RequestBody Fornecedor fornecedor) {
         int retorno = repositorio.criar(fornecedor);
@@ -41,7 +41,7 @@ public class FornecedorController {
         return "Erro ao adicionar fornecedor.";
     }
 
-    // DELETE: remove um fornecedor pelo ID
+
     @DeleteMapping("/{id}")
     public String deletar(@PathVariable String id) {
         int retorno = repositorio.deletar(id);
@@ -51,7 +51,7 @@ public class FornecedorController {
         return "Erro ao deletar fornecedor.";
     }
 
-    // PUT: atualiza um fornecedor existente
+
     @PutMapping("/{id}")
     public String atualizar(@PathVariable String id, @RequestBody Fornecedor fornecedor) {
         fornecedor.setId(id); // garante que o ID vem da URL

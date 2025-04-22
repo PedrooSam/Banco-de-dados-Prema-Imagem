@@ -19,13 +19,13 @@ public class PacienteController {
         this.repositorio = repositorio;
     }
 
-    // GET: lista todos os pacientes
+
     @GetMapping
     public List<Paciente> listar() {
         return repositorio.buscarLista();
     }
 
-    // GET: busca um paciente pelo ID
+
     @GetMapping("/id/{id}")
     public Paciente buscar(@PathVariable("id") long id) {
         return repositorio.buscarPorId(id);
@@ -36,7 +36,7 @@ public class PacienteController {
         return repositorio.buscarPorCpf(cpf);
     }
 
-    // POST: cria novo paciente
+
     @PostMapping
     public String criar(@RequestBody Paciente paciente) {
         int retorno = repositorio.criar(paciente);
@@ -46,7 +46,7 @@ public class PacienteController {
         return "Erro ao adicionar paciente.";
     }
 
-    // DELETE: remove um paciente pelo ID
+
     @DeleteMapping("/{id}")
     public String deletar(@PathVariable long id) {
         int retorno = repositorio.deletar(id);
@@ -56,7 +56,7 @@ public class PacienteController {
         return "Erro ao deletar paciente";
     }
 
-    // PUT: atualiza um paciente existente
+
     @PutMapping("/id/{id}")
     public String atualizar(@PathVariable long id, @RequestBody Paciente paciente) {
         paciente.setId(id); // garante que o ID vem da URL

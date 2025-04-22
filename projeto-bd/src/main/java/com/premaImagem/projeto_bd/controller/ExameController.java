@@ -19,19 +19,19 @@ public class ExameController {
         this.repositorio = repositorio;
     }
 
-    // GET: lista todos os exames
+
     @GetMapping
     public List<Exame> listar() {
         return repositorio.buscarLista();
     }
 
-    // GET: busca um exame pelo nome (ou ID, dependendo do tipo)
+
     @GetMapping("/{id}")
     public Exame buscarPorId(@PathVariable("id") long id) {
         return repositorio.buscar(id);
     }
 
-    // POST: cria novo exame
+
     @PostMapping
     public String criar(@RequestBody Exame exame) {
         int retorno = repositorio.criar(exame);
@@ -41,7 +41,7 @@ public class ExameController {
         return "Erro ao adicionar exame.";
     }
 
-    // DELETE: remove um exame pelo ID
+
     @DeleteMapping("/{id}")
     public String deletar(@PathVariable long id) {
         int retorno = repositorio.deletar(id);
