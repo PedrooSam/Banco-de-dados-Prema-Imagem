@@ -33,4 +33,9 @@ public class ColaboradorController {
     public Colaborador buscarPorCpf(@PathVariable String cpf) {
         return colaboradorRepositorio.buscarPorCpf(cpf);
     }
+
+    @GetMapping("/id/{id}")
+    public Colaborador buscarPorId(@PathVariable long id) {
+        return colaboradorRepositorio.buscarPorId(id);
+    }
 }

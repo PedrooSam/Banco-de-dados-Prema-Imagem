@@ -25,4 +25,9 @@ public class ColaboradorRepositorio {
         String sql = "SELECT * FROM Colaborador WHERE cpf = ?";
         return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(Colaborador.class), cpf);
     }
+
+    public Colaborador buscarPorId(long id) {
+        String sql = "SELECT * FROM Colaborador WHERE id = ?";
+        return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(Colaborador.class), id);
+    }
 }
