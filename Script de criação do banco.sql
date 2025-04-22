@@ -16,7 +16,7 @@ create table Empregado(
 );
 
 create table Medico(
-	especialidade varchar(10) not null,
+	especialidade varchar(100) not null,
 	crm varchar(8) unique not null,
 	id BIGINT PRIMARY KEY,
 	foreign key(id) references Colaborador(id)
