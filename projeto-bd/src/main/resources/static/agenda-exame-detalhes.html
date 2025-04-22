@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalhes do Agendamento</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 40px;
+            background-color: #f9f9f9;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .navbar {
+            background-color: #1976d2;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+            padding: 8px 16px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .navbar a:hover {
+            background-color: #125aa0;
+        }
+
+        .navbar .brand {
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .links {
+            display: flex;
+            gap: 10px;
+        }
+
+        .container {
+            background-color: white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            margin-top: 30px;
+            border-radius: 10px;
+            width: 100%;
+            max-width: 700px;
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .detail-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 10px;
+            align-items: baseline;
+        }
+
+        .detail-row strong {
+            font-size: 16px;
+            color: #555;
+            width: 180px;
+            flex-shrink: 0;
+        }
+
+        .detail-row span {
+            font-size: 16px;
+            color: #333;
+        }
+
+        .actions {
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .actions button {
+            padding: 10px 18px;
+            font-size: 14px;
+            cursor: pointer;
+            border-radius: 5px;
+            border: none;
+            background-color: #1976d2;
+            color: white;
+            transition: background-color 0.3s ease;
+            margin: 0 10px;
+        }
+
+        .actions button:hover {
+            background-color: #125aa0;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="navbar">
+        <div class="brand">
+            <a href="home.html">PremaImagem</a>
+        </div>
+        <div class="links">
+            <a href="agenda-exame-lista.html">Agendamentos</a>
+            <a href="paciente-lista.html">Pacientes</a>
+            <a href="medico-lista.html">Médicos</a>
+            <a href="exame-lista.html">Exames</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <h1>Detalhes do Agendamento</h1>
+
+        <div class="details">
+            <div class="detail-row">
+                <strong>Data e Hora:</strong> <span id="dataHoraRealizacao"></span>
+            </div>
+            <div class="detail-row">
+                <strong>Paciente:</strong> <span id="pacienteNome"></span> (<span id="pacienteId"></span>)
+            </div>
+            <div class="detail-row">
+                <strong>Médico:</strong> <span id="medicoNome"></span> (<span id="medicoId"></span>)
+            </div>
+            <div class="detail-row">
+                <strong>Exame:</strong> <span id="exameNome"></span> (<span id="exameId"></span>)
+            </div>
+            <div class="detail-row">
+                <strong>Médico Requisitante:</strong> <span id="medicoRequisitante"></span>
+            </div>
+            <div class="detail-row">
+                <strong>Laudo:</strong> <span id="laudo"></span>
+            </div>
+            <div class="detail-row">
+                <strong>Status:</strong> <span id="status"></span>
+            </div>
+        </div>
+
+        <div class="actions">
+            <button id="editarButton">Editar</button>
+            <button id="excluirButton">Excluir</button>
+            <button onclick="window.location.href='agenda-exame-lista.html'">Voltar</button>
+        </div>
+    </div>
+
+    <script>
+        const dataHoraRealizacaoSpan = document.getElementById('dataHoraRealizacao');
+        const pacienteNomeSpan = document.getElementById('pacienteNome');
+        const pacienteIdSpan = document.getElementById('pacienteId');
+        const medicoNomeSpan = document.getElementById('medicoNome');
+        const medicoIdSpan = document.getElementById('medicoId');
+        const exameNomeSpan = document.getElementById('exameNome');
+        const exameIdSpan = document.getElementById('exameId');
+        const medicoRequisitanteSpan = document.getElementById('medicoRequisitante');
+        const laudoSpan = document.getElementById('laudo');
+        const statusSpan = document.getElementById('status');
+        const editarButton = document.getElementById('editarButton');
+        const excluirButton = document.getElementById('excluirButton');
+
+        async function carregarDetalhesAgendamento() {
+            const params = new URLSearchParams(window.location.search);
+            const dataHoraRealizacaoParam = params.get('dataHoraRealizacao');
+            const idPaciente = params.get('idPaciente');
+            const idMedico = params.get('idMedico');
+            const idExame = params.get('idExame');
+
+            if (dataHoraRealizacaoParam && idPaciente && idMedico && idExame) {
+                const dataHoraRealizacaoFormatadaParaURL = encodeURIComponent(dataHoraRealizacaoParam.replace(' ', 'T'));
+                const url = `http://localhost:8080/agenda-exames/${idMedico}/${idPaciente}/${idExame}/${dataHoraRealizacaoFormatadaParaURL}`;
+
+                try {
+                    const response = await fetch(url);
+                    if (!response.ok) {
+                        throw new Error(`Erro ao carregar os detalhes do agendamento: Status ${response.status}`);
+                    }
+                    const agendamento = await response.json();
+
+                    dataHoraRealizacaoSpan.textContent = agendamento.dataHoraRealizacao.replace('T', ' ').slice(0, 16);
+                    medicoRequisitanteSpan.textContent = agendamento.medicoRequisitante;
+                    laudoSpan.textContent = agendamento.laudo || '-';
+                    statusSpan.textContent = agendamento.status;
+
+                    // Buscar informações do paciente
+                    const pacienteResponse = await fetch(`http://localhost:8080/pacientes/id/${agendamento.idPaciente}`);
+                    const paciente = await pacienteResponse.json();
+                    pacienteNomeSpan.textContent = paciente ? paciente.nome : 'Paciente não encontrado';
+                    pacienteIdSpan.textContent = agendamento.idPaciente;
+
+                    // Buscar informações do médico
+                    const medicoResponse = await fetch(`http://localhost:8080/medicos/id/${agendamento.idMedico}`);
+                    const medico = await medicoResponse.json();
+                    medicoNomeSpan.textContent = medico ? medico.nome : 'Médico não encontrado';
+                    medicoIdSpan.textContent = agendamento.idMedico;
+
+                    // Buscar informações do exame
+                    const exameResponse = await fetch(`http://localhost:8080/exames/${agendamento.idExame}`);
+                    const exame = await exameResponse.json();
+                    exameNomeSpan.textContent = exame ? exame.nome : 'Exame não encontrado';
+                    exameIdSpan.textContent = agendamento.idExame;
+
+                    // Configurar botões de ação
+                    editarButton.onclick = () => {
+                        window.location.href = `agenda-exame-form.html?dataHoraRealizacao=${encodeURIComponent(dataHoraRealizacaoParam)}&idPaciente=${idPaciente}&idMedico=${idMedico}&idExame=${idExame}`;
+                    };
+
+                    excluirButton.onclick = () => confirmarExclusao(idMedico, idPaciente, idExame, dataHoraRealizacaoParam);
+
+                } catch (error) {
+                    alert(error.message);
+                }
+            } else {
+                alert('Parâmetros inválidos para carregar os detalhes do agendamento.');
+            }
+        }
+
+        async function confirmarExclusao(idMedico, idPaciente, idExame, dataHoraRealizacao) {
+            if (confirm("Deseja realmente excluir este agendamento?")) {
+                const dataHoraRealizacaoFormatadaParaURL = encodeURIComponent(dataHoraRealizacao.replace(' ', 'T'));
+                const url = `http://localhost:8080/agenda-exames/${idMedico}/${idPaciente}/${idExame}/${dataHoraRealizacaoFormatadaParaURL}`;
+                try {
+                    const response = await fetch(url, {
+                        method: 'DELETE',
+                    });
+                    if (response.ok) {
+                        alert('Agendamento excluído com sucesso!');
+                        window.location.href = 'agenda-exame-lista.html';
+                    } else {
+                        const errorText = await response.text();
+                        alert(`Erro ao excluir agendamento: ${errorText}`);
+                    }
+                } catch (error) {
+                    alert('Erro de rede ao excluir o agendamento.');
+                }
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', carregarDetalhesAgendamento);
+    </script>
+
+</body>
+</html>

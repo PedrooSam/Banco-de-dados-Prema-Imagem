@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Agendamentos de Exames</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 40px;
+            background-color: #f9f9f9;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .navbar {
+            background-color: #1976d2;
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+            padding: 8px 16px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .navbar a:hover {
+            background-color: #125aa0;
+        }
+
+        .navbar .brand {
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .links {
+            display: flex;
+            gap: 10px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1000px;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-top: 20px;
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .button-bar {
+            margin-bottom: 20px;
+            text-align: right;
+            width: 100%;
+        }
+
+        .button-bar button {
+            margin-left: 10px;
+            padding: 10px 18px;
+            font-size: 14px;
+            cursor: pointer;
+            border-radius: 5px;
+            border: none;
+            background-color: #4CAF50;
+            color: white;
+            transition: background-color 0.3s ease;
+        }
+
+        .button-bar button:hover {
+            background-color: #45a049;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        th, td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+            text-align: left;
+        }
+
+        th {
+            background-color: #eeeeee;
+        }
+
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        .actions {
+            text-align: center;
+        }
+
+        .actions button {
+            margin: 5px;
+            padding: 8px 12px;
+            font-size: 14px;
+            cursor: pointer;
+            border-radius: 5px;
+            border: none;
+            background-color: #1976d2;
+            color: white;
+            transition: background-color 0.3s ease;
+        }
+
+        .actions button:hover {
+            background-color: #125aa0;
+        }
+
+        .error-message {
+            color: red;
+            margin-top: 10px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="navbar">
+        <div class="brand">
+            <a href="home.html">PremaImagem</a>
+        </div>
+        <div class="links">
+            <a href="agenda-exame-lista.html" class="active">Agendamentos</a>
+            <a href="paciente-lista.html">Pacientes</a>
+            <a href="medico-lista.html">Médicos</a>
+            <a href="exame-lista.html">Exames</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <h1>Lista de Agendamentos de Exames</h1>
+
+        <div class="button-bar">
+            <button onclick="location.href='agenda-exame-form.html'">Novo Agendamento</button>
+        </div>
+
+        <table id="agendaExamesTable">
+            <thead>
+                <tr>
+                    <th>Data e Hora</th>
+                    <th>Paciente</th>
+                    <th>Médico</th>
+                    <th>Exame</th>
+                    <th>Médico Requisitante</th>
+                    <th>Laudo</th>
+                    <th>Status</th>
+                    <th class="actions">Ações</th>
+                </tr>
+            </thead>
+            <tbody id="agendaExamesTableBody">
+            </tbody>
+        </table>
+
+        <div id="errorMessage" class="error-message"></div>
+    </div>
+
+    <script>
+        const agendaExamesTableBody = document.getElementById('agendaExamesTableBody');
+        const errorMessageDiv = document.getElementById('errorMessage');
+
+        async function carregarAgendamentos() {
+            try {
+                const response = await fetch('http://localhost:8080/agenda-exames');
+                if (!response.ok) {
+                    throw new Error('Erro ao carregar os agendamentos de exames.');
+                }
+                const agendamentos = await response.json();
+                agendaExamesTableBody.innerHTML = '';
+
+                for (const agendamento of agendamentos) {
+                    const row = document.createElement('tr');
+                    const dataHoraCell = document.createElement('td');
+                    const pacienteCell = document.createElement('td');
+                    const medicoCell = document.createElement('td');
+                    const exameCell = document.createElement('td');
+                    const medicoRequisitanteCell = document.createElement('td');
+                    const laudoCell = document.createElement('td');
+                    const statusCell = document.createElement('td');
+                    const actionsCell = document.createElement('td');
+                    actionsCell.classList.add('actions');
+
+                    dataHoraCell.textContent = agendamento.dataHoraRealizacao.replace('T', ' ').slice(0, 16);
+
+                    // Buscar nome do paciente
+                    const pacienteResponse = await fetch(`http://localhost:8080/pacientes/id/${agendamento.idPaciente}`);
+                    const paciente = await pacienteResponse.json();
+                    pacienteCell.textContent = paciente ? paciente.nome : 'Paciente não encontrado';
+
+                    // Buscar nome do médico
+                    const medicoResponse = await fetch(`http://localhost:8080/medicos/id/${agendamento.idMedico}`);
+                    const medico = await medicoResponse.json();
+                    medicoCell.textContent = medico ? medico.nome : 'Médico não encontrado';
+
+                    // Buscar nome do exame
+                    const exameResponse = await fetch(`http://localhost:8080/exames/${agendamento.idExame}`);
+                    const exame = await exameResponse.json();
+                    exameCell.textContent = exame ? exame.nome : 'Exame não encontrado';
+
+                    medicoRequisitanteCell.textContent = agendamento.medicoRequisitante;
+                    laudoCell.textContent = agendamento.laudo || '-';
+                    statusCell.textContent = agendamento.status;
+
+                    // Botões de ação
+                    const editarButton = document.createElement('button');
+                    editarButton.textContent = 'Editar';
+                    editarButton.onclick = () => {
+                        window.location.href = `agenda-exame-form.html?dataHoraRealizacao=${agendamento.dataHoraRealizacao}&idPaciente=${agendamento.idPaciente}&idMedico=${agendamento.idMedico}&idExame=${agendamento.idExame}`;
+                    };
+                    actionsCell.appendChild(editarButton);
+
+                    const detalhesButton = document.createElement('button');
+                    detalhesButton.textContent = 'Detalhes';
+                    detalhesButton.onclick = () => {
+                        window.location.href = `agenda-exame-detalhes.html?dataHoraRealizacao=${agendamento.dataHoraRealizacao}&idPaciente=${agendamento.idPaciente}&idMedico=${agendamento.idMedico}&idExame=${agendamento.idExame}`;
+                    };
+                    actionsCell.appendChild(detalhesButton);
+
+                    row.appendChild(dataHoraCell);
+                    row.appendChild(pacienteCell);
+                    row.appendChild(medicoCell);
+                    row.appendChild(exameCell);
+                    row.appendChild(medicoRequisitanteCell);
+                    row.appendChild(laudoCell);
+                    row.appendChild(statusCell);
+                    row.appendChild(actionsCell);
+                    agendaExamesTableBody.appendChild(row);
+                }
+
+            } catch (error) {
+                console.error('Erro ao carregar agendamentos:', error);
+                errorMessageDiv.textContent = error.message;
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', carregarAgendamentos);
+    </script>
+
+</body>
+</html>

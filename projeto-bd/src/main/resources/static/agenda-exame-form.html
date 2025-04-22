@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulário de Agendamento de Exame</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 40px;
+            background-color: #f9f9f9;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .navbar {
+            background-color: #1976d2;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+            padding: 8px 16px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .navbar a:hover {
+            background-color: #125aa0;
+        }
+
+        .navbar .brand {
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .links {
+            display: flex;
+            gap: 10px;
+        }
+
+        .container {
+            background-color: white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            margin-top: 30px;
+            border-radius: 10px;
+            width: 100%;
+            max-width: 700px;
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 16px;
+            color: #555;
+            margin-bottom: 5px;
+        }
+
+        .form-group input[type="datetime-local"],
+        .form-group select,
+        .form-group input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+
+        .form-group select {
+            appearance: none;
+            background-image: url('data:image/svg+xml;charset=UTF-8,<svg fill="%23555" viewBox="0 0 4 5"><path d="M2 0L0 2h4L2 0z"/></svg>');
+            background-repeat: no-repeat;
+            background-position-x: 100%;
+            background-position-y: 5px;
+            padding-right: 20px;
+        }
+
+        .buttons {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .buttons button {
+            padding: 10px 18px;
+            font-size: 14px;
+            cursor: pointer;
+            border-radius: 5px;
+            border: none;
+            background-color: #1976d2;
+            color: white;
+            transition: background-color 0.3s ease;
+            margin: 0 10px;
+        }
+
+        .buttons button:hover {
+            background-color: #125aa0;
+        }
+
+        .error-message {
+            color: red;
+            margin-top: 10px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="navbar">
+        <div class="brand">
+            <a href="home.html">PremaImagem</a>
+        </div>
+        <div class="links">
+            <a href="agenda-exame-lista.html">Agendamentos</a>
+            <a href="paciente-lista.html">Pacientes</a>
+            <a href="medico-lista.html">Médicos</a>
+            <a href="exame-lista.html">Exames</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <h1 id="formTitle">Novo Agendamento</h1>
+
+        <form id="agendaExameForm">
+            <div class="form-group">
+                <label for="dataHoraRealizacao">Data e Hora:</label>
+                <input type="datetime-local" id="dataHoraRealizacao" name="dataHoraRealizacao" required>
+            </div>
+
+            <div class="form-group">
+                <label for="idPaciente">Paciente:</label>
+                <select id="idPaciente" name="idPaciente" required>
+                    <option value="">Selecione o Paciente</option>
+                    </select>
+            </div>
+
+            <div class="form-group">
+                <label for="idMedico">Médico:</label>
+                <select id="idMedico" name="idMedico" required>
+                    <option value="">Selecione o Médico</option>
+                    </select>
+            </div>
+
+            <div class="form-group">
+                <label for="idExame">Exame:</label>
+                <select id="idExame" name="idExame" required>
+                    <option value="">Selecione o Exame</option>
+                    </select>
+            </div>
+
+            <div class="form-group">
+                <label for="medicoRequisitante">Médico Requisitante:</label>
+                <input type="text" id="medicoRequisitante" name="medicoRequisitante">
+            </div>
+
+            <div class="form-group">
+                <label for="laudo">Laudo:</label>
+                <input type="text" id="laudo" name="laudo">
+            </div>
+
+            <div class="form-group">
+                <label for="status">Status:</label>
+                <select id="status" name="status">
+                    <option value="Agendado">Agendado</option>
+                    <option value="Realizado">Realizado</option>
+                    <option value="Cancelado">Cancelado</option>
+                </select>
+            </div>
+
+            <div class="buttons">
+                <button type="submit">Salvar</button>
+                <button type="button" onclick="window.location.href='agenda-exame-lista.html'">Cancelar</button>
+            </div>
+        </form>
+
+        <div id="errorMessage" class="error-message"></div>
+    </div>
+
+    <script>
+        const formTitle = document.getElementById('formTitle');
+        const agendaExameForm = document.getElementById('agendaExameForm');
+        const dataHoraRealizacaoInput = document.getElementById('dataHoraRealizacao');
+        const idPacienteSelect = document.getElementById('idPaciente');
+        const idMedicoSelect = document.getElementById('idMedico');
+        const idExameSelect = document.getElementById('idExame');
+        const medicoRequisitanteInput = document.getElementById('medicoRequisitante');
+        const laudoInput = document.getElementById('laudo');
+        const statusSelect = document.getElementById('status');
+        const errorMessageDiv = document.getElementById('errorMessage');
+
+        let editing = false;
+        let originalDataHoraRealizacao;
+        let originalIdPaciente;
+        let originalIdMedico;
+        let originalIdExame;
+
+        async function carregarOpcoes(url, selectElement, valueField = 'id', textField = 'nome') {
+            try {
+                const response = await fetch(url);
+                if (!response.ok) {
+                    throw new Error(`Erro ao carregar opções de ${textField.toLowerCase()}s.`);
+                }
+                const data = await response.json();
+                data.forEach(item => {
+                    const option = document.createElement('option');
+                    option.value = item[valueField];
+                    option.textContent = item[textField];
+                    selectElement.appendChild(option);
+                });
+            } catch (error) {
+                console.error(error);
+                errorMessageDiv.textContent = error.message;
+            }
+        }
+
+        async function carregarDadosParaEdicao() {
+            const params = new URLSearchParams(window.location.search);
+            const dataHoraRealizacaoParam = params.get('dataHoraRealizacao');
+            const pacienteIdParam = params.get('idPaciente');
+            const medicoIdParam = params.get('idMedico');
+            const exameIdParam = params.get('idExame');
+
+            if (dataHoraRealizacaoParam && pacienteIdParam && medicoIdParam && exameIdParam) {
+                editing = true;
+                formTitle.textContent = 'Editar Agendamento';
+                originalDataHoraRealizacao = dataHoraRealizacaoParam;
+                originalIdPaciente = parseInt(pacienteIdParam);
+                originalIdMedico = parseInt(medicoIdParam);
+                originalIdExame = parseInt(exameIdParam);
+
+                const url = `http://localhost:8080/agenda-exames/${originalIdMedico}/${originalIdPaciente}/${originalIdExame}/${encodeURIComponent(originalDataHoraRealizacao.replace(' ', 'T'))}`;
+
+                try {
+                    const response = await fetch(url);
+                    if (!response.ok) {
+                        throw new Error('Erro ao carregar dados do agendamento para edição.');
+                    }
+                    const agendamento = await response.json();
+
+                    dataHoraRealizacaoInput.value = agendamento.dataHoraRealizacao.slice(0, 16).replace(' ', 'T');
+                    idPacienteSelect.value = agendamento.idPaciente;
+                    idMedicoSelect.value = agendamento.idMedico;
+                    idExameSelect.value = agendamento.idExame;
+                    medicoRequisitanteInput.value = agendamento.medicoRequisitante || '';
+                    laudoInput.value = agendamento.laudo || '';
+                    statusSelect.value = agendamento.status || 'Agendado';
+
+                } catch (error) {
+                    console.error(error);
+                    errorMessageDiv.textContent = error.message;
+                }
+            }
+        }
+
+        async function salvarAgendamento(event) {
+            event.preventDefault();
+
+            const dataHoraRealizacao = dataHoraRealizacaoInput.value;
+            const idPaciente = parseInt(idPacienteSelect.value);
+            const idMedico = parseInt(idMedicoSelect.value);
+            const idExame = parseInt(idExameSelect.value);
+            const medicoRequisitante = medicoRequisitanteInput.value;
+            const laudo = laudoInput.value;
+            const status = statusSelect.value;
+
+            const agendaExameData = {
+                dataHoraRealizacao: dataHoraRealizacao + ':00', // Adiciona segundos para corresponder ao backend
+                idPaciente: idPaciente,
+                idMedico: idMedico,
+                idExame: idExame,
+                medicoRequisitante: medicoRequisitante,
+                laudo: laudo,
+                status: status
+            };
+
+            let url = 'http://localhost:8080/agenda-exames';
+            let method = 'POST';
+
+            if (editing) {
+                url = `http://localhost:8080/agenda-exames/${originalIdMedico}/${originalIdPaciente}/${originalIdExame}/${encodeURIComponent(originalDataHoraRealizacao.replace(' ', 'T'))}`;
+                method = 'PUT';
+            }
+
+            try {
+                const response = await fetch(url, {
+                    method: method,
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(agendaExameData)
+                });
+
+                if (response.ok) {
+                    const message = await response.text();
+                    alert(message);
+                    window.location.href = 'agenda-exame-lista.html';
+                } else {
+                    const errorText = await response.text();
+                    errorMessageDiv.textContent = `Erro ao ${editing ? 'atualizar' : 'salvar'} agendamento: ${errorText}`;
+                }
+
+            } catch (error) {
+                console.error(error);
+                errorMessageDiv.textContent = `Erro de rede ao ${editing ? 'atualizar' : 'salvar'} agendamento.`;
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            await carregarOpcoes('http://localhost:8080/pacientes', idPacienteSelect);
+            await carregarOpcoes('http://localhost:8080/medicos', idMedicoSelect);
+            await carregarOpcoes('http://localhost:8080/exames', idExameSelect);
+            await carregarDadosParaEdicao();
+        });
+
+        agendaExameForm.addEventListener('submit', salvarAgendamento);
+    </script>
+
+</body>
+</html>

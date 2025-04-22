@@ -145,11 +145,6 @@
       <label for="nomeMae">Nome da Mãe:</label>
       <input type="text" id="nomeMae" required>
 
-      <label for="pacienteIndicador">Paciente Indicador:</label>
-      <select id="pacienteIndicador">
-        <option value="">Nenhum</option>
-      </select>
-
       <button type="submit">Salvar</button>
     </form>
   </div>
@@ -192,9 +187,6 @@
           document.getElementById("telefone2").value = p.telefone2 || "";
           document.getElementById("email").value = p.email;
           document.getElementById("nomeMae").value = p.nomeMae;
-          if (p.pacienteIndicador) {
-            document.getElementById("pacienteIndicador").value = p.pacienteIndicador.id;
-          }
         });
     }
 
@@ -213,10 +205,7 @@
         telefone1: document.getElementById("telefone1").value,
         telefone2: document.getElementById("telefone2").value,
         email: document.getElementById("email").value,
-        nomeMae: document.getElementById("nomeMae").value,
-        pacienteIndicador: document.getElementById("pacienteIndicador").value 
-          ? { id: document.getElementById("pacienteIndicador").value } 
-          : null
+        nomeMae: document.getElementById("nomeMae").value
       };
 
       const method = pacienteId ? "PUT" : "POST";
