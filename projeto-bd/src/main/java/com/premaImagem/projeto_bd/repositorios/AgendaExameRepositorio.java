@@ -24,7 +24,7 @@ public class AgendaExameRepositorio {
         return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(AgendaExame.class));
     }
 
-    public AgendaExame buscar(LocalDateTime dataHoraRealizacao, long idPaciente, long idMedico, long idExame) {
+    public AgendaExame buscarPorId(LocalDateTime dataHoraRealizacao, long idPaciente, long idMedico, long idExame) {
         String sql = "SELECT * FROM AgendaExame WHERE dataHoraRealizacao = ? AND idPaciente = ? AND idMedico = ? AND idExame = ?";
         return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(AgendaExame.class),
                 dataHoraRealizacao, idPaciente, idMedico, idExame);

@@ -14,6 +14,8 @@ public class AgendaExame {
     private long idMedico;
     private long idExame;
 
+    public AgendaExame() {
+    }
 
     public AgendaExame(LocalDateTime dataHoraRealizacao, String medicoRequisitante, String laudo, String status,
                         long idPaciente, long idMedico, long idExame) {

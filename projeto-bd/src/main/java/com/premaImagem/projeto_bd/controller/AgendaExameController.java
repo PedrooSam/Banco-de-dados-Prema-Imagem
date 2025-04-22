@@ -3,6 +3,7 @@ package com.premaImagem.projeto_bd.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.premaImagem.projeto_bd.repositorios.AgendaExameRepositorio;
@@ -28,14 +29,17 @@ public class AgendaExameController {
     }
 
     // GET: busca um agendamento específico (chave composta)
-    @GetMapping("/buscar")
-    public AgendaExame buscar(
-            @RequestParam("dataHoraRealizacao") LocalDateTime dataHoraRealizacao,
-            @RequestParam("idPaciente") long idPaciente,
-            @RequestParam("idMedico") long idMedico,
-            @RequestParam("idExame") long idExame
-    ) {
-        return repositorio.buscar(dataHoraRealizacao, idPaciente, idMedico, idExame);
+    @GetMapping("/{idMedico}/{idPaciente}/{idExame}/{dataHoraRealizacao}")
+    public ResponseEntity<AgendaExame> buscarPorIdComposto(@PathVariable long idMedico,
+                                                           @PathVariable long idPaciente,
+                                                           @PathVariable long idExame,
+                                                           @PathVariable LocalDateTime dataHoraRealizacao) {
+        AgendaExame agendaExame = repositorio.buscarPorId(dataHoraRealizacao,idMedico, idPaciente, idExame);
+        if (agendaExame != null) {
+            return ResponseEntity.ok(agendaExame);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     // POST: cria um novo agendamento de exame
