@@ -107,12 +107,59 @@ def GET_colaborador():
     
     print("Sucesso!")
 
+def POST_AgendaExame():
+    url = 'http://localhost:8080/agenda-exames'
 
+    json = {
+            "dataHoraRealizacao": "2025-04-22T11:30:00",
+            "medicoRequisitante": 1,
+            "laudo": "LAUDO",
+            "status": "STAUTUS",
+            "idPaciente": 1,
+            "idMedico": 2,
+            "idExame": 1
+            }
+    
+    response = requests.post(url, json=json)
+
+    print(response.status_code)
+
+    if response.status_code != 200:
+        print(response.json()['error'])
+        return
+    
+    print("Sucesso!")
+
+def GET_AgendaExame():
+
+    json = {
+            "dataHoraRealizacao": "2025-04-22T11:30:00",
+            "medicoRequisitante": 1,
+            "laudo": "LAUDO",
+            "status": "STAUTUS",
+            "idPaciente": 1,
+            "idMedico": 2,
+            "idExame": 1
+            }
+    
+    url = f'http://localhost:8080/1/2/1/{json['dataHoraRealizacao']}'
+    
+    response = requests.post(url, json=json)
+
+    print(response.status_code)
+
+    if response.status_code != 200:
+        print(response.json()['error'])
+        return
+    
+    print("Sucesso!")
 
 print("===============TESTES===============")
 
 #post_Exame()
 #post_AgendaExame()
 #post_Paciente()
-POST_Colaborador()
-GET_colaborador()
+#POST_Colaborador()
+#GET_colaborador()
+
+GET_AgendaExame()
