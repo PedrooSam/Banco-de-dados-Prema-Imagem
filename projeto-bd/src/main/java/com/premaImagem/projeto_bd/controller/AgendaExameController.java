@@ -34,13 +34,15 @@ public class AgendaExameController {
                                                            @PathVariable long idPaciente,
                                                            @PathVariable long idExame,
                                                            @PathVariable LocalDateTime dataHoraRealizacao) {
-        AgendaExame agendaExame = repositorio.buscarPorId(dataHoraRealizacao,idMedico, idPaciente, idExame);
+        // Certifique-se de que o método no repositório esteja pronto para lidar com esses 4 parâmetros
+        AgendaExame agendaExame = repositorio.buscarPorId(dataHoraRealizacao, idMedico, idPaciente, idExame);
         if (agendaExame != null) {
             return ResponseEntity.ok(agendaExame);
         } else {
             return ResponseEntity.notFound().build();
         }
     }
+
 
     // POST: cria um novo agendamento de exame
     @PostMapping
@@ -53,27 +55,44 @@ public class AgendaExameController {
     }
 
     // PUT: atualiza um agendamento (usa os campos da chave composta no corpo da requisição)
-    @PutMapping
-    public String atualizar(@RequestBody AgendaExame agendaExame) {
-        int retorno = repositorio.atualizar(agendaExame);
+    @PutMapping("/{idMedico}/{idPaciente}/{idExame}/{dataHoraRealizacao}")
+    public ResponseEntity<String> atualizar(@PathVariable long idMedico,
+                                            @PathVariable long idPaciente,
+                                            @PathVariable long idExame,
+                                            @PathVariable LocalDateTime dataHoraRealizacao,
+                                            @RequestBody AgendaExame agendaExame) {
 
-        if (retorno == 1) return "Agendamento atualizado com sucesso!";
-        if (retorno > 1) return "Conflito com dados no banco";
-        return "Erro ao atualizar agendamento.";
+        // Verifica se a agenda já existe
+        AgendaExame existente = repositorio.buscarPorId(dataHoraRealizacao, idMedico, idPaciente, idExame);
+        if (existente == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        // Atualize a agenda com os dados enviados
+        agendaExame.setIdMedico(idMedico);
+        agendaExame.setIdPaciente(idPaciente);
+        agendaExame.setIdExame(idExame);
+        agendaExame.setDataHoraRealizacao(dataHoraRealizacao);
+
+        repositorio.atualizar(agendaExame);
+        return ResponseEntity.ok("Agenda de exame atualizada com sucesso!");
     }
 
     // DELETE: remove um agendamento específico (chave composta)
-    @DeleteMapping
-    public String deletar(
-            @RequestParam("dataHoraRealizacao") LocalDateTime dataHoraRealizacao,
-            @RequestParam("idPaciente") long idPaciente,
-            @RequestParam("idMedico") long idMedico,
-            @RequestParam("idExame") long idExame
-    ) {
-        int retorno = repositorio.deletar(dataHoraRealizacao, idPaciente, idMedico, idExame);
+    @DeleteMapping("/{idMedico}/{idPaciente}/{idExame}/{dataHoraRealizacao}")
+    public ResponseEntity<String> deletar(@PathVariable long idMedico,
+                                          @PathVariable long idPaciente,
+                                          @PathVariable long idExame,
+                                          @PathVariable LocalDateTime dataHoraRealizacao) {
 
-        if (retorno == 1) return "Agendamento deletado com sucesso!";
-        if (retorno > 1) return "Conflito com dados do banco";
-        return "Erro ao deletar agendamento.";
+        // Verificar se a agenda do exame existe
+        AgendaExame agendaExame = repositorio.buscarPorId(dataHoraRealizacao, idMedico, idPaciente, idExame);
+        if (agendaExame == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        // Deletar a agenda do exame
+        repositorio.deletar(dataHoraRealizacao, idMedico, idPaciente, idExame);
+        return ResponseEntity.ok("Agenda de exame deletada com sucesso!");
     }
 }

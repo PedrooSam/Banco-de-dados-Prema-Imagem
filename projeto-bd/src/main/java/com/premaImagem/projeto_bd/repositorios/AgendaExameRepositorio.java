@@ -24,10 +24,14 @@ public class AgendaExameRepositorio {
         return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(AgendaExame.class));
     }
 
-    public AgendaExame buscarPorId(LocalDateTime dataHoraRealizacao, long idPaciente, long idMedico, long idExame) {
-        String sql = "SELECT * FROM AgendaExame WHERE dataHoraRealizacao = ? AND idPaciente = ? AND idMedico = ? AND idExame = ?";
-        return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(AgendaExame.class),
-                dataHoraRealizacao, idPaciente, idMedico, idExame);
+    public AgendaExame buscarPorId(LocalDateTime dataHoraRealizacao, long idMedico, long idPaciente, long idExame) {
+        String sql = "SELECT * FROM AgendaExame WHERE idMedico = ? AND idPaciente = ? AND idExame = ? AND dataHoraRealizacao = ?";
+        List<AgendaExame> agendaExame = jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(AgendaExame.class), idMedico, idPaciente, idExame, dataHoraRealizacao);
+        if (agendaExame.isEmpty()) {
+            return null;
+        } else {
+            return agendaExame.get(0); // Como a busca será baseada em uma combinação única, deve retornar no máximo 1 item.
+        }
     }
 
     public int criar(AgendaExame agendaExame) {
