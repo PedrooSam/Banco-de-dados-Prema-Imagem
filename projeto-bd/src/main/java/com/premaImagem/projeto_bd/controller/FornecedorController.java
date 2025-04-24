@@ -25,10 +25,13 @@ public class FornecedorController {
         return repositorio.buscarLista();
     }
 
-
-    @GetMapping("/{id}")
+    @GetMapping("/nome/{nome}")
+    public Fornecedor buscarPorNome(@PathVariable("nome") String nome){
+        return repositorio.buscarPorNome(nome);
+    }
+    @GetMapping("/id/{id}")
     public Fornecedor buscarPorId(@PathVariable("id") String id) {
-        return repositorio.buscar(id);
+        return repositorio.buscarPorId(id);
     }
 
 

@@ -24,7 +24,12 @@ public class FornecedorRepositorio {
         return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Fornecedor.class));
     }
 
-    public Fornecedor buscar(String id) {
+    public Fornecedor buscarPorNome(String nome){
+        String sql= "SELECT * FROM Fornecedor WHERE nome = ?";
+        return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(Fornecedor.class), nome);
+    }
+
+    public Fornecedor buscarPorId(String id) {
         String sql = "SELECT * FROM Fornecedor WHERE id = ?";
         return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(Fornecedor.class), id);
     }
