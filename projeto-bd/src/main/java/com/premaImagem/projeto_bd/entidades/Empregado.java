@@ -9,6 +9,9 @@ public class Empregado extends Colaborador{
     private double salario;
     private String funcao;
 
+    public Empregado(){
+
+    }
     public Empregado (String cpf, String nome, String numeroPis, double salario, String funcao){
         super(cpf, nome);
         this.numeroPis = numeroPis;

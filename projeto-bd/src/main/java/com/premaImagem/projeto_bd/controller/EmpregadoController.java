@@ -1,73 +1,72 @@
 package com.premaImagem.projeto_bd.controller;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.premaImagem.projeto_bd.entidades.Empregado;
 import com.premaImagem.projeto_bd.repositorios.EmpregadoRepositorio;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/empregados")
 public class EmpregadoController {
 
-    private EmpregadoRepositorio repositorio;
+    private final EmpregadoRepositorio repositorio;
 
     @Autowired
-    public EmpregadoController(EmpregadoRepositorio repositorio){
+    public EmpregadoController(EmpregadoRepositorio repositorio) {
         this.repositorio = repositorio;
     }
 
     @GetMapping
-    public List<Empregado> listar(){
+    public List<Empregado> lista() {
         return repositorio.buscarLista();
     }
 
-    @GetMapping("/{nome}")
-    public Empregado buscar(String nome){
+    @GetMapping("/id/{id}")
+    public ResponseEntity<Empregado> buscarPorId(@PathVariable long id) {
+        Empregado empregado = repositorio.buscarPorId(id);
+        if (empregado != null) {
+            return ResponseEntity.ok(empregado);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("/nome/{nome}")
+    public Empregado buscarPorNome(@PathVariable String nome) {
         return repositorio.buscarPorNome(nome);
     }
 
-    @GetMapping("/{id}")
-    public Empregado buscar(long id){
-        return repositorio.buscarPorId(id);
-    }
-
     @PostMapping
-    public String criar(Empregado empregado){
+    public String criar(@RequestBody Empregado empregado) {
         int retorno = repositorio.criar(empregado);
-
-        if (retorno == 1) return "Empregado adicionado com sucesso!";
-        if (retorno > 1) return "Conflito com dados no banco";
-
-        return "Erro ao adicionar empregado.";
+        if (retorno == 1) {
+            return "Empregado criado com sucesso!";
+        } else {
+            return "Erro ao criar empregado.";
+        }
     }
 
     @PutMapping("/{id}")
-    public String atualizar(@PathVariable long id, @RequestBody Empregado empregado){
-
+    public String atualizar(@PathVariable long id, @RequestBody Empregado empregado) {
         empregado.setId(id);
         int retorno = repositorio.atualizar(empregado);
-
-        if (retorno == 1) return "Empregado atualizado com sucesso!";
-        if (retorno > 1) return "Conflito com dados do banco";
-        return "Erro ao atualizar empregado.";
+        if (retorno == 1) {
+            return "Empregado atualizado com sucesso!";
+        } else {
+            return "Erro ao atualizar empregado.";
+        }
     }
 
     @DeleteMapping("/{id}")
-    public String deletar(@PathVariable long id){
+    public String deletar(@PathVariable long id) {
         int retorno = repositorio.deletar(id);
-
-        if (retorno == 1) return "Empregado deletado com sucesso!";
-        if (retorno > 1) return "Conflito com dados do banco";
-        return "Erro ao deletar empregado.";
+        if (retorno == 1) {
+            return "Empregado deletado com sucesso!";
+        } else {
+            return "Erro ao deletar empregado.";
+        }
     }
 }

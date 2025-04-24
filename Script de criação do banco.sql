@@ -112,3 +112,5 @@ CREATE TABLE Venda(
 
 
 
+
+

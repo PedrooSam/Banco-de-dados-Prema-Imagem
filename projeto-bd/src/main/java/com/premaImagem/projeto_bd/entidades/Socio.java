@@ -4,6 +4,9 @@ public class Socio extends Colaborador {
 
     private double proLabore;
 
+    public Socio(){
+
+    }
     public Socio(String cpf, String nome, double proLabore) {
         super(cpf, nome);
         this.proLabore = proLabore;
