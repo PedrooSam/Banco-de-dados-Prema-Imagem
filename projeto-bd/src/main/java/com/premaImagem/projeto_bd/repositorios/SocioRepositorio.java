@@ -1,6 +1,7 @@
 package com.premaImagem.projeto_bd.repositorios;
 
 import com.premaImagem.projeto_bd.entidades.Colaborador;
+import com.premaImagem.projeto_bd.entidades.Medico;
 import com.premaImagem.projeto_bd.entidades.Socio;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -26,7 +27,12 @@ public class SocioRepositorio {
         return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Socio.class));
     }
 
-    public Socio buscar(long id) {
+    public Socio buscarPorNome(String nome){
+        String sqlSocio = "SELECT c.id, c.nome, c.cpf, s.prolabore FROM Colaborador c INNER JOIN Socio s ON c.id = s.id WHERE c.nome = ?";
+        return jdbcTemplate.queryForObject(sqlSocio, new BeanPropertyRowMapper<>(Socio.class), nome);
+    }
+
+    public Socio buscarPorId(long id) {
         String sql = "SELECT c.id, c.nome, c.cpf, s.proLabore " +
                 "FROM Colaborador c INNER JOIN Socio s ON c.id = s.id WHERE c.id = ?";
         return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(Socio.class), id);

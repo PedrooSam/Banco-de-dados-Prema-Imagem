@@ -3,6 +3,7 @@ package com.premaImagem.projeto_bd.controller;
 import java.util.List;
 
 import com.premaImagem.projeto_bd.entidades.Colaborador;
+import com.premaImagem.projeto_bd.entidades.Medico;
 import com.premaImagem.projeto_bd.entidades.Socio;
 import com.premaImagem.projeto_bd.repositorios.ColaboradorRepositorio;
 import com.premaImagem.projeto_bd.repositorios.SocioRepositorio;
@@ -29,9 +30,14 @@ public class SocioController {
         return repositorio.buscarLista();
     }
 
+    @GetMapping("/nome/{nome}")
+    public Socio buscarPorNome(@PathVariable String nome) {
+        return repositorio.buscarPorNome(nome);
+    }
+
     @GetMapping("/{id}")
     public Socio buscarPorId(@PathVariable("id") long id) {
-        return repositorio.buscar(id);
+        return repositorio.buscarPorId(id);
     }
 
     @PostMapping
