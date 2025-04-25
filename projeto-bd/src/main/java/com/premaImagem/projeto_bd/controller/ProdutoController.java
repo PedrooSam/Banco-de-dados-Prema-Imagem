@@ -62,7 +62,7 @@ public class ProdutoController {
     }
 
     @DeleteMapping("/{id}")
-    public String deletar(@RequestBody long id){
+    public String deletar(@PathVariable long id){
         int retorno = repositorio.deletar(id);
 
         if (retorno == 1) return "Produto excluído com sucesso!";
@@ -72,12 +72,12 @@ public class ProdutoController {
     }
 
     @PutMapping("/{id}")
-    public String atualizar(@RequestBody long id){
-        int retorno = repositorio.deletar(id);
+    public String atualizar(@PathVariable long id, @RequestBody Produto produto){
+        produto.setId(id);
+        int retorno = repositorio.atualizar(produto);
 
         if (retorno == 1) return "Produto atualizado com sucesso!";
-        if (retorno > 1) return "Conflito com dados no banco.";
+        else return "Erro ao atualizar produto";
 
-        return "Erro ao adicionar produto.";
     }
 }

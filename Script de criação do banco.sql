@@ -9,7 +9,7 @@ create table Colaborador(
 create table Empregado(
 	dataAdmissao date not null, 
 	funcao varchar(100) not null,
-	numeroPis varchar(11) unique not null,
+	numeroPis varchar(15) unique not null,
 	salario double not null,
 	id BIGINT PRIMARY KEY,
 	foreign key(id) references Colaborador(id)
@@ -57,7 +57,7 @@ CREATE TABLE AgendaExame(
 	dataHoraRealizacao DATETIME,
 	medicoRequisitante varchar(45) not null,
 	laudo varchar(1000) not null,
-	status varchar(10) not null,
+	status varchar(20) not null,
 	idPaciente BIGINT,
 	idMedico  BIGINT,
 	idExame BIGINT,
