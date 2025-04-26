@@ -37,7 +37,7 @@ Este projeto foi desenvolvido como parte de uma disciplina de **Banco de Dados**
 - **Spring Boot** - Framework utilizado para desenvolvimento da API.
 - **Spring Data JPA** - Para manipulação e persistência de dados no banco de dados.
 - **MySQL** - Banco de dados relacional utilizado para armazenar os dados.
-- **Postman** - Ferramenta de testes de APIs.
+- **Postman/APIdog** - Ferramenta de testes de APIs.
 - **Maven** - Gerenciador de dependências.
 
 ---
