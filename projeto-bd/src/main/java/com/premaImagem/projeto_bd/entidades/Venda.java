@@ -9,6 +9,9 @@ public class Venda{
     private long idProduto;
     private long idSocio;
 
+    public Venda(){
+
+    }
     public Venda(LocalDateTime dataHoraVenda, long idSocio, long idProduto, long idFornecedor, int quantidade) {
         this.dataHoraVenda = dataHoraVenda;
         this.idSocio = idSocio;
