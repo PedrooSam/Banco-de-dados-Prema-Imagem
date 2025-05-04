@@ -35,13 +35,13 @@ public class ProdutoRepositorio {
     }
 
     public int criar(Produto produto){
-        String sql = "INSERT INTO Produto (id, nome, preco) VALUES (?, ?, ?)";
-        return jdbcTemplate.update(sql, produto.getId(), produto.getNome(), produto.getPreco());
+        String sql = "INSERT INTO Produto (id, nome, preco, quantidade) VALUES (?, ?, ?, ?)";
+        return jdbcTemplate.update(sql, produto.getId(), produto.getNome(), produto.getPreco(), produto.getQuantidade());
     }
 
     public int atualizar(Produto produto){
-        String sql = "UPDATE Produto SET nome = ?, preco = ? WHERE Produto.id = ?";
-        return jdbcTemplate.update(sql, produto.getNome(), produto.getPreco(), produto.getId());
+        String sql = "UPDATE Produto SET nome = ?, preco = ?, quantidade = ? WHERE Produto.id = ?";
+        return jdbcTemplate.update(sql, produto.getNome(), produto.getPreco(), produto.getQuantidade(), produto.getId());
     }
 
     public int deletar(long id){
