@@ -15,7 +15,6 @@ create table Empregado(
 	foreign key(id) references Colaborador(id)
 );
 
-alter table Empregado modify column numeroPis varchar(20);
 
 create table Medico(
 	especialidade varchar(100) not null,
