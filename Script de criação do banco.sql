@@ -9,11 +9,13 @@ create table Colaborador(
 create table Empregado(
 	dataAdmissao date not null, 
 	funcao varchar(100) not null,
-	numeroPis varchar(15) unique not null,
+	numeroPis varchar(20) unique not null,
 	salario double not null,
 	id BIGINT PRIMARY KEY,
 	foreign key(id) references Colaborador(id)
 );
+
+alter table Empregado modify column numeroPis varchar(20);
 
 create table Medico(
 	especialidade varchar(100) not null,
