@@ -1,7 +1,7 @@
-import './paciente.css'
+import './pacientes.css'
 
 export default function pacientes() {
     return(
-        <h1 class='titulo'>RECEBA!!!</h1>
+        <h1 className='titulo'>RECEBA!!!</h1>
     )
 }
