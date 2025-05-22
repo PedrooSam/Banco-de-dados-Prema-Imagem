@@ -3,7 +3,6 @@ package com.premaImagem.projeto_bd.controller;
 import com.premaImagem.projeto_bd.entidades.Empregado;
 import com.premaImagem.projeto_bd.repositorios.EmpregadoRepositorio;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,18 +25,15 @@ public class EmpregadoController {
     }
 
     @GetMapping("/id/{id}")
-    public ResponseEntity<Empregado> buscarPorId(@PathVariable long id) {
-        Empregado empregado = repositorio.buscarPorId(id);
-        if (empregado != null) {
-            return ResponseEntity.ok(empregado);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    public List<Empregado> buscarPorId(@PathVariable long id) {
+        List<Empregado> empregado = repositorio.buscarPorId(id);
+        return empregado;
     }
 
     @GetMapping("/nome/{nome}")
-    public Empregado buscarPorNome(@PathVariable String nome) {
-        return repositorio.buscarPorNome(nome);
+    public List<Empregado> buscarPorNome(@PathVariable String nome) {
+        List<Empregado> empregado = repositorio.buscarPorNome(nome);
+        return empregado;
     }
 
     @PostMapping

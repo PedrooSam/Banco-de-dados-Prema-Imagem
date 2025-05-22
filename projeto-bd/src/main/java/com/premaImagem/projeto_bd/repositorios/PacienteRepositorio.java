@@ -24,14 +24,14 @@ public class PacienteRepositorio {
         return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Paciente.class));
     }
 
-    public Paciente buscarPorId(long id) {
+    public List<Paciente> buscarPorId(long id) {
         String sql = "SELECT * FROM Paciente WHERE id = ?";
-        return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(Paciente.class), id);
+        return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Paciente.class), id);
     }
 
-    public Paciente buscarPorCpf(String cpf) {
+    public List<Paciente> buscarPorCpf(String cpf) {
         String sql = "SELECT * FROM Paciente WHERE cpf = ?";
-        return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(Paciente.class), cpf);
+        return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Paciente.class), cpf);
     }
 
     public int criar(Paciente paciente) {

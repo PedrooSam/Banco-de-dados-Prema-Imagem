@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/colaboradores")
 public class ColaboradorController {
@@ -28,14 +30,21 @@ public class ColaboradorController {
         return "Colaborador criado com sucesso!";
     }
 
+    @GetMapping
+    public List<Colaborador> buscarPorLista() {
+        List<Colaborador> colaborador = colaboradorRepositorio.listar();
+        return colaborador;
+    }
 
     @GetMapping("/cpf/{cpf}")
-    public Colaborador buscarPorCpf(@PathVariable String cpf) {
-        return colaboradorRepositorio.buscarPorCpf(cpf);
+    public List<Colaborador> buscarPorCpf(@PathVariable String cpf) {
+        List<Colaborador> colaborador = colaboradorRepositorio.buscarPorCpf(cpf);
+        return colaborador;
     }
 
     @GetMapping("/id/{id}")
-    public Colaborador buscarPorId(@PathVariable long id) {
-        return colaboradorRepositorio.buscarPorId(id);
+    public List<Colaborador> buscarPorId(@PathVariable long id) {
+        List<Colaborador> colaborador = colaboradorRepositorio.buscarPorId(id);
+        return colaborador;
     }
 }

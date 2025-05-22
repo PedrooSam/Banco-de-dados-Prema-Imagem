@@ -28,9 +28,9 @@ public class MedicoRepositorio{
         return jdbcTemplate.query(sqlMedico, new BeanPropertyRowMapper<>(Medico.class));
     }
 
-    public Medico buscarPorNome(String nome){
+    public List<Medico> buscarPorNome(String nome){
         String sqlMedico = "SELECT c.id, c.nome, c.cpf, m.crm, m.especialidade FROM Colaborador c INNER JOIN Medico m ON c.id = m.id WHERE c.nome = ?";
-        return jdbcTemplate.queryForObject(sqlMedico, new BeanPropertyRowMapper<>(Medico.class), nome);
+        return jdbcTemplate.query(sqlMedico, new BeanPropertyRowMapper<>(Medico.class), nome);
     }
 
     //buscar por id
