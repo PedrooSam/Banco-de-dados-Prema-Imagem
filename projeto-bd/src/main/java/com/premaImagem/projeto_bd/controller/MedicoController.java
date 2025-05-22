@@ -27,14 +27,9 @@ public class MedicoController{
     }
 
     @GetMapping("/id/{id}")
-    public ResponseEntity<Medico> buscarPorId(@PathVariable long id) {
-        Medico medico = repositorio.buscarPorId(id);
-        if(medico != null){
-            return ResponseEntity.ok(medico);
-        }
-        else{
-            return ResponseEntity.notFound().build();
-        }
+    public List<Medico> buscarPorId(@PathVariable long id) {
+        List<Medico> medico = repositorio.buscarPorId(id);
+        return medico;
     }
 
     @GetMapping("/nome/{nome}")
