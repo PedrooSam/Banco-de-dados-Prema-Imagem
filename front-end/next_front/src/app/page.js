@@ -11,20 +11,40 @@ export default function Home() {
     fetch('http://localhost:8080/agendamentos-exames')
       .then(res => res.json())
       .then(async data => {
-        // Para cada agendamento, busca os dados do médico
-        const agendamentosComMedico = await Promise.all(
+        const agendamentosComDetalhes = await Promise.all(
           data.map(async (agendamento) => {
             try {
-              const res = await fetch($`http://localhost:8080/medicos/${agendamento.idMedico}`);
-              const medico = await res.json();
-              return { ...agendamento, medico };
+              // Buscar médico
+              const medicoRes = await fetch(`http://localhost:8080/medicos/${agendamento.idMedico}`);
+              const medico = await medicoRes.json();
+
+              // Buscar paciente
+              const pacienteRes = await fetch(`http://localhost:8080/pacientes/${agendamento.idPaciente}`);
+              const paciente = await pacienteRes.json();
+
+              // Buscar exame
+              const exameRes = await fetch(`http://localhost:8080/exames/${agendamento.idExame}`);
+              const exame = await exameRes.json();
+
+              return {
+                ...agendamento,
+                medico,
+                paciente,
+                exame,
+              };
             } catch (err) {
-              console.error("Erro ao buscar médico:", err);
-              return { ...agendamento, medico: null };
+              console.error("Erro ao buscar dados relacionados:", err);
+              return {
+                ...agendamento,
+                medico: null,
+                paciente: null,
+                exame: null,
+              };
             }
           })
         );
-        setAgendamentos(agendamentosComMedico);
+
+        setAgendamentos(agendamentosComDetalhes);
       })
       .catch(err => console.error("Erro ao buscar agendamentos:", err));
   }, []);
