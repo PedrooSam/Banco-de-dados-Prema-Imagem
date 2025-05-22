@@ -9,9 +9,24 @@ export default function Home() {
 
   useEffect(() => {
     fetch('http://localhost:8080/agendamentos-exames')
-      .then((res) => res.json())
-      .then((data) => setAgendamentos(data))
-      .catch((err) => console.error('Erro ao buscar agendamentos:', err));
+      .then(res => res.json())
+      .then(async data => {
+        // Para cada agendamento, busca os dados do médico
+        const agendamentosComMedico = await Promise.all(
+          data.map(async (agendamento) => {
+            try {
+              const res = await fetch($`http://localhost:8080/medicos/${agendamento.idMedico}`);
+              const medico = await res.json();
+              return { ...agendamento, medico };
+            } catch (err) {
+              console.error("Erro ao buscar médico:", err);
+              return { ...agendamento, medico: null };
+            }
+          })
+        );
+        setAgendamentos(agendamentosComMedico);
+      })
+      .catch(err => console.error("Erro ao buscar agendamentos:", err));
   }, []);
 
 
