@@ -33,8 +33,9 @@ public class MedicoController{
     }
 
     @GetMapping("/nome/{nome}")
-    public Medico buscarPorNome(@PathVariable String nome) {
-        return repositorio.buscarPorNome(nome);
+    public List<Medico> buscarPorNome(@PathVariable String nome) {
+        List<Medico> medico = repositorio.buscarPorNome(nome);
+        return medico;
     }
 
     @PostMapping

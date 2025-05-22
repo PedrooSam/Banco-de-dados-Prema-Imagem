@@ -24,9 +24,9 @@ public class ExameRepositorio{
         return exames;
     }
 
-    public Exame buscar(long id){
+    public List<Exame> buscar(long id){
         String sql = "SELECT * FROM Exame WHERE Exame.id = ?";
-        return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(Exame.class), id);
+        return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Exame.class), id);
     }
 
     public int criar(Exame exame){

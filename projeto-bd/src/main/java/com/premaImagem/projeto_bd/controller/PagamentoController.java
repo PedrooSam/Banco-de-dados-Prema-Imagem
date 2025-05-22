@@ -25,8 +25,9 @@ public class PagamentoController{
     }
 
     @GetMapping("/{id}")
-    public Pagamento buscar(@PathVariable long id) {
-        return repositorio.buscarPorId(id);
+    public List<Pagamento> buscar(@PathVariable long id) {
+        List<Pagamento> pagamento = repositorio.buscarPorId(id);
+        return pagamento;
     }
 
     @PostMapping

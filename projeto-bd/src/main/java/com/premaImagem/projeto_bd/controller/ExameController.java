@@ -28,8 +28,9 @@ public class ExameController {
 
 
     @GetMapping("/{id}")
-    public Exame buscarPorId(@PathVariable("id") long id) {
-        return repositorio.buscar(id);
+    public List<Exame> buscarPorId(@PathVariable("id") long id) {
+        List<Exame> exame = repositorio.buscar(id);
+        return exame;
     }
 
 

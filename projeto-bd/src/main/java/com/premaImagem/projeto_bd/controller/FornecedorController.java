@@ -27,12 +27,14 @@ public class FornecedorController {
     }
 
     @GetMapping("/nome/{nome}")
-    public Fornecedor buscarPorNome(@PathVariable("nome") String nome){
-        return repositorio.buscarPorNome(nome);
+    public List<Fornecedor> buscarPorNome(@PathVariable("nome") String nome){
+        List<Fornecedor> fornecedor = repositorio.buscarPorNome(nome);
+        return fornecedor;
     }
     @GetMapping("/id/{id}")
-    public Fornecedor buscarPorId(@PathVariable("id") String id) {
-        return repositorio.buscarPorId(id);
+    public List<Fornecedor> buscarPorId(@PathVariable("id") String id) {
+        List<Fornecedor> fornecedor = repositorio.buscarPorId(id);
+        return fornecedor;
     }
 
 

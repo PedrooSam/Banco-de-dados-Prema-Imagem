@@ -28,13 +28,15 @@ public class PacienteController {
 
 
     @GetMapping("/id/{id}")
-    public Paciente buscar(@PathVariable("id") long id) {
-        return repositorio.buscarPorId(id);
+    public List<Paciente> buscar(@PathVariable("id") long id) {
+        List<Paciente> paciente = repositorio.buscarPorId(id);
+        return paciente;
     }
 
     @GetMapping("/cpf/{cpf}")
-    public Paciente buscar(@PathVariable("cpf") String cpf) {
-        return repositorio.buscarPorCpf(cpf);
+    public List<Paciente> buscar(@PathVariable("cpf") String cpf) {
+        List<Paciente> paciente = repositorio.buscarPorCpf(cpf);
+        return paciente;
     }
 
 

@@ -24,9 +24,9 @@ public class PagamentoRepositorio{
         return jdbcTemplate.query(sqlPagamento, new BeanPropertyRowMapper<>(Pagamento.class));
     }
 
-    public Pagamento buscarPorId(long id){
+    public List<Pagamento> buscarPorId(long id){
         String sqlPagamento = "SELECT * FROM Pagamento WHERE id = ?";
-        return jdbcTemplate.queryForObject(sqlPagamento, new BeanPropertyRowMapper<>(Pagamento.class), id);
+        return jdbcTemplate.query(sqlPagamento, new BeanPropertyRowMapper<>(Pagamento.class), id);
     }
 
     public int criar(Pagamento pagamento){
