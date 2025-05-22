@@ -1,5 +1,6 @@
 package com.premaImagem.projeto_bd.repositorios;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,12 @@ public class AgendaExameRepositorio {
             return agendaExame.get(0); // Como a busca será baseada em uma combinação única, deve retornar no máximo 1 item.
         }
     }
+    public List<AgendaExame> buscarPorData(LocalDate dataHoraRealizacao) {
+        String sql = "SELECT * FROM AgendaExame WHERE extract(day from dataHoraRealizacao) = ? and extract(month from dataHoraRealizacao) = ? and extract(year from dataHoraRealizacao) = ?";
+        List<AgendaExame> agendaExame = jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(AgendaExame.class), dataHoraRealizacao.getDayOfMonth(), dataHoraRealizacao.getMonthValue(), dataHoraRealizacao.getYear());
+        return agendaExame;
+    }
+
 
     public int criar(AgendaExame agendaExame) {
         String sql = "INSERT INTO AgendaExame (dataHoraRealizacao, medicoRequisitante, laudo, status, idPaciente, idMedico, idExame) " +

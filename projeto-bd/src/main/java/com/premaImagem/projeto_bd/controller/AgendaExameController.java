@@ -1,5 +1,6 @@
 package com.premaImagem.projeto_bd.controller;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +43,11 @@ public class AgendaExameController {
         } else {
             return ResponseEntity.notFound().build();
         }
+    }
+    @GetMapping("/{dataHoraRealizacao}")
+    public List<AgendaExame> buscarPorData(@PathVariable LocalDate dataHoraRealizacao){
+        List<AgendaExame> listaDeAgendaExame = repositorio.buscarPorData(dataHoraRealizacao);
+        return listaDeAgendaExame;
     }
 
 
