@@ -34,14 +34,10 @@ public class MedicoRepositorio{
     }
 
     //buscar por id
-    public Medico buscarPorId(long id){
+    public List<Medico> buscarPorId(long id){
         String sqlMedico = "SELECT c.id, c.nome, c.cpf, m.crm, m.especialidade FROM Colaborador c INNER JOIN Medico m ON c.id = m.id WHERE c.id = ?";
         List<Medico> medico = jdbcTemplate.query(sqlMedico, new BeanPropertyRowMapper<>(Medico.class), id);
-        if(medico.isEmpty()){
-            return null;
-        }else{
-            return medico.get(0);
-        }
+        return medico;
     }
 
     @Transactional

@@ -32,13 +32,15 @@ public class SocioController {
     }
 
     @GetMapping("/nome/{nome}")
-    public Socio buscarPorNome(@PathVariable String nome) {
-        return repositorio.buscarPorNome(nome);
+    public List<Socio> buscarPorNome(@PathVariable String nome) {
+        List<Socio> socio = repositorio.buscarPorNome(nome);
+        return socio;
     }
 
     @GetMapping("/{id}")
-    public Socio buscarPorId(@PathVariable("id") long id) {
-        return repositorio.buscarPorId(id);
+    public List<Socio> buscarPorId(@PathVariable("id") long id) {
+        List<Socio> socio = repositorio.buscarPorId(id);
+        return socio;
     }
 
     @PostMapping

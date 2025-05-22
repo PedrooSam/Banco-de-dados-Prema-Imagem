@@ -27,15 +27,17 @@ public class SocioRepositorio {
         return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Socio.class));
     }
 
-    public Socio buscarPorNome(String nome){
+    public List<Socio> buscarPorNome(String nome){
         String sqlSocio = "SELECT c.id, c.nome, c.cpf, s.prolabore FROM Colaborador c INNER JOIN Socio s ON c.id = s.id WHERE c.nome = ?";
-        return jdbcTemplate.queryForObject(sqlSocio, new BeanPropertyRowMapper<>(Socio.class), nome);
+        List<Socio> socio = jdbcTemplate.query(sqlSocio, new BeanPropertyRowMapper<>(Socio.class), nome);
+        return socio;
     }
 
-    public Socio buscarPorId(long id) {
+    public List<Socio> buscarPorId(long id) {
         String sql = "SELECT c.id, c.nome, c.cpf, s.proLabore " +
                 "FROM Colaborador c INNER JOIN Socio s ON c.id = s.id WHERE c.id = ?";
-        return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(Socio.class), id);
+        List<Socio> socio = jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Socio.class), id);
+        return socio;
     }
 
     @Transactional
