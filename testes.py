@@ -142,9 +142,9 @@ def GET_AgendaExame():
             "idExame": 1
             }
     
-    url = f'http://localhost:8080/1/2/1/{json['dataHoraRealizacao']}'
+    url = f'http://localhost:8080/agenda-exames/1/2/1/{json['dataHoraRealizacao']}'
     
-    response = requests.post(url, json=json)
+    response = requests.get(url, json=json)
 
     print(response.status_code)
 
@@ -154,6 +154,33 @@ def GET_AgendaExame():
     
     print("Sucesso!")
 
+def GET_list_AgendaExame():
+    
+    url = f'http://localhost:8080/agenda-exames'
+    
+    response = requests.get(url)
+
+    print(response.status_code)
+
+    if response.status_code != 200:
+        print(response.json()['error'])
+        return
+    
+    print("Sucesso!")
+
+def GET_list_pacientes():
+    url = 'http://localhost:8080/pacientes'
+
+    response = requests.get(url)
+
+    if response.status_code != 200:
+        print(response.status_code)
+        print(response.json()['error'])
+        return
+    
+    print(response.json())
+    print("Sucesso!")
+
 print("===============TESTES===============")
 
 #post_Exame()
@@ -161,5 +188,6 @@ print("===============TESTES===============")
 #post_Paciente()
 #POST_Colaborador()
 #GET_colaborador()
+#GET_list_AgendaExame()
 
-GET_AgendaExame()
+GET_list_pacientes()

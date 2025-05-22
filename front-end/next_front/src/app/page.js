@@ -6,11 +6,14 @@ import { useEffect, useState } from 'react';
 export default function Home() {
   
   const [agendamentos, setAgendamentos] = useState([]);
+  console.log("Home");
 
   useEffect(() => {
-    fetch('http://localhost:8080/agendamentos-exames')
+    console.log("useEffect");
+    fetch('http://localhost:8080/agenda-exames')
       .then(res => res.json())
       .then(async data => {
+        console.log("Resposta da API:", data);
         const agendamentosComDetalhes = await Promise.all(
           data.map(async (agendamento) => {
             try {
@@ -19,7 +22,7 @@ export default function Home() {
               const medico = await medicoRes.json();
 
               // Buscar paciente
-              const pacienteRes = await fetch(`http://localhost:8080/pacientes/${agendamento.idPaciente}`);
+              const pacienteRes = await fetch(`http://localhost:8080/pacientes/id/${agendamento.idPaciente}`);
               const paciente = await pacienteRes.json();
 
               // Buscar exame
