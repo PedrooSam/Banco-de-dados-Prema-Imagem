@@ -22,7 +22,8 @@ public class ExameController {
 
     @GetMapping
     public List<Exame> listar() {
-        return repositorio.buscarLista();
+        List<Exame> listaDeExame = repositorio.buscarLista();
+        return listaDeExame;
     }
 
 
