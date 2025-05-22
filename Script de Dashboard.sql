@@ -232,3 +232,33 @@ SELECT
 FROM AgendaExame
 GROUP BY hora
 ORDER BY total_exames DESC;
+
+
+-- Triggers de cascata 
+
+-- Trigger para apagar colaborador quando um médico for apagado
+
+CREATE TRIGGER trg_delete_colaborador_medico
+AFTER DELETE ON Medico
+FOR EACH ROW
+BEGIN
+    DELETE FROM Colaborador WHERE id = OLD.id;
+END 
+
+
+-- Trigger para apagar colaborador quando um empregado for apagado
+
+CREATE TRIGGER trg_delete_colaborador_empregado
+AFTER DELETE ON Empregado
+FOR EACH ROW
+BEGIN
+    DELETE FROM Colaborador WHERE id = OLD.id;
+END 
+-- Trigger para apagar colaborador quando um sócio for apagado
+
+CREATE TRIGGER trg_delete_colaborador_socio
+AFTER DELETE ON Socio
+FOR EACH ROW
+BEGIN
+    DELETE FROM Colaborador WHERE id = OLD.id;
+END 
