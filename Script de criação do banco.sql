@@ -83,6 +83,7 @@ CREATE TABLE Pagamento(
 	FOREIGN KEY (agendaExameDataHora,agendaExamePaciente, agendaExameMedico,agendaExameExame) REFERENCES AgendaExame(dataHoraRealizacao, idPaciente, idMedico, idExame)
 );
 
+
 CREATE TABLE Fornecedor(
 	id BIGINT AUTO_INCREMENT primary key,
 	nome varchar(45) not null,
