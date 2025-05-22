@@ -20,7 +20,8 @@ public class PagamentoController{
 
     @GetMapping
     public List<Pagamento> listar() {
-        return repositorio.buscarLista();
+        List<Pagamento> listaDePagamento = repositorio.buscarLista();
+        return listaDePagamento;
     }
 
     @GetMapping("/{id}")

@@ -21,7 +21,8 @@ public class VendaController{
 
     @GetMapping
     public List<Venda> lista(){
-        return repositorio.buscarLista();
+        List<Venda> listaDeVenda = repositorio.buscarLista();
+        return listaDeVenda;
     }
 
     @GetMapping("/data/{dataHoraVenda}")

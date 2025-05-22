@@ -22,7 +22,8 @@ public class PacienteController {
 
     @GetMapping
     public List<Paciente> listar() {
-        return repositorio.buscarLista();
+        List<Paciente> listaDePaciente = repositorio.buscarLista();
+        return listaDePaciente;
     }
 
 

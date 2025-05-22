@@ -22,7 +22,8 @@ public class FornecedorController {
 
     @GetMapping
     public List<Fornecedor> listar() {
-        return repositorio.buscarLista();
+        List<Fornecedor> listaDeFornecedor = repositorio.buscarLista();
+        return listaDeFornecedor;
     }
 
     @GetMapping("/nome/{nome}")

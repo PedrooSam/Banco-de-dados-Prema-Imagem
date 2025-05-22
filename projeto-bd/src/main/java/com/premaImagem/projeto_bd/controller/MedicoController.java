@@ -22,7 +22,8 @@ public class MedicoController{
 
     @GetMapping
     public List<Medico>lista(){
-        return repositorio.buscarLista();
+        List<Medico> listaDeMedico = repositorio.buscarLista();
+        return listaDeMedico;
     }
 
     @GetMapping("/id/{id}")

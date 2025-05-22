@@ -21,7 +21,8 @@ public class EmpregadoController {
 
     @GetMapping
     public List<Empregado> lista() {
-        return repositorio.buscarLista();
+        List<Empregado> listaDeEmpregado = repositorio.buscarLista();
+        return listaDeEmpregado;
     }
 
     @GetMapping("/id/{id}")

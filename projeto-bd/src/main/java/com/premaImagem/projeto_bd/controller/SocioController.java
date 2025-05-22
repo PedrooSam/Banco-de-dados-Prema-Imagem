@@ -27,7 +27,8 @@ public class SocioController {
 
     @GetMapping
     public List<Socio> listar() {
-        return repositorio.buscarLista();
+        List<Socio> listaDeSocio = repositorio.buscarLista();
+        return listaDeSocio;
     }
 
     @GetMapping("/nome/{nome}")

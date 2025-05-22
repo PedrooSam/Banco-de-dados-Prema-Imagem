@@ -25,7 +25,8 @@ public class AgendaExameController {
     // GET: lista todos os agendamentos de exame
     @GetMapping
     public List<AgendaExame> listar() {
-        return repositorio.buscarLista();
+        List<AgendaExame> listaDeAgendaExame = repositorio.buscarLista();
+        return listaDeAgendaExame;
     }
 
     // GET: busca um agendamento específico (chave composta)
