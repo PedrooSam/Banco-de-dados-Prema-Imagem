@@ -21,17 +21,20 @@ public class ProdutoRepositorio {
 
     public List<Produto> buscarLista(){
         String sql = "SELECT * FROM Produto";
-        return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Produto.class));
+        List<Produto> produto = jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Produto.class));
+        return produto;
     }
 
-    public Produto buscarPorNome(String nome){
+    public List<Produto> buscarPorNome(String nome){
         String sql = "SELECT * FROM Produto WHERE Produto.nome = ?";
-        return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(Produto.class), nome);
+        List<Produto> produto = jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Produto.class), nome);
+        return produto;
     }
 
-    public Produto buscarPorId(long id){
+    public List<Produto> buscarPorId(long id){
         String sql = "SELECT * FROM Produto WHERE Produto.id = ?";
-        return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(Produto.class), id);
+        List<Produto> produto = jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Produto.class), id);
+        return produto;
     }
 
     public int criar(Produto produto){

@@ -28,24 +28,16 @@ public class ProdutoController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Produto> buscarPorId(@PathVariable("id") long id){
-        Produto produto = repositorio.buscarPorId(id);
-        if (produto != null) {
-            return ResponseEntity.ok(produto);
-        } else {
-            return ResponseEntity.status(404).body(null); // Produto não encontrado
-        }
+    public List<Produto> buscarPorId(@PathVariable("id") long id){
+        List<Produto> produto = repositorio.buscarPorId(id);
+        return produto;
     }
 
 
     @GetMapping("/nome/{nome}")
-    public ResponseEntity<Produto> buscarPorNome(@PathVariable("nome") String nome){
-        Produto produto = repositorio.buscarPorNome(nome);
-        if (produto != null) {
-            return ResponseEntity.ok(produto);
-        } else {
-            return ResponseEntity.status(404).body(null); // Produto não encontrado
-        }
+    public List<Produto> buscarPorNome(@PathVariable("nome") String nome){
+        List<Produto> produto = repositorio.buscarPorNome(nome);
+        return produto;
     }
 
     @PostMapping
