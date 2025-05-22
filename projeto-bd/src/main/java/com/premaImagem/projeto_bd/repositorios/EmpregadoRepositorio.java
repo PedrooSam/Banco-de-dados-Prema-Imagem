@@ -26,16 +26,16 @@ public class EmpregadoRepositorio {
         return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Empregado.class));
     }
 
-    public Empregado buscarPorId(long id) {
+    public List<Empregado> buscarPorId(long id) {
         String sql = "SELECT e.id, e.numeroPis, e.salario, e.funcao, e.dataAdmissao, c.nome, c.cpf " +
                 "FROM Empregado e INNER JOIN Colaborador c ON e.id = c.id WHERE e.id = ?";
-        return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(Empregado.class), id);
+        return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Empregado.class), id);
     }
 
-    public Empregado buscarPorNome(String nome) {
+    public List<Empregado> buscarPorNome(String nome) {
         String sql = "SELECT e.id, e.numeroPis, e.salario, e.funcao, e.dataAdmissao, c.nome, c.cpf " +
                 "FROM Empregado e INNER JOIN Colaborador c ON e.id = c.id WHERE c.nome = ?";
-        return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(Empregado.class), nome);
+        return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Empregado.class), nome);
     }
 
     @Transactional
