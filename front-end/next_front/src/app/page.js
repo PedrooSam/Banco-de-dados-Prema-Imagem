@@ -6,12 +6,50 @@ import { useEffect, useState } from 'react';
 export default function Home() {
   
   const [agendamentos, setAgendamentos] = useState([]);
+  console.log("Home");
 
   useEffect(() => {
-    fetch('http://localhost:8080/agendamentos-exames')
-      .then((res) => res.json())
-      .then((data) => setAgendamentos(data))
-      .catch((err) => console.error('Erro ao buscar agendamentos:', err));
+    console.log("useEffect");
+    fetch('http://localhost:8080/agenda-exames')
+      .then(res => res.json())
+      .then(async data => {
+        console.log("Resposta da API:", data);
+        const agendamentosComDetalhes = await Promise.all(
+          data.map(async (agendamento) => {
+            try {
+              // Buscar médico
+              const medicoRes = await fetch(`http://localhost:8080/medicos/${agendamento.idMedico}`);
+              const medico = await medicoRes.json();
+
+              // Buscar paciente
+              const pacienteRes = await fetch(`http://localhost:8080/pacientes/id/${agendamento.idPaciente}`);
+              const paciente = await pacienteRes.json();
+
+              // Buscar exame
+              const exameRes = await fetch(`http://localhost:8080/exames/${agendamento.idExame}`);
+              const exame = await exameRes.json();
+
+              return {
+                ...agendamento,
+                medico,
+                paciente,
+                exame,
+              };
+            } catch (err) {
+              console.error("Erro ao buscar dados relacionados:", err);
+              return {
+                ...agendamento,
+                medico: null,
+                paciente: null,
+                exame: null,
+              };
+            }
+          })
+        );
+
+        setAgendamentos(agendamentosComDetalhes);
+      })
+      .catch(err => console.error("Erro ao buscar agendamentos:", err));
   }, []);
 
 
