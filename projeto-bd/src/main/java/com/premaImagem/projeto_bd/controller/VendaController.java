@@ -25,9 +25,10 @@ public class VendaController{
         return listaDeVenda;
     }
 
-    @GetMapping("/data/{dataHoraVenda}")
-    public Venda buscar(@PathVariable LocalDateTime dataHoraVenda){
-        return repositorio.buscarPorDataHora(dataHoraVenda);
+    @GetMapping("/data/{dataHoraVenda}/{idFornecedor}/{idProduto}/{idSocio}")
+    public List<Venda> buscar(@PathVariable LocalDateTime dataHoraVenda){
+        List<Venda> venda = repositorio.buscarPorDataHora(dataHoraVenda);
+        return venda;
     }
 
     @GetMapping("/produto/{nome}")
@@ -46,8 +47,10 @@ public class VendaController{
         }
     }
 
-    @PutMapping("/{dataHoraVenda}")
-    public String atualizar(@PathVariable LocalDateTime dataHoraVenda, @RequestBody Venda venda){
+    @PutMapping("/{dataHoraVenda}/{idFornecedor}/{idProduto}/{idSocio}")
+    public String atualizar(@PathVariable LocalDateTime dataHoraVenda, @PathVariable("idFornecedor") long idFornecedor,
+                            @PathVariable("idProduto") long idProduto,
+                            @PathVariable("idSocio") long idSocio, @RequestBody Venda venda){
         venda.setDataHoraVenda(dataHoraVenda);
         int retorno = repositorio.atualizar(venda);
         if(retorno == 1){
@@ -58,8 +61,10 @@ public class VendaController{
         }
     }
 
-    @DeleteMapping("/{dataHoraVenda}")
-    public String deletar(@PathVariable LocalDateTime dataHoraVenda){
+    @DeleteMapping("/{dataHoraVenda}/{idFornecedor}/{idProduto}/{idSocio}")
+    public String deletar(@PathVariable LocalDateTime dataHoraVenda, @PathVariable("idFornecedor") long idFornecedor,
+    @PathVariable("idProduto") long idProduto,
+    @PathVariable("idSocio") long idSocio){
         int retorno = repositorio.deletar(dataHoraVenda);
         if(retorno == 1){
             return "Venda deletada com sucesso!";

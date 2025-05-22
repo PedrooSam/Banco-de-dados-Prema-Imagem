@@ -25,9 +25,10 @@ public class VendaRepositorio{
         return jdbcTemplate.query(sqlVenda, new BeanPropertyRowMapper<>(Venda.class));
     }
 
-    public Venda buscarPorDataHora(LocalDateTime dataHoraVenda){
+    public List<Venda> buscarPorDataHora(LocalDateTime dataHoraVenda){
         String sqlVenda = "SELECT * FROM Venda WHERE dataHoraVenda = ?";
-        return jdbcTemplate.queryForObject(sqlVenda, new BeanPropertyRowMapper<>(Venda.class), dataHoraVenda);
+        List<Venda> venda = jdbcTemplate.query(sqlVenda, new BeanPropertyRowMapper<>(Venda.class), dataHoraVenda);
+        return venda;
     }
 
     //buscar por produto

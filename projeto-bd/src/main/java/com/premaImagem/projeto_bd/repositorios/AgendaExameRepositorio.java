@@ -25,14 +25,9 @@ public class AgendaExameRepositorio {
         return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(AgendaExame.class));
     }
 
-    public AgendaExame buscarPorId(LocalDateTime dataHoraRealizacao, long idMedico, long idPaciente, long idExame) {
+    public List<AgendaExame> buscarPorId(long idMedico, long idPaciente, long idExame, LocalDateTime dataHoraRealizacao) {
         String sql = "SELECT * FROM AgendaExame WHERE idMedico = ? AND idPaciente = ? AND idExame = ? AND dataHoraRealizacao = ?";
-        List<AgendaExame> agendaExame = jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(AgendaExame.class), idMedico, idPaciente, idExame, dataHoraRealizacao);
-        if (agendaExame.isEmpty()) {
-            return null;
-        } else {
-            return agendaExame.get(0); // Como a busca será baseada em uma combinação única, deve retornar no máximo 1 item.
-        }
+        return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(AgendaExame.class), idMedico, idPaciente, idExame, dataHoraRealizacao);
     }
     public List<AgendaExame> buscarPorData(LocalDate dataHoraRealizacao) {
         String sql = "SELECT * FROM AgendaExame WHERE extract(day from dataHoraRealizacao) = ? and extract(month from dataHoraRealizacao) = ? and extract(year from dataHoraRealizacao) = ?";
@@ -69,8 +64,8 @@ public class AgendaExameRepositorio {
         );
     }
 
-    public int deletar(LocalDateTime dataHoraRealizacao, long idPaciente, long idMedico, long idExame) {
-        String sql = "DELETE FROM AgendaExame WHERE dataHoraRealizacao = ? AND idPaciente = ? AND idMedico = ? AND idExame = ?";
-        return jdbcTemplate.update(sql, dataHoraRealizacao, idPaciente, idMedico, idExame);
+    public int deletar(long idMedico, long idPaciente, long idExame, LocalDateTime dataHoraRealizacao) {
+        String sql = "DELETE FROM AgendaExame WHERE idMedico = ? AND idPaciente = ? AND idExame = ? AND dataHoraRealizacao = ?";
+        return jdbcTemplate.update(sql, idMedico, idPaciente, idExame, dataHoraRealizacao);
     }
 }
