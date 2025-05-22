@@ -1039,41 +1039,75 @@ INSERT INTO Pagamento (formaPagamento, notaFiscal, valorPago, parcelas, id, data
 INSERT INTO Pagamento (formaPagamento, notaFiscal, valorPago, parcelas, id, dataPagamento, agendaExameDataHora, agendaExamePaciente, agendaExameMedico, agendaExameExame) VALUES ('Cartão', 'IjKlMnOpQrStUvWxYz01', 480.00, 4, 18, '2024-05-04 15:00:00', '2024-05-03 14:55:30', 18, 118, 8);
 INSERT INTO Pagamento (formaPagamento, notaFiscal, valorPago, parcelas, id, dataPagamento, agendaExameDataHora, agendaExamePaciente, agendaExameMedico, agendaExameExame) VALUES ('PIX', '23456789AbCdEfGhIjKl', 500.00, 3, 19, '2024-08-23 10:00:00', '2024-08-22 09:20:18', 19, 119, 9);
 
--- Procedure: Preço do exame pelo nome
+-- Procedure: Buscar por data
 
-CREATE PROCEDURE precoExamePorNome(
-    IN p_nome VARCHAR(50),
-    OUT p_preco DOUBLE
+CREATE PROCEDURE BuscarPorData(
+    IN tabela VARCHAR(64),
+    IN colunaData VARCHAR(64),
+    IN dataBusca DATE
 )
 BEGIN
-    SELECT preco
-    INTO p_preco
-    FROM Exame
-    WHERE nome = p_nome
-    LIMIT 1;
+    -- copia o parâmetro para uma user variable
+    SET @data = dataBusca;
 
-    IF p_preco IS NULL THEN
-        SET p_preco = -1;  -- Exame não encontrado
-    END IF;
-END
+    -- monta o SQL dinâmico, escapando nomes de tabela/coluna
+    SET @sql = CONCAT(
+      'SELECT *',
+      ' FROM `', tabela, '`',
+      ' WHERE DATE(`', colunaData, '`) = ?'
+    );
 
-CALL precoExamePorNome('Vitae', @preco);
-SELECT @preco;
+    PREPARE stmt FROM @sql;
+    EXECUTE stmt USING @data;
+    DEALLOCATE PREPARE stmt;
+end
 
--- Trigger: Impede que o salário seja negativo 
+-- Chamando a procedure
+CALL BuscarPorData('AgendaExame','dataHoraRealizacao','2025-01-10');
 
-CREATE TRIGGER validaSalarioEmpregado
-BEFORE INSERT ON Empregado
+-- Trigger para mudar status de agendaExame depois que adicionou em pagamento 
+
+CREATE TRIGGER AtualizaStatusExame
+AFTER INSERT ON Pagamento
 FOR EACH ROW
 BEGIN
-    IF NEW.salario < 0 THEN
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Salário não pode ser negativo.';
-    END IF;
-END
+    UPDATE AgendaExame
+    SET status = 'Pago'
+    WHERE dataHoraRealizacao = NEW.agendaExameDataHora
+      AND idPaciente = NEW.agendaExamePaciente
+      AND idMedico = NEW.agendaExameMedico
+      AND idExame = NEW.agendaExameExame;
+END 
 
--- teste
-INSERT INTO Empregado (dataAdmissao, funcao, numeroPis, salario, id)
-VALUES ('2025-05-21', 'Testador', '123456789012346', -1000.00, 31);
+-- Teste trigger
+
+INSERT INTO Pagamento (
+    formaPagamento,
+    notaFiscal,
+    valorPago,
+    parcelas,
+    agendaExameDataHora,
+    agendaExamePaciente,
+    agendaExameMedico,
+    agendaExameExame
+) VALUES (
+    'Pix',
+    'NF20240522001',
+    350.00,
+    1,
+    '2024-12-30 08:15:22',
+    14,
+    114,
+    5
+);
+
+-- Conferindo se funcionou { Tem que retornar pago}
+SELECT status
+FROM AgendaExame
+WHERE dataHoraRealizacao = '2024-12-30 08:15:22'
+  AND idPaciente = 14
+  AND idMedico = 114
+  AND idExame = 5;
 
 -- 1. Dashboard Geral / Visão Executiva
 
@@ -1191,13 +1225,12 @@ GROUP BY p.id, p.nome
 ORDER BY quantidade_vendida DESC
 LIMIT 10;
 
--- Produtos com estoque baixo
+-- Quantidade de produtos
 SELECT
     nome,
     quantidade
 FROM Produto
-WHERE quantidade < 10
-ORDER BY quantidade ASC;
+ORDER BY quantidade DESC;
 
 -- Compras por fornecedor
 
