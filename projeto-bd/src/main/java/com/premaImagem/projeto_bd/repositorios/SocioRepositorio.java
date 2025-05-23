@@ -75,6 +75,13 @@ public class SocioRepositorio {
     }
 
     @Transactional
+    public void transferirVendasSocio(long idAntigo, long idNovo) {
+        String sql = "UPDATE Venda SET idSocio = ? WHERE idSocio = ?";
+        jdbcTemplate.update(sql, idNovo, idAntigo);
+    }
+
+
+    @Transactional
     public int atualizar(Socio socio) {
         String sqlColab = "UPDATE Colaborador SET nome = ?, cpf = ? WHERE id = ?";
         jdbcTemplate.update(sqlColab, socio.getNome(), socio.getCpf(), socio.getId());

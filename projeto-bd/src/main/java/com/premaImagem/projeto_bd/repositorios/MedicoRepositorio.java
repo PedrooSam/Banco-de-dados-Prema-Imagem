@@ -79,6 +79,17 @@ public class MedicoRepositorio{
     }
 
     @Transactional
+    public void transferirVinculosMedico(long idAntigo, long idNovo) {
+        // Atualiza todos os agendamentos para o novo médico
+        String sqlAgenda = "UPDATE AgendaExame SET idMedico = ? WHERE idMedico = ?";
+        jdbcTemplate.update(sqlAgenda, idNovo, idAntigo);
+
+        // Atualiza todos os pagamentos para o novo médico
+        String sqlPagamentos = "UPDATE Pagamento SET agendaExameMedico = ? WHERE agendaExameMedico = ?";
+        jdbcTemplate.update(sqlPagamentos, idNovo, idAntigo);
+    }
+
+    @Transactional
     public int atualizar(Medico medico){
         String sqlColaborador = "UPDATE Colaborador SET Colaborador.nome = ?, Colaborador.cpf = ? WHERE id = ?";
         jdbcTemplate.update(sqlColaborador, medico.getNome(), medico.getCpf(), medico.getId());

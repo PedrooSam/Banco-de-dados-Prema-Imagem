@@ -9,7 +9,6 @@ import com.premaImagem.projeto_bd.repositorios.ColaboradorRepositorio;
 import com.premaImagem.projeto_bd.repositorios.SocioRepositorio;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -51,6 +50,12 @@ public class SocioController {
         } else {
             return "Erro ao criar sócio.";
         }
+    }
+
+    @PutMapping("/{idAntigo}/transferir-vendas/{idNovo}")
+    public String transferirVendas(@PathVariable long idAntigo, @PathVariable long idNovo) {
+        repositorio.transferirVendasSocio(idAntigo, idNovo);
+        return "Vínculos de vendas transferidos!";
     }
 
     @PutMapping("/{id}")
