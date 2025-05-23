@@ -3,6 +3,17 @@ import { StatusBadge } from '../statusBadge';
 
 
 export function AgendamentoCard({ item }) {
+
+  function formatDate(dateString) {
+    const options = {
+      hour: '2-digit',
+      minute: '2-digit',
+    };
+    return new Intl.DateTimeFormat('pt-BR', options).format(new Date(dateString));
+  }
+
+
+
   return (
     <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg shadow-sm">
       <div className="flex items-center gap-3">
@@ -15,7 +26,7 @@ export function AgendamentoCard({ item }) {
         </div>
       </div>
       <div className="flex flex-col items-end gap-1">
-        <span className="font-bold text-gray-500">{item.dataHoraRealizacao}</span>
+        <span className="font-bold text-gray-500">{formatDate(item.dataHoraRealizacao)}</span>
         <span className="text-sm text-gray-500">{item.medico?.nome}</span>
         <StatusBadge status={item.status} />
       </div>
