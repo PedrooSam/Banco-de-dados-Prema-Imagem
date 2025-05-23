@@ -1,8 +1,8 @@
 import { Clock } from 'lucide-react';
-import StatusBadge from '../statusBadge';
+import { StatusBadge } from '../statusBadge';
 
 
-export default function AgendamentoCard({ item }) {
+export function AgendamentoCard({ item }) {
   return (
     <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg shadow-sm">
       <div className="flex items-center gap-3">
@@ -10,7 +10,7 @@ export default function AgendamentoCard({ item }) {
           <Clock className="w-5 h-5 opacity-100 text-gray-500" />
         </div>
         <div>
-          <h3 className="font-semibold">{item.paciente?.nome}</h3>
+          <h3 className="font-semibold text-gray-600">{item.paciente?.nome}</h3>
           <p className="text-sm text-gray-500">{item.exame?.nome}</p>
         </div>
       </div>

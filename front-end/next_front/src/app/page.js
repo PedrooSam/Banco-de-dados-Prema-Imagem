@@ -1,7 +1,8 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import AgendamentoCard from '../components/agendamentoCard';
+import { AgendamentoTable } from '../components/agendamentosDia/agendamentoTable';
+import { QuickAccess } from "../components/acessoRapido/acessoRapidoTable";
 
 export default function Home() {
   const [agendamentos, setAgendamentos] = useState([]);
@@ -44,25 +45,9 @@ export default function Home() {
 
 
   return (
-    <div className="p-6 bg-white rounded-lg shadow-md">
-      <div className="flex justify-between items-center mb-4">
-        <div>
-          <h2 className="text-xl font-bold text-gray-700">Agendamentos do Dia</h2>
-          <p className="text-gray-500">Visualize e gerencie os exames agendados para hoje</p>
-        </div>
-        <button className="text-green-600 font-semibold">Ver Todos</button>
-      </div>
-
-      <div className="flex gap-2 mb-4">
-        <button className="px-3 py-1 bg-green-100 text-green-700 rounded">Manhã</button>
-        <button className="px-3 py-1 bg-gray-100 text-gray-700 rounded">Tarde</button>
-      </div>
-
-      <div className="space-y-3">
-        {agendamentos.map((item, index) => (
-          <AgendamentoCard key={index} item={item} />
-        ))}
-      </div>
+    <div className="flex gap-8">
+      <AgendamentoTable agendamentos={agendamentos} />
+      <QuickAccess />
     </div>
   );
 }
