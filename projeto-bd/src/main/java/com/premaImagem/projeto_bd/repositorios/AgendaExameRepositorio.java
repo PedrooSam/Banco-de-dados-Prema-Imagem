@@ -35,6 +35,10 @@ public class AgendaExameRepositorio {
         return agendaExame;
     }
 
+    public List<AgendaExame> buscarPorMedico(long idMedico) {
+        String sql = "SELECT * FROM AgendaExame WHERE idMedico = ?";
+        return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(AgendaExame.class), idMedico);
+    }
 
     public int criar(AgendaExame agendaExame) {
         String sql = "INSERT INTO AgendaExame (dataHoraRealizacao, medicoRequisitante, laudo, status, idPaciente, idMedico, idExame) " +
