@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { AgendamentoTable } from '../components/agendamentosDia/agendamentoTable';
 import { QuickAccess } from "../components/acessoRapido/acessoRapidoTable";
+import { Carrossel } from "../components/menuDashboards/carrossel"
 
 export default function Home() {
   const [agendamentos, setAgendamentos] = useState([]);
@@ -45,9 +46,14 @@ export default function Home() {
 
 
   return (
-    <div className="flex gap-8">
-      <AgendamentoTable agendamentos={agendamentos} />
-      <QuickAccess />
+    <div>
+      <div className='w-screen mx-auto my-10'>
+        <Carrossel />
+      </div>
+      <div className="flex gap-15">
+        <AgendamentoTable agendamentos={agendamentos} />
+        <QuickAccess />
+      </div>
     </div>
   );
 }

@@ -8,7 +8,7 @@ export function Navbar() {
       {/* Logo e nome */}
       <div className="flex items-center gap-2 text-green-600 font-semibold text-lg">
         <FileText className="w-6 h-6" />
-        MediClinic
+        Prema Imagem
       </div>
 
       {/* Campo de busca */}

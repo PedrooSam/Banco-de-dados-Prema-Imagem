@@ -8,7 +8,7 @@ export function QuickAccess() {
   };
 
   return (
-    <section className="p-6 bg-white rounded-lg shadow-md max-w-md">
+    <section className="p-6 bg-white rounded-lg shadow-xl max-w-md">
       <h2 className="text-xl font-bold text-gray-800 mb-1">Acesso Rápido</h2>
       <p className="text-gray-500 mb-6">
         Acesse as principais funcionalidades do sistema
