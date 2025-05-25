@@ -5,6 +5,7 @@ import java.util.List;
 import com.premaImagem.projeto_bd.entidades.Colaborador;
 import com.premaImagem.projeto_bd.entidades.Medico;
 import com.premaImagem.projeto_bd.entidades.Socio;
+import com.premaImagem.projeto_bd.entidades.Venda;
 import com.premaImagem.projeto_bd.repositorios.ColaboradorRepositorio;
 import com.premaImagem.projeto_bd.repositorios.SocioRepositorio;
 
@@ -42,6 +43,12 @@ public class SocioController {
         return socio;
     }
 
+    @GetMapping("/{idSocio}/vendas")
+    public List<Venda> listarVendasPorSocio(@PathVariable long idSocio) {
+        return repositorio.buscarVendasPorSocio(idSocio);
+    }
+
+
     @PostMapping
     public String criar(@RequestBody Socio socio) {
         int retorno = repositorio.criar(socio);
@@ -52,10 +59,11 @@ public class SocioController {
         }
     }
 
-    @PutMapping("/{idAntigo}/transferir-vendas/{idNovo}")
-    public String transferirVendas(@PathVariable long idAntigo, @PathVariable long idNovo) {
+    @PutMapping("/{idAntigo}/transferir-vendas-e-excluir/{idNovo}")
+    public String transferirVendasEExcluir(@PathVariable long idAntigo, @PathVariable long idNovo) {
         repositorio.transferirVendasSocio(idAntigo, idNovo);
-        return "Vínculos de vendas transferidos!";
+        repositorio.deletar(idAntigo);
+        return "Vendas transferidas e sócio excluído!";
     }
 
     @PutMapping("/{id}")
