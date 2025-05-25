@@ -41,27 +41,6 @@ export function Carrossel() {
             <StatCard title="Faturamento Diário" value="R$ 4.250" percentage="+5%" color="yellow" />
           </Link>
         </SwiperSlide>
-        
-        <SwiperSlide>
-          <Link href="/dashboard/agenda-exames">
-            <StatCard title="Agendamentos Hoje2" value="24" percentage="+8%" color="green" />
-          </Link>
-        </SwiperSlide>
-        <SwiperSlide>
-          <Link href="/dashboard/exames">
-            <StatCard title="Exames Realizados2" value="18" percentage="+12%" color="yellow" />
-          </Link>
-        </SwiperSlide>
-        <SwiperSlide>
-          <Link href="/dashboard/pacientes">
-            <StatCard title="Novos Pacientes2" value="7" percentage="+3%" color="green" />
-          </Link>
-        </SwiperSlide>
-        <SwiperSlide>
-          <Link href="/dashboard/financeiro">
-            <StatCard title="Faturamento Diário2" value="R$ 4.250" percentage="+5%" color="yellow" />
-          </Link>
-        </SwiperSlide>
       </Swiper>
     </div>
   );

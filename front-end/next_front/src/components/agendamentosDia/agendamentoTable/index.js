@@ -16,7 +16,7 @@ export function AgendamentoTable({ agendamentos }) {
           <button className="px-3 py-1 bg-gray-100 text-gray-700 rounded">Tarde</button>
         </div>
   
-        <div className="flex-1 overflow-y-auto max-h-[500px] space-y-3">
+        <div className="flex-1 overflow-y-auto max-h-[400px] space-y-3">
           {agendamentos.map((item, index) => (
             <AgendamentoCard key={index} item={item} />
           ))}

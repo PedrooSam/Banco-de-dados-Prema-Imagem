@@ -18,7 +18,7 @@ export default function Home() {
         data.map(async (agendamento) => {
           console.log("Agendamento original da API:", agendamento);
           try {
-            const medicoRes = await fetch(`http://localhost:8080/medicos/${agendamento.idMedico}`);
+            const medicoRes = await fetch(`http://localhost:8080/medicos/id/${agendamento.idMedico}`);
             const medico = await medicoRes.json();
 
             const pacienteRes = await fetch(`http://localhost:8080/pacientes/id/${agendamento.idPaciente}`);
