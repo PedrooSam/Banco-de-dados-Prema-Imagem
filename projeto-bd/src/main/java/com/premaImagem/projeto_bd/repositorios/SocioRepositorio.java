@@ -3,6 +3,7 @@ package com.premaImagem.projeto_bd.repositorios;
 import com.premaImagem.projeto_bd.entidades.Colaborador;
 import com.premaImagem.projeto_bd.entidades.Medico;
 import com.premaImagem.projeto_bd.entidades.Socio;
+import com.premaImagem.projeto_bd.entidades.Venda;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -40,6 +41,11 @@ public class SocioRepositorio {
         return socio;
     }
 
+    public List<Venda> buscarVendasPorSocio(long idSocio) {
+        String sql = "SELECT * FROM Venda WHERE idSocio = ?";
+        return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Venda.class), idSocio);
+    }
+
     @Transactional
     public int criar(Socio socio) {
         // Verifica se o colaborador já existe
@@ -72,6 +78,12 @@ public class SocioRepositorio {
         // Cria o sócio com o mesmo ID
         String sqlInserirSocio = "INSERT INTO Socio (id, proLabore) VALUES (?, ?)";
         return jdbcTemplate.update(sqlInserirSocio, socio.getId(), socio.getProLabore());
+    }
+
+    @Transactional
+    public void transferirVendasSocio(long idSocioAntigo, long idSocioNovo) {
+        String sql = "UPDATE Venda SET idSocio = ? WHERE idSocio = ?";
+        jdbcTemplate.update(sql, idSocioNovo, idSocioAntigo);
     }
 
     @Transactional

@@ -5,11 +5,11 @@ import java.util.List;
 import com.premaImagem.projeto_bd.entidades.Colaborador;
 import com.premaImagem.projeto_bd.entidades.Medico;
 import com.premaImagem.projeto_bd.entidades.Socio;
+import com.premaImagem.projeto_bd.entidades.Venda;
 import com.premaImagem.projeto_bd.repositorios.ColaboradorRepositorio;
 import com.premaImagem.projeto_bd.repositorios.SocioRepositorio;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -43,6 +43,12 @@ public class SocioController {
         return socio;
     }
 
+    @GetMapping("/{idSocio}/vendas")
+    public List<Venda> listarVendasPorSocio(@PathVariable long idSocio) {
+        return repositorio.buscarVendasPorSocio(idSocio);
+    }
+
+
     @PostMapping
     public String criar(@RequestBody Socio socio) {
         int retorno = repositorio.criar(socio);
@@ -51,6 +57,13 @@ public class SocioController {
         } else {
             return "Erro ao criar sócio.";
         }
+    }
+
+    @PutMapping("/{idAntigo}/transferir-vendas-e-excluir/{idNovo}")
+    public String transferirVendasEExcluir(@PathVariable long idAntigo, @PathVariable long idNovo) {
+        repositorio.transferirVendasSocio(idAntigo, idNovo);
+        repositorio.deletar(idAntigo);
+        return "Vendas transferidas e sócio excluído!";
     }
 
     @PutMapping("/{id}")

@@ -48,6 +48,11 @@ public class MedicoController{
             return "Erro ao criar médico.";
         }
     }
+    @PutMapping("/{idAntigo}/transferir-vinculos/{idNovo}")
+    public String transferirVinculos(@PathVariable long idAntigo, @PathVariable long idNovo) {
+        repositorio.transferirVinculosMedico(idAntigo, idNovo);
+        return "Vínculos transferidos!";
+    }
 
     @PutMapping("/{id}")
     public String atualizar(@PathVariable long id, @RequestBody Medico medico){

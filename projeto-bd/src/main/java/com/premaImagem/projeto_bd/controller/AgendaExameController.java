@@ -46,6 +46,11 @@ public class AgendaExameController {
         return listaDeAgendaExame;
     }
 
+    @GetMapping("/medico/{idMedico}")
+    public List<AgendaExame> buscarPorMedico(@PathVariable long idMedico) {
+        return repositorio.buscarPorMedico(idMedico);
+    }
+
 
     // POST: cria um novo agendamento de exame
     @PostMapping
