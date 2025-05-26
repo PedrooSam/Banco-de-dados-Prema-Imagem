@@ -45,7 +45,7 @@ CREATE TABLE Paciente(
 	dataNascimento date not null,
 	cep varchar(8) not null,
 	numeroEndereco varchar(5) not null,
-	complementoEndereco varchar(15) not null,
+	complementoEndereco varchar(15),
 	telefone1 varchar(11) not null,
 	telefone2 varchar(11) default null,
 	email varchar(50) unique not null,
