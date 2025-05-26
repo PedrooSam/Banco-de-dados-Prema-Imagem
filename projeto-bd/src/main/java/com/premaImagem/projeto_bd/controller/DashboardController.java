@@ -3,7 +3,6 @@ package com.premaImagem.projeto_bd.controller;
 import com.premaImagem.projeto_bd.dto.*;
 import com.premaImagem.projeto_bd.repositorios.DashboardRepositorio;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -12,7 +11,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-
 @RestController
 @RequestMapping("/api/dashboard")
 public class DashboardController {
@@ -20,19 +18,34 @@ public class DashboardController {
     @Autowired
     private DashboardRepositorio dashboardRepositorio;
 
-    //medicos que mais realizaram exames
+    // Medicos que mais realizaram exames
     @GetMapping("/top-exames")
     public List<ExameMaisRealizadoDTO> getTop10Exames() {
-        return dashboardRepositorio.top10ExamesMaisRealizados(PageRequest.of(0, 10));
+        List<Object[]> resultados = dashboardRepositorio.top10ExamesMaisRealizados(); // Método agora retorna List<Object[]>
+        List<ExameMaisRealizadoDTO> dtos = new ArrayList<>();
+        for (Object[] row : resultados) {
+            String nome = (String) row[0]; // Coluna "nome" do Exame
+            Long quantidade = ((Number) row[1]).longValue(); // Coluna "quantidade"
+            dtos.add(new ExameMaisRealizadoDTO(nome, quantidade));
+        }
+        return dtos;
     }
 
-    //exames por medicos
+    // Exames por medicos
     @GetMapping("/exames-por-medico")
     public List<ExamesPorMedicoDTO> getExamesPorMedico() {
-        return dashboardRepositorio.examesPorMedico();
+        List<Object[]> resultados = dashboardRepositorio.examesPorMedico(); // Método agora retorna List<Object[]>
+        List<ExamesPorMedicoDTO> dtos = new ArrayList<>();
+        for (Object[] row : resultados) {
+            Long idMedico = ((Number) row[0]).longValue(); // Coluna "id" do Medico
+            String nomeMedico = (String) row[1]; // Coluna "nome" do Colaborador (medico)
+            Long totalExames = ((Number) row[2]).longValue(); // Coluna "total_exames"
+            dtos.add(new ExamesPorMedicoDTO(idMedico, nomeMedico, totalExames));
+        }
+        return dtos;
     }
 
-    //dashboard para exames por periodo do dia
+    // Dashboard para exames por periodo do dia
     @GetMapping("/exames-por-periodo")
     public List<ExamesPorPeriodoDiaDTO> getExamesPorPeriodo() {
         List<Object[]> resultados = dashboardRepositorio.examesPorPeriodo();
@@ -45,13 +58,21 @@ public class DashboardController {
         return dtos;
     }
 
-    //dashboard para exames por mes ou ano
+    // Dashboard para exames por mes ou ano
     @GetMapping("/exames-por-mes-ano")
     public List<ExamesPorMesAnoDTO> getExamesPorMesAno() {
-        return dashboardRepositorio.totalExamesPorMesAno();
+        List<Object[]> resultados = dashboardRepositorio.totalExamesPorMesAno(); // Método agora retorna List<Object[]>
+        List<ExamesPorMesAnoDTO> dtos = new ArrayList<>();
+        for (Object[] row : resultados) {
+            Integer ano = ((Number) row[0]).intValue(); // Coluna "ano"
+            Integer mes = ((Number) row[1]).intValue(); // Coluna "mes"
+            Long totalExames = ((Number) row[2]).longValue(); // Coluna "totalExames"
+            dtos.add(new ExamesPorMesAnoDTO(ano, mes, totalExames));
+        }
+        return dtos;
     }
 
-    //percentual de exame por medico
+    // Percentual de exame por medico
     @GetMapping("/percentual-exames-por-medico")
     public List<PercentualExamesPorMedicoDTO> getPercentualExamesPorMedico() {
         List<Object[]> resultados = dashboardRepositorio.percentualExamesPorMedico();
@@ -64,7 +85,7 @@ public class DashboardController {
         return dtos;
     }
 
-    //medico com mais exames em determinado mes
+    // Medico com mais exames em determinado mes
     @GetMapping("/top5-medicos-atendimentos-mes")
     public List<MedicoAtendimentosMesDTO> getTop5MedicosAtendimentosMes() {
         List<Object[]> resultados = dashboardRepositorio.top5MedicosAtendimentosMesAtual();
@@ -77,7 +98,7 @@ public class DashboardController {
         return dtos;
     }
 
-    //pacientes com mais exames realizados
+    // Pacientes com mais exames realizados
     @GetMapping("/top10-pacientes-mais-exames")
     public List<PacienteMaisExamesDTO> getTop10PacientesMaisExames() {
         List<Object[]> resultados = dashboardRepositorio.top10PacientesMaisExames();
@@ -90,7 +111,7 @@ public class DashboardController {
         return dtos;
     }
 
-    //exames por faixa etaria dos pacientes
+    // Exames por faixa etaria dos pacientes
     @GetMapping("/exames-por-faixa-etaria")
     public List<ExamesPorFaixaEtariaDTO> getExamesPorFaixaEtaria() {
         List<Object[]> resultados = dashboardRepositorio.examesPorFaixaEtaria();
@@ -103,7 +124,7 @@ public class DashboardController {
         return dtos;
     }
 
-    //pacientes que indicaram outros pacientes
+    // Pacientes que indicaram outros pacientes
     @GetMapping("/top10-pacientes-indicadores")
     public List<PacienteIndicadorDTO> getTop10PacientesIndicadores() {
         List<Object[]> resultados = dashboardRepositorio.top10PacientesIndicadores();
@@ -116,7 +137,7 @@ public class DashboardController {
         return dtos;
     }
 
-    //Produtos mais utilizados
+    // Produtos mais utilizados
     @GetMapping("/top10-produtos-mais-utilizados")
     public List<ProdutoMaisUtilizadoDTO> getTop10ProdutosMaisUtilizados() {
         List<Object[]> resultados = dashboardRepositorio.top10ProdutosMaisUtilizados();
@@ -124,13 +145,14 @@ public class DashboardController {
         for (Object[] row : resultados) {
             String produto = (String) row[0];
             Long vezesVendido = ((Number) row[1]).longValue();
-            Long quantidadeVendida = ((Number) row[2]).longValue();
+            // Ajuste no índice para quantidadeVendida, se a consulta retornar 3 colunas
+            Long quantidadeVendida = row.length > 2 && row[2] != null ? ((Number) row[2]).longValue() : 0L;
             dtos.add(new ProdutoMaisUtilizadoDTO(produto, vezesVendido, quantidadeVendida));
         }
         return dtos;
     }
 
-    //quantidade de produtos
+    // Quantidade de produtos
     @GetMapping("/quantidade-produtos")
     public List<QuantidadeProdutoDTO> getQuantidadeProdutos() {
         List<Object[]> resultados = dashboardRepositorio.quantidadeProdutos();
@@ -143,7 +165,7 @@ public class DashboardController {
         return dtos;
     }
 
-    //compras por fornecedor
+    // Compras por fornecedor
     @GetMapping("/compras-por-fornecedor")
     public List<ComprasPorFornecedorDTO> getComprasPorFornecedor() {
         List<Object[]> resultados = dashboardRepositorio.comprasPorFornecedor();
@@ -156,29 +178,30 @@ public class DashboardController {
         return dtos;
     }
 
-    //Total de exames agendados por dia
+    // Total de exames agendados por dia
     @GetMapping("/exames-agendados-por-dia")
     public List<ExamesAgendadosPorDiaDTO> getExamesAgendadosPorDia() {
         List<Object[]> resultados = dashboardRepositorio.examesAgendadosPorDia();
         List<ExamesAgendadosPorDiaDTO> dtos = new ArrayList<>();
         for (Object[] row : resultados) {
-            // Pode vir como java.sql.Date ou String dependendo do driver!
-            LocalDate dia;
-            Object raw = row[0];
-            if (raw instanceof java.sql.Date) {
-                dia = ((java.sql.Date) raw).toLocalDate();
-            } else if (raw instanceof String) {
-                dia = LocalDate.parse((String) raw);
-            } else {
-                dia = null;
+            LocalDate dia = null;
+            Object rawDate = row[0];
+            if (rawDate instanceof java.sql.Date) {
+                dia = ((java.sql.Date) rawDate).toLocalDate();
+            } else if (rawDate instanceof String) {
+                dia = LocalDate.parse((String) rawDate); // Pode precisar de um formatter se o formato não for ISO
+            } else if (rawDate instanceof java.time.LocalDate){ // Se o JDBC driver já converter
+                dia = (java.time.LocalDate) rawDate;
             }
+            // Adicione mais verificações de tipo se necessário
+
             Long totalExames = ((Number) row[1]).longValue();
             dtos.add(new ExamesAgendadosPorDiaDTO(dia, totalExames));
         }
         return dtos;
     }
 
-    //Número médio de exames que um paciente faz por agendamento
+    // Número médio de exames que um paciente faz por agendamento
     @GetMapping("/media-exames-por-agendamento")
     public MediaExamesPorAgendamentoDTO getMediaExamesPorAgendamento() {
         Double media = dashboardRepositorio.mediaExamesPorAgendamento();
@@ -186,7 +209,7 @@ public class DashboardController {
         return new MediaExamesPorAgendamentoDTO(media);
     }
 
-    //Quantos exames agendados por hora do dia
+    // Quantos exames agendados por hora do dia
     @GetMapping("/exames-por-hora")
     public List<ExamesPorHoraDTO> getExamesPorHora() {
         List<Object[]> resultados = dashboardRepositorio.examesPorHora();
