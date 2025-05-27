@@ -5,6 +5,7 @@ import com.premaImagem.projeto_bd.repositorios.DashboardRepositorio;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
@@ -47,8 +48,11 @@ public class DashboardController {
 
     // Dashboard para exames por periodo do dia
     @GetMapping("/exames-por-periodo")
-    public List<ExamesPorPeriodoDiaDTO> getExamesPorPeriodo() {
-        List<Object[]> resultados = dashboardRepositorio.examesPorPeriodo();
+    public List<ExamesPorPeriodoDiaDTO> getExamesPorPeriodo(@RequestParam String data) {
+
+        LocalDate dataEspecifica = LocalDate.parse(data);
+
+        List<Object[]> resultados = dashboardRepositorio.examesPorPeriodoParaDataEspecifica(dataEspecifica);
         List<ExamesPorPeriodoDiaDTO> dtos = new ArrayList<>();
         for (Object[] row : resultados) {
             String periodo = (String) row[0];
@@ -60,16 +64,18 @@ public class DashboardController {
 
     // Dashboard para exames por mes ou ano
     @GetMapping("/exames-por-mes-ano")
-    public List<ExamesPorMesAnoDTO> getExamesPorMesAno() {
-        List<Object[]> resultados = dashboardRepositorio.totalExamesPorMesAno(); // Método agora retorna List<Object[]>
-        List<ExamesPorMesAnoDTO> dtos = new ArrayList<>();
-        for (Object[] row : resultados) {
-            Integer ano = ((Number) row[0]).intValue(); // Coluna "ano"
-            Integer mes = ((Number) row[1]).intValue(); // Coluna "mes"
-            Long totalExames = ((Number) row[2]).longValue(); // Coluna "totalExames"
-            dtos.add(new ExamesPorMesAnoDTO(ano, mes, totalExames));
+    public ExamesPorMesAnoDTO getExamesPorMesAno(
+            @RequestParam int ano,
+            @RequestParam int mes) {
+
+        Long totalExames = dashboardRepositorio.getContagemExamesRealizadosPorMesAno(ano, mes);
+
+        // Se totalExames for null (o que não deve acontecer com COUNT(*)), trata como 0.
+        if (totalExames == null) {
+            totalExames = 0L;
         }
-        return dtos;
+
+        return new ExamesPorMesAnoDTO(ano, mes, totalExames);
     }
 
     // Percentual de exame por medico
@@ -87,8 +93,11 @@ public class DashboardController {
 
     // Medico com mais exames em determinado mes
     @GetMapping("/top5-medicos-atendimentos-mes")
-    public List<MedicoAtendimentosMesDTO> getTop5MedicosAtendimentosMes() {
-        List<Object[]> resultados = dashboardRepositorio.top5MedicosAtendimentosMesAtual();
+    public List<MedicoAtendimentosMesDTO> getTop5MedicosAtendimentosMes(
+            @RequestParam int ano,
+            @RequestParam int mes) {
+
+        List<Object[]> resultados = dashboardRepositorio.top5MedicosAtendimentosPorMesAno(ano, mes);
         List<MedicoAtendimentosMesDTO> dtos = new ArrayList<>();
         for (Object[] row : resultados) {
             String nome = (String) row[0];
@@ -113,15 +122,8 @@ public class DashboardController {
 
     // Exames por faixa etaria dos pacientes
     @GetMapping("/exames-por-faixa-etaria")
-    public List<ExamesPorFaixaEtariaDTO> getExamesPorFaixaEtaria() {
-        List<Object[]> resultados = dashboardRepositorio.examesPorFaixaEtaria();
-        List<ExamesPorFaixaEtariaDTO> dtos = new ArrayList<>();
-        for (Object[] row : resultados) {
-            String faixaEtaria = (String) row[0];
-            Long totalExames = ((Number) row[1]).longValue();
-            dtos.add(new ExamesPorFaixaEtariaDTO(faixaEtaria, totalExames));
-        }
-        return dtos;
+    public ExamesPorFaixaEtariaDTO getExamesPorFaixaEtaria(@RequestParam String faixaEtaria) {
+        return dashboardRepositorio.getExamesPorFaixaEtariaEspecifica(faixaEtaria);
     }
 
     // Pacientes que indicaram outros pacientes
@@ -180,45 +182,45 @@ public class DashboardController {
 
     // Total de exames agendados por dia
     @GetMapping("/exames-agendados-por-dia")
-    public List<ExamesAgendadosPorDiaDTO> getExamesAgendadosPorDia() {
-        List<Object[]> resultados = dashboardRepositorio.examesAgendadosPorDia();
-        List<ExamesAgendadosPorDiaDTO> dtos = new ArrayList<>();
-        for (Object[] row : resultados) {
-            LocalDate dia = null;
-            Object rawDate = row[0];
-            if (rawDate instanceof java.sql.Date) {
-                dia = ((java.sql.Date) rawDate).toLocalDate();
-            } else if (rawDate instanceof String) {
-                dia = LocalDate.parse((String) rawDate); // Pode precisar de um formatter se o formato não for ISO
-            } else if (rawDate instanceof java.time.LocalDate){ // Se o JDBC driver já converter
-                dia = (java.time.LocalDate) rawDate;
-            }
-            // Adicione mais verificações de tipo se necessário
+    public ExamesAgendadosPorDiaDTO getExamesAgendadosPorDia(@RequestParam String data) {
 
-            Long totalExames = ((Number) row[1]).longValue();
-            dtos.add(new ExamesAgendadosPorDiaDTO(dia, totalExames));
+        LocalDate dataEspecifica = LocalDate.parse(data);
+
+        Long totalExames = dashboardRepositorio.getContagemExamesParaDataEspecifica(dataEspecifica);
+
+        if (totalExames == null) {
+            totalExames = 0L;
         }
-        return dtos;
+
+        return new ExamesAgendadosPorDiaDTO(dataEspecifica, totalExames);
     }
 
     // Número médio de exames que um paciente faz por agendamento
     @GetMapping("/media-exames-por-agendamento")
-    public MediaExamesPorAgendamentoDTO getMediaExamesPorAgendamento() {
-        Double media = dashboardRepositorio.mediaExamesPorAgendamento();
-        if (media == null) media = 0.0;
+    public MediaExamesPorAgendamentoDTO getMediaExamesPorAgendamento(@RequestParam long idPaciente) {
+        // Chama o novo método do repositório com o idPaciente
+        Double media = dashboardRepositorio.mediaExamesPorAgendamentoParaPaciente(idPaciente);
+
+        if (media == null) {
+            media = 0.0;
+        }
         return new MediaExamesPorAgendamentoDTO(media);
     }
 
     // Quantos exames agendados por hora do dia
     @GetMapping("/exames-por-hora")
-    public List<ExamesPorHoraDTO> getExamesPorHora() {
-        List<Object[]> resultados = dashboardRepositorio.examesPorHora();
-        List<ExamesPorHoraDTO> dtos = new ArrayList<>();
-        for (Object[] row : resultados) {
-            Integer hora = ((Number) row[0]).intValue();
-            Long totalExames = ((Number) row[1]).longValue();
-            dtos.add(new ExamesPorHoraDTO(hora, totalExames));
+    public ExamesPorHoraDTO getExamesPorHora(
+            @RequestParam int ano,
+            @RequestParam int mes,
+            @RequestParam int dia,
+            @RequestParam int hora) {
+
+        Long totalExames = dashboardRepositorio.getContagemExamesParaDataHoraEspecifica(ano, mes, dia, hora);
+
+        if (totalExames == null) {
+            totalExames = 0L;
         }
-        return dtos;
+
+        return new ExamesPorHoraDTO(hora, totalExames);
     }
 }
