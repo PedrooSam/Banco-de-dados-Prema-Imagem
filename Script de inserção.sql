@@ -1,5 +1,5 @@
 
--- Inserção Colaborador (Total: 10, conforme especificado pelo usuário)
+-- Inserção Colaborador Total: 10
 INSERT INTO Colaborador (id, nome, cpf) VALUES (1, 'Gustavo Souza', '35192975196');
 INSERT INTO Colaborador (id, nome, cpf) VALUES (2, 'Pedro Nascimento', '58261979254');
 INSERT INTO Colaborador (id, nome, cpf) VALUES (3, 'Laura Oliveira', '70063100605');
@@ -11,19 +11,19 @@ INSERT INTO Colaborador (id, nome, cpf) VALUES (8, 'Maria Moraes', '74611037304'
 INSERT INTO Colaborador (id, nome, cpf) VALUES (9, 'Marcos Freitas', '22399995016'); -- Sócio
 INSERT INTO Colaborador (id, nome, cpf) VALUES (10, 'Camila Rodrigues', '86065701251'); -- Sócio
 
--- Inserção Empregado (3 Empregados, conforme especificado pelo usuário)
+-- Inserção Empregado 3 Empregados
 INSERT INTO Empregado (dataAdmissao, funcao, numeroPis, salario, id) VALUES ('2020-01-15', 'Técnico em Radiologia', '895791452243351', 3800.00, 1);
 INSERT INTO Empregado (dataAdmissao, funcao, numeroPis, salario, id) VALUES ('2021-03-10', 'Recepcionista', '129742893827343', 2200.00, 2);
 INSERT INTO Empregado (dataAdmissao, funcao, numeroPis, salario, id) VALUES ('2022-05-20', 'Auxiliar Administrativo', '481278255006914', 2500.00, 3);
 
--- Inserção Medico (5 Médicos, conforme especificado pelo usuário)
+-- Inserção Medico 5 Médicos
 INSERT INTO Medico (especialidade, crm, id) VALUES ('Radiologista', '12345SP', 4);
 INSERT INTO Medico (especialidade, crm, id) VALUES ('Radiologista', '23456SP', 5);
 INSERT INTO Medico (especialidade, crm, id) VALUES ('Ultrassonografista', '34567SP', 6);
 INSERT INTO Medico (especialidade, crm, id) VALUES ('Radiologista Intervencionista', '45678SP', 7);
 INSERT INTO Medico (especialidade, crm, id) VALUES ('Cardiologista', '56789SP', 8);
 
--- Inserção Socio (2 Sócios, conforme especificado pelo usuário)
+-- Inserção Socio 2 Sócios
 INSERT INTO Socio (proLabore, id) VALUES (15000.00, 9);
 INSERT INTO Socio (proLabore, id) VALUES (14500.00, 10);
 
@@ -152,48 +152,217 @@ INSERT INTO Venda (dataHoraVenda, quantidade, idFornecedor, idProduto, idSocio) 
 INSERT INTO Venda (dataHoraVenda, quantidade, idFornecedor, idProduto, idSocio) VALUES ('2024-05-17 08:00:00', 4, 4, 4, 10);
 INSERT INTO Venda (dataHoraVenda, quantidade, idFornecedor, idProduto, idSocio) VALUES ('2024-05-22 17:50:00', 2, 5, 6, 9);
 
--- Inserção AgendaExame (20 Agendamentos)
+-- Inserção AgendaExame 
 -- idMedico: 4 a 8
 -- idPaciente: 1 a 20
 -- idExame: 1 a 50
+-- Inserções Individuais para AgendaExame com dados mais variados
+
+-- Paciente 1 (Ana Julia Silva) - Vários exames, alguns no passado
 INSERT INTO AgendaExame (dataHoraRealizacao, medicoRequisitante, laudo, status, idPaciente, idMedico, idExame) VALUES
-('2025-06-01 08:00:00', 'Dr. House', 'Laudo pendente.', 'agendado', 1, 4, 2), -- Raio-X Tórax
-('2025-06-01 09:00:00', 'Dra. Grey', 'Paciente estável.', 'realizado', 2, 5, 5), -- RM Crânio
-('2025-06-02 10:30:00', 'Dr. Shepherd', 'Acompanhar evolução.', 'agendado', 3, 6, 13), -- US Abdômen
-('2025-06-02 11:00:00', 'Dra. Yang', 'Sem alterações significativas.', 'realizado', 4, 7, 8), -- TC Abdômen
-('2025-06-03 14:00:00', 'Dr. Wilson', 'Recomenda-se novo exame em 6 meses.', 'agendado', 5, 8, 26), -- Mamografia
-('2025-06-03 15:30:00', 'Dr. Foreman', 'Laudo detalhado em anexo.', 'realizado', 6, 4, 1), -- Endoscopia
-('2025-06-04 08:30:00', 'Dra. Bailey', 'Exame cancelado pelo paciente.', 'cancelado', 7, 5, 11), -- RM Joelho
-('2025-06-04 09:45:00', 'Dr. Webber', 'Achados normais para a idade.', 'realizado', 8, 6, 33), -- US Mamária
-('2025-06-05 16:00:00', 'Dra. Torres', 'Pequena lesão identificada, seguir com US.', 'agendado', 9, 7, 19), -- RX Coluna
-('2025-06-05 17:00:00', 'Dr. Sloan', 'Resultado dentro dos parâmetros.', 'realizado', 10, 8, 39), -- US Ombro
-('2025-06-06 08:15:00', 'Dr. Karev', 'Laudo em processamento.', 'agendado', 11, 4, 49), -- RX Abdômen
-('2025-06-06 09:30:00', 'Dra. Pierce', 'Comparar com exames anteriores.', 'realizado', 12, 5, 50), -- RM Pelve
-('2025-06-07 10:45:00', 'Dr. Avery', 'Paciente cooperativo.', 'agendado', 13, 6, 3), -- Ecocardiograma
-('2025-06-07 11:30:00', 'Dra. Kepner', 'Sem intercorrências durante o exame.', 'realizado', 14, 7, 4), -- Colonoscopia
-('2025-06-08 14:30:00', 'Dr. Hunt', 'Necessário contraste para melhor visualização.', 'agendado', 15, 8, 9), -- TC Tórax
-('2025-06-08 15:45:00', 'Dra. Altman', 'Laudo liberado.', 'realizado', 16, 4, 16), -- RM Coluna Lombar
-('2025-06-09 08:45:00', 'Dr. Koracick', 'Aguardando preparo do paciente.', 'agendado', 17, 5, 21), -- TC Crânio
-('2025-06-09 10:00:00', 'Dra. Robbins', 'Exame realizado com sucesso.', 'realizado', 18, 6, 23), -- US Tireoide
-('2025-06-10 16:30:00', 'Dr. DeLuca', 'Paciente apresentou leve desconforto.', 'agendado', 19, 7, 27), -- TC Pelve
-('2025-06-10 17:45:00', 'Dra. Helm', 'Resultados preliminares normais.', 'realizado', 20, 8, 30); -- US Próstata
+('2025-04-10 08:00:00', 'Dr. House', 'Achados normais.', 'realizado', 1, 4, 2); -- Raio-X Tórax (Passado)
+INSERT INTO AgendaExame (dataHoraRealizacao, medicoRequisitante, laudo, status, idPaciente, idMedico, idExame) VALUES
+('2025-04-10 08:30:00', 'Dr. House', 'Coleta realizada.', 'realizado', 1, 4, 7); -- Hemograma Completo (Passado)
+INSERT INTO AgendaExame (dataHoraRealizacao, medicoRequisitante, laudo, status, idPaciente, idMedico, idExame) VALUES
+('2025-05-15 09:00:00', 'Dr. House', 'Paciente não compareceu.', 'cancelado', 1, 4, 13); -- US Abdômen (Passado, cancelado)
+INSERT INTO AgendaExame (dataHoraRealizacao, medicoRequisitante, laudo, status, idPaciente, idMedico, idExame) VALUES
+('2025-06-01 08:00:00', 'Dr. House', 'Laudo pendente.', 'agendado', 1, 4, 2); -- Raio-X Tórax (Futuro)
+INSERT INTO AgendaExame (dataHoraRealizacao, medicoRequisitante, laudo, status, idPaciente, idMedico, idExame) VALUES
+('2025-06-10 10:00:00', 'Dr. House', 'Aguardando realização.', 'agendado', 1, 6, 3); -- Ecocardiograma (Futuro)
+-- Paciente 2 (Bruno Costa Alves) - Alguns exames
+INSERT INTO AgendaExame (dataHoraRealizacao, medicoRequisitante, laudo, status, idPaciente, idMedico, idExame) VALUES
+('2025-05-05 09:00:00', 'Dra. Grey', 'Paciente estável, sem alterações.', 'realizado', 2, 5, 5); -- RM Crânio (Passado)
+INSERT INTO AgendaExame (dataHoraRealizacao, medicoRequisitante, laudo, status, idPaciente, idMedico, idExame) VALUES
+('2025-06-03 09:30:00', 'Dra. Grey', 'Laudo pendente.', 'agendado', 2, 5, 7); -- Hemograma Completo (Futuro)
+-- Paciente 3 (Carlos Eduardo Lima)
+INSERT INTO AgendaExame (dataHoraRealizacao, medicoRequisitante, laudo, status, idPaciente, idMedico, idExame) VALUES
+('2025-06-02 10:30:00', 'Dr. Shepherd', 'Acompanhar evolução.', 'agendado', 3, 6, 13); -- US Abdômen
+-- Paciente 4 (Daniela Ferreira Santos)
+INSERT INTO AgendaExame (dataHoraRealizacao, medicoRequisitante, laudo, status, idPaciente, idMedico, idExame) VALUES
+('2025-04-20 11:00:00', 'Dra. Yang', 'Sem alterações significativas.', 'realizado', 4, 7, 8); -- TC Abdômen (Passado)
+-- Paciente 5 (Eduardo Pereira Oliveira)
+INSERT INTO AgendaExame (dataHoraRealizacao, medicoRequisitante, laudo, status, idPaciente, idMedico, idExame) VALUES
+('2025-06-03 14:00:00', 'Dr. Wilson', 'Recomenda-se novo exame em 6 meses.', 'agendado', 5, 8, 26); -- Mamografia
+-- Paciente 6 (Fernanda Almeida Ribeiro)
+INSERT INTO AgendaExame (dataHoraRealizacao, medicoRequisitante, laudo, status, idPaciente, idMedico, idExame) VALUES
+('2025-05-10 15:30:00', 'Dr. Foreman', 'Laudo detalhado em anexo.', 'realizado', 6, 4, 1); -- Endoscopia (Passado)
+-- Paciente 7 (Gustavo Henrique Souza)
+INSERT INTO AgendaExame (dataHoraRealizacao, medicoRequisitante, laudo, status, idPaciente, idMedico, idExame) VALUES
+('2025-06-04 08:30:00', 'Dra. Bailey', 'Exame cancelado pelo paciente.', 'cancelado', 7, 5, 11); -- RM Joelho
+-- Paciente 8 (Heloisa Martins Barbosa)
+INSERT INTO AgendaExame (dataHoraRealizacao, medicoRequisitante, laudo, status, idPaciente, idMedico, idExame) VALUES
+('2025-05-02 09:45:00', 'Dr. Webber', 'Achados normais para a idade.', 'realizado', 8, 6, 33); -- US Mamária (Passado)
+-- Paciente 9 (Igor Nogueira Campos)
+INSERT INTO AgendaExame (dataHoraRealizacao, medicoRequisitante, laudo, status, idPaciente, idMedico, idExame) VALUES
+('2025-06-05 16:00:00', 'Dra. Torres', 'Pequena lesão identificada, seguir com US.', 'agendado', 9, 7, 19); -- RX Coluna
+-- Paciente 10 (Julia Castro Dias)
+INSERT INTO AgendaExame (dataHoraRealizacao, medicoRequisitante, laudo, status, idPaciente, idMedico, idExame) VALUES
+('2025-04-25 17:00:00', 'Dr. Sloan', 'Resultado dentro dos parâmetros.', 'realizado', 10, 8, 39); -- US Ombro (Passado)
+-- Paciente 11 (Lucas Azevedo Pinto)
+INSERT INTO AgendaExame (dataHoraRealizacao, medicoRequisitante, laudo, status, idPaciente, idMedico, idExame) VALUES
+('2025-06-06 08:15:00', 'Dr. Karev', 'Laudo em processamento.', 'agendado', 11, 4, 49); -- RX Abdômen
+-- Paciente 12 (Manuela Gomes Farias)
+INSERT INTO AgendaExame (dataHoraRealizacao, medicoRequisitante, laudo, status, idPaciente, idMedico, idExame) VALUES
+('2025-05-18 09:30:00', 'Dra. Pierce', 'Comparar com exames anteriores.', 'realizado', 12, 5, 50); -- RM Pelve (Passado)
+-- Paciente 13 (Nicolas Martins Lima)
+INSERT INTO AgendaExame (dataHoraRealizacao, medicoRequisitante, laudo, status, idPaciente, idMedico, idExame) VALUES
+('2025-06-07 10:45:00', 'Dr. Avery', 'Paciente cooperativo.', 'agendado', 13, 6, 3); -- Ecocardiograma
+-- Paciente 14 (Olivia Castro Silva)
+INSERT INTO AgendaExame (dataHoraRealizacao, medicoRequisitante, laudo, status, idPaciente, idMedico, idExame) VALUES
+('2025-05-20 11:30:00', 'Dra. Kepner', 'Sem intercorrências durante o exame.', 'realizado', 14, 7, 4); -- Colonoscopia (Passado)
+-- Paciente 15 (Pedro Barros Ribeiro)
+INSERT INTO AgendaExame (dataHoraRealizacao, medicoRequisitante, laudo, status, idPaciente, idMedico, idExame) VALUES
+('2025-06-08 14:30:00', 'Dr. Hunt', 'Necessário contraste para melhor visualização.', 'agendado', 15, 8, 9); -- TC Tórax
+-- Paciente 16 (Renata Dias Souza)
+INSERT INTO AgendaExame (dataHoraRealizacao, medicoRequisitante, laudo, status, idPaciente, idMedico, idExame) VALUES
+('2025-04-15 15:45:00', 'Dra. Altman', 'Laudo liberado.', 'realizado', 16, 4, 16); -- RM Coluna Lombar (Passado)
+-- Paciente 17 (Samuel Correia Nogueira)
+INSERT INTO AgendaExame (dataHoraRealizacao, medicoRequisitante, laudo, status, idPaciente, idMedico, idExame) VALUES
+('2025-06-09 08:45:00', 'Dr. Koracick', 'Aguardando preparo do paciente.', 'agendado', 17, 5, 21); -- TC Crânio
+-- Paciente 18 (Tatiana Campos Pereira)
+INSERT INTO AgendaExame (dataHoraRealizacao, medicoRequisitante, laudo, status, idPaciente, idMedico, idExame) VALUES
+('2025-05-22 10:00:00', 'Dra. Robbins', 'Exame realizado com sucesso.', 'realizado', 18, 6, 23); -- US Tireoide (Passado)
+-- Paciente 19 (Thiago Dias Alves)
+INSERT INTO AgendaExame (dataHoraRealizacao, medicoRequisitante, laudo, status, idPaciente, idMedico, idExame) VALUES
+('2025-06-10 16:30:00', 'Dr. DeLuca', 'Paciente apresentou leve desconforto.', 'agendado', 19, 7, 27); -- TC Pelve
+-- Paciente 20 (Valentina Esteves Costa)
+INSERT INTO AgendaExame (dataHoraRealizacao, medicoRequisitante, laudo, status, idPaciente, idMedico, idExame) VALUES
+('2025-04-28 17:45:00', 'Dra. Helm', 'Resultados preliminares normais.', 'realizado', 20, 8, 30); -- US Próstata (Passado)
+-- Mais Hemogramas (Exame ID 7)
+INSERT INTO AgendaExame (dataHoraRealizacao, medicoRequisitante, laudo, status, idPaciente, idMedico, idExame) VALUES
+('2025-05-03 08:00:00', 'Dr. House', 'Coleta OK.', 'realizado', 3, 4, 7);
+INSERT INTO AgendaExame (dataHoraRealizacao, medicoRequisitante, laudo, status, idPaciente, idMedico, idExame) VALUES
+('2025-05-10 08:15:00', 'Dra. Bailey', 'Valores de referência.', 'realizado', 11, 6, 7);
+INSERT INTO AgendaExame (dataHoraRealizacao, medicoRequisitante, laudo, status, idPaciente, idMedico, idExame) VALUES
+('2025-06-11 09:00:00', 'Dr. House', 'Pendente.', 'agendado', 15, 4, 7);
+-- Mais Raio-X de Tórax (Exame ID 2)
+INSERT INTO AgendaExame (dataHoraRealizacao, medicoRequisitante, laudo, status, idPaciente, idMedico, idExame) VALUES
+('2025-05-04 10:00:00', 'Dr. Wilson', 'Sem alterações pleurais.', 'realizado', 5, 4, 2);
+INSERT INTO AgendaExame (dataHoraRealizacao, medicoRequisitante, laudo, status, idPaciente, idMedico, idExame) VALUES
+('2025-06-12 11:00:00', 'Dra. Yang', 'Aguardando laudo.', 'agendado', 10, 7, 2);
+-- Mais Ultrassonografia Abdominal Total (Exame ID 13)
+INSERT INTO AgendaExame (dataHoraRealizacao, medicoRequisitante, laudo, status, idPaciente, idMedico, idExame) VALUES
+('2025-04-29 14:00:00', 'Dr. Shepherd', 'Fígado esteatótico leve.', 'realizado', 8, 6, 13);
+INSERT INTO AgendaExame (dataHoraRealizacao, medicoRequisitante, laudo, status, idPaciente, idMedico, idExame) VALUES
+('2025-06-13 15:00:00', 'Dr. Foreman', 'Revisar em 3 meses.', 'agendado', 12, 4, 13);
+-- Exames menos comuns (Ex: ID 40 a 45)
+INSERT INTO AgendaExame (dataHoraRealizacao, medicoRequisitante, laudo, status, idPaciente, idMedico, idExame) VALUES
+('2025-05-06 16:00:00', 'Dr. Karev', 'Dentro dos padrões.', 'realizado', 14, 7, 40); -- Gasometria Arterial
+INSERT INTO AgendaExame (dataHoraRealizacao, medicoRequisitante, laudo, status, idPaciente, idMedico, idExame) VALUES
+('2025-06-14 08:00:00', 'Dra. Altman', 'Laudo pendente.', 'agendado', 17, 5, 42); -- Eletroencefalograma
+INSERT INTO AgendaExame (dataHoraRealizacao, medicoRequisitante, laudo, status, idPaciente, idMedico, idExame) VALUES
+('2025-05-07 09:30:00', 'Dr. Hunt', 'Confirmado.', 'realizado', 19, 8, 43); -- Beta HCG
+-- Paciente 2 (Bruno Costa Alves) com mais um exame no passado
+INSERT INTO AgendaExame (dataHoraRealizacao, medicoRequisitante, laudo, status, idPaciente, idMedico, idExame) VALUES
+('2025-04-12 11:00:00', 'Dra. Grey', 'Exame normal.', 'realizado', 2, 5, 14); -- Perfil Lipídico
+-- Médico 4 (Gustavo Moraes) com mais alguns exames
+INSERT INTO AgendaExame (dataHoraRealizacao, medicoRequisitante, laudo, status, idPaciente, idMedico, idExame) VALUES
+('2025-05-23 13:30:00', 'Dr. House', 'Lesão não significativa.', 'realizado', 9, 4, 5); -- RM Crânio
+INSERT INTO AgendaExame (dataHoraRealizacao, medicoRequisitante, laudo, status, idPaciente, idMedico, idExame) VALUES
+('2025-06-15 14:00:00', 'Dr. Wilson', 'Agendado.', 'agendado', 18, 4, 2); -- Raio-X Tórax
 
--- Inserção Pagamento (15 Pagamentos, vinculados aos agendamentos acima)
--- (formaPagamento, notaFiscal, valorPago, parcelas, id, dataPagamento, agendaExameDataHora, agendaExamePaciente, agendaExameMedico, agendaExameExame)
+-- Insert pagamento
+-- Nota Fiscal: NF<ID_PAGAMENTO><ANO_PAGAMENTO><MES_PAGAMENTO><DIA_PAGAMENTO><LETRA_SEQUENCIAL>
+
+-- Para AgendaExame: ('2025-06-01 08:00:00', 'Dr. House', 'Laudo pendente.', 'agendado', 1, 4, 2) -> Exame 2 (Preço: 578.06)
 INSERT INTO Pagamento (formaPagamento, notaFiscal, valorPago, parcelas, id, dataPagamento, agendaExameDataHora, agendaExamePaciente, agendaExameMedico, agendaExameExame) VALUES
-('Cartão', 'NF00120250601A', 578.06, 3, 1, '2025-06-01 07:50:00', '2025-06-01 08:00:00', 1, 4, 2),
-('PIX', 'NF00220250601B', 721.73, 1, 2, '2025-06-01 08:55:00', '2025-06-01 09:00:00', 2, 5, 5),
-('Dinheiro', 'NF00320250602C', 180.31, 1, 3, '2025-06-02 10:20:00', '2025-06-02 10:30:00', 3, 6, 13),
-('Cartão', 'NF00420250602D', 450.22, 2, 4, '2025-06-02 10:50:00', '2025-06-02 11:00:00', 4, 7, 8),
-('PIX', 'NF00520250603E', 221.22, 1, 5, '2025-06-03 13:50:00', '2025-06-03 14:00:00', 5, 8, 26),
-('Cartão', 'NF00620250603F', 651.13, 4, 6, '2025-06-03 15:20:00', '2025-06-03 15:30:00', 6, 4, 1),
--- ('PIX', 'NF00720250604G', 689.48, 1, 7, '2025-06-04 08:20:00', '2025-06-04 08:30:00', 7, 5, 11), -- Exame cancelado, sem pagamento
-('Dinheiro', 'NF00820250604H', 173.61, 1, 8, '2025-06-04 09:35:00', '2025-06-04 09:45:00', 8, 6, 33),
-('Cartão', 'NF00920250605I', 150.98, 1, 9, '2025-06-05 15:50:00', '2025-06-05 16:00:00', 9, 7, 19),
-('PIX', 'NF01020250605J', 198.83, 1, 10, '2025-06-05 16:50:00', '2025-06-05 17:00:00', 10, 8, 39),
-('Cartão', 'NF01120250606K', 176.22, 1, 11, '2025-06-06 08:05:00', '2025-06-06 08:15:00', 11, 4, 49),
-('PIX', 'NF01220250606L', 829.43, 6, 12, '2025-06-06 09:20:00', '2025-06-06 09:30:00', 12, 5, 50),
-('Dinheiro', 'NF01320250607M', 208.70, 1, 13, '2025-06-07 10:35:00', '2025-06-07 10:45:00', 13, 6, 3),
-('Cartão', 'NF01420250607N', 599.45, 3, 14, '2025-06-07 11:20:00', '2025-06-07 11:30:00', 14, 7, 4),
-('PIX', 'NF01520250608O', 435.81, 2, 15, '2025-06-08 14:20:00', '2025-06-08 14:30:00', 15, 8, 9);
+('Cartão', 'NF120250601A', 578.06, 3, 1, '2025-06-01 07:50:00', '2025-06-01 08:00:00', 1, 4, 2);
+-- Para AgendaExame: ('2025-05-05 09:00:00', 'Dra. Grey', 'Paciente estável...', 'realizado', 2, 5, 5) -> Exame 5 (Preço: 721.73)
+INSERT INTO Pagamento (formaPagamento, notaFiscal, valorPago, parcelas, id, dataPagamento, agendaExameDataHora, agendaExamePaciente, agendaExameMedico, agendaExameExame) VALUES
+('PIX', 'NF220250505A', 721.73, 1, 2, '2025-05-05 08:50:00', '2025-05-05 09:00:00', 2, 5, 5);
+-- Para AgendaExame: ('2025-06-02 10:30:00', 'Dr. Shepherd', 'Acompanhar evolução.', 'agendado', 3, 6, 13) -> Exame 13 (Preço: 180.31)
+INSERT INTO Pagamento (formaPagamento, notaFiscal, valorPago, parcelas, id, dataPagamento, agendaExameDataHora, agendaExamePaciente, agendaExameMedico, agendaExameExame) VALUES
+('Dinheiro', 'NF320250602A', 180.31, 1, 3, '2025-06-02 10:20:00', '2025-06-02 10:30:00', 3, 6, 13);
+-- Para AgendaExame: ('2025-04-20 11:00:00', 'Dra. Yang', 'Sem alterações...', 'realizado', 4, 7, 8) -> Exame 8 (Preço: 450.22)
+INSERT INTO Pagamento (formaPagamento, notaFiscal, valorPago, parcelas, id, dataPagamento, agendaExameDataHora, agendaExamePaciente, agendaExameMedico, agendaExameExame) VALUES
+('Cartão', 'NF420250420A', 450.22, 2, 4, '2025-04-20 10:50:00', '2025-04-20 11:00:00', 4, 7, 8);
+-- Para AgendaExame: ('2025-06-03 14:00:00', 'Dr. Wilson', 'Recomenda-se...', 'agendado', 5, 8, 26) -> Exame 26 (Preço: 221.22)
+INSERT INTO Pagamento (formaPagamento, notaFiscal, valorPago, parcelas, id, dataPagamento, agendaExameDataHora, agendaExamePaciente, agendaExameMedico, agendaExameExame) VALUES
+('PIX', 'NF520250603A', 221.22, 1, 5, '2025-06-03 13:50:00', '2025-06-03 14:00:00', 5, 8, 26);
+-- Para AgendaExame: ('2025-05-10 15:30:00', 'Dr. Foreman', 'Laudo detalhado...', 'realizado', 6, 4, 1) -> Exame 1 (Preço: 651.13)
+INSERT INTO Pagamento (formaPagamento, notaFiscal, valorPago, parcelas, id, dataPagamento, agendaExameDataHora, agendaExamePaciente, agendaExameMedico, agendaExameExame) VALUES
+('Cartão', 'NF620250510A', 651.13, 4, 6, '2025-05-10 15:20:00', '2025-05-10 15:30:00', 6, 4, 1);
+-- Para AgendaExame: ('2025-05-02 09:45:00', 'Dr. Webber', 'Achados normais...', 'realizado', 8, 6, 33) -> Exame 33 (Preço: 173.61)
+INSERT INTO Pagamento (formaPagamento, notaFiscal, valorPago, parcelas, id, dataPagamento, agendaExameDataHora, agendaExamePaciente, agendaExameMedico, agendaExameExame) VALUES
+('Dinheiro', 'NF820250502A', 173.61, 1, 8, '2025-05-02 09:35:00', '2025-05-02 09:45:00', 8, 6, 33);
+-- Para AgendaExame: ('2025-06-05 16:00:00', 'Dra. Torres', 'Pequena lesão...', 'agendado', 9, 7, 19) -> Exame 19 (Preço: 150.98)
+INSERT INTO Pagamento (formaPagamento, notaFiscal, valorPago, parcelas, id, dataPagamento, agendaExameDataHora, agendaExamePaciente, agendaExameMedico, agendaExameExame) VALUES
+('Cartão', 'NF920250605A', 150.98, 1, 9, '2025-06-05 15:50:00', '2025-06-05 16:00:00', 9, 7, 19);
+-- Para AgendaExame: ('2025-04-25 17:00:00', 'Dr. Sloan', 'Resultado dentro...', 'realizado', 10, 8, 39) -> Exame 39 (Preço: 198.83)
+INSERT INTO Pagamento (formaPagamento, notaFiscal, valorPago, parcelas, id, dataPagamento, agendaExameDataHora, agendaExamePaciente, agendaExameMedico, agendaExameExame) VALUES
+('PIX', 'NF1020250425A', 198.83, 1, 10, '2025-04-25 16:50:00', '2025-04-25 17:00:00', 10, 8, 39);
+-- Para AgendaExame: ('2025-06-06 08:15:00', 'Dr. Karev', 'Laudo em processamento.', 'agendado', 11, 4, 49) -> Exame 49 (Preço: 176.22)
+INSERT INTO Pagamento (formaPagamento, notaFiscal, valorPago, parcelas, id, dataPagamento, agendaExameDataHora, agendaExamePaciente, agendaExameMedico, agendaExameExame) VALUES
+('Cartão', 'NF1120250606A', 176.22, 1, 11, '2025-06-06 08:05:00', '2025-06-06 08:15:00', 11, 4, 49);
+-- Para AgendaExame: ('2025-05-18 09:30:00', 'Dra. Pierce', 'Comparar com exames...', 'realizado', 12, 5, 50) -> Exame 50 (Preço: 829.43)
+INSERT INTO Pagamento (formaPagamento, notaFiscal, valorPago, parcelas, id, dataPagamento, agendaExameDataHora, agendaExamePaciente, agendaExameMedico, agendaExameExame) VALUES
+('PIX', 'NF1220250518A', 829.43, 6, 12, '2025-05-18 09:20:00', '2025-05-18 09:30:00', 12, 5, 50);
+-- Para AgendaExame: ('2025-06-07 10:45:00', 'Dr. Avery', 'Paciente cooperativo.', 'agendado', 13, 6, 3) -> Exame 3 (Preço: 208.70)
+INSERT INTO Pagamento (formaPagamento, notaFiscal, valorPago, parcelas, id, dataPagamento, agendaExameDataHora, agendaExamePaciente, agendaExameMedico, agendaExameExame) VALUES
+('Dinheiro', 'NF1320250607A', 208.70, 1, 13, '2025-06-07 10:35:00', '2025-06-07 10:45:00', 13, 6, 3);
+-- Para AgendaExame: ('2025-05-20 11:30:00', 'Dra. Kepner', 'Sem intercorrências...', 'realizado', 14, 7, 4) -> Exame 4 (Preço: 599.45)
+INSERT INTO Pagamento (formaPagamento, notaFiscal, valorPago, parcelas, id, dataPagamento, agendaExameDataHora, agendaExamePaciente, agendaExameMedico, agendaExameExame) VALUES
+('Cartão', 'NF1420250520A', 599.45, 3, 14, '2025-05-20 11:20:00', '2025-05-20 11:30:00', 14, 7, 4);
+-- Para AgendaExame: ('2025-06-08 14:30:00', 'Dr. Hunt', 'Necessário contraste...', 'agendado', 15, 8, 9) -> Exame 9 (Preço: 435.81)
+INSERT INTO Pagamento (formaPagamento, notaFiscal, valorPago, parcelas, id, dataPagamento, agendaExameDataHora, agendaExamePaciente, agendaExameMedico, agendaExameExame) VALUES
+('PIX', 'NF1520250608A', 435.81, 2, 15, '2025-06-08 14:20:00', '2025-06-08 14:30:00', 15, 8, 9);
+-- Para AgendaExame: ('2025-04-10 08:00:00', 'Dr. House', 'Achados normais.', 'realizado', 1, 4, 2) -> Exame 2 (Preço: 578.06)
+INSERT INTO Pagamento (formaPagamento, notaFiscal, valorPago, parcelas, id, dataPagamento, agendaExameDataHora, agendaExamePaciente, agendaExameMedico, agendaExameExame) VALUES
+('Cartão', 'NF1620250410A', 578.06, 2, 16, '2025-04-10 07:50:00', '2025-04-10 08:00:00', 1, 4, 2);
+-- Para AgendaExame: ('2025-04-10 08:30:00', 'Dr. House', 'Coleta realizada.', 'realizado', 1, 4, 7) -> Exame 7 (Preço: 41.25)
+INSERT INTO Pagamento (formaPagamento, notaFiscal, valorPago, parcelas, id, dataPagamento, agendaExameDataHora, agendaExamePaciente, agendaExameMedico, agendaExameExame) VALUES
+('PIX', 'NF1720250410B', 41.25, 1, 17, '2025-04-10 08:20:00', '2025-04-10 08:30:00', 1, 4, 7);
+-- Para AgendaExame: ('2025-04-15 15:45:00', 'Dra. Altman', 'Laudo liberado.', 'realizado', 16, 4, 16) -> Exame 16 (Preço: 762.10)
+INSERT INTO Pagamento (formaPagamento, notaFiscal, valorPago, parcelas, id, dataPagamento, agendaExameDataHora, agendaExamePaciente, agendaExameMedico, agendaExameExame) VALUES
+('Cartão', 'NF1820250415A', 762.10, 4, 18, '2025-04-15 15:30:00', '2025-04-15 15:45:00', 16, 4, 16);
+-- Para AgendaExame: ('2025-05-22 10:00:00', 'Dra. Robbins', 'Exame realizado...', 'realizado', 18, 6, 23) -> Exame 23 (Preço: 157.88)
+INSERT INTO Pagamento (formaPagamento, notaFiscal, valorPago, parcelas, id, dataPagamento, agendaExameDataHora, agendaExamePaciente, agendaExameMedico, agendaExameExame) VALUES
+('Dinheiro', 'NF1920250522A', 157.88, 1, 19, '2025-05-22 09:50:00', '2025-05-22 10:00:00', 18, 6, 23);
+-- Para AgendaExame: ('2025-04-28 17:45:00', 'Dra. Helm', 'Resultados preliminares...', 'realizado', 20, 8, 30) -> Exame 30 (Preço: 161.25)
+INSERT INTO Pagamento (formaPagamento, notaFiscal, valorPago, parcelas, id, dataPagamento, agendaExameDataHora, agendaExamePaciente, agendaExameMedico, agendaExameExame) VALUES
+('PIX', 'NF2020250428A', 161.25, 1, 20, '2025-04-28 17:30:00', '2025-04-28 17:45:00', 20, 8, 30);
+-- Para AgendaExame (adicional): ('2025-05-03 08:00:00', ... 'realizado', 3, 4, 7) -> Exame 7 (Preço: 41.25)
+INSERT INTO Pagamento (formaPagamento, notaFiscal, valorPago, parcelas, id, dataPagamento, agendaExameDataHora, agendaExamePaciente, agendaExameMedico, agendaExameExame) VALUES
+('Dinheiro', 'NF2120250503A', 41.25, 1, 21, '2025-05-03 07:50:00', '2025-05-03 08:00:00', 3, 4, 7);
+-- Para AgendaExame (adicional): ('2025-05-10 08:15:00', ... 'realizado', 11, 6, 7) -> Exame 7 (Preço: 41.25)
+INSERT INTO Pagamento (formaPagamento, notaFiscal, valorPago, parcelas, id, dataPagamento, agendaExameDataHora, agendaExamePaciente, agendaExameMedico, agendaExameExame) VALUES
+('Cartão', 'NF2220250510B', 41.25, 1, 22, '2025-05-10 08:05:00', '2025-05-10 08:15:00', 11, 6, 7);
+-- Para AgendaExame (adicional): ('2025-05-04 10:00:00', ... 'realizado', 5, 4, 2) -> Exame 2 (Preço: 578.06)
+INSERT INTO Pagamento (formaPagamento, notaFiscal, valorPago, parcelas, id, dataPagamento, agendaExameDataHora, agendaExamePaciente, agendaExameMedico, agendaExameExame) VALUES
+('PIX', 'NF2320250504A', 578.06, 1, 23, '2025-05-04 09:50:00', '2025-05-04 10:00:00', 5, 4, 2);
+-- Para AgendaExame (adicional): ('2025-04-29 14:00:00', ... 'realizado', 8, 6, 13) -> Exame 13 (Preço: 180.31)
+INSERT INTO Pagamento (formaPagamento, notaFiscal, valorPago, parcelas, id, dataPagamento, agendaExameDataHora, agendaExamePaciente, agendaExameMedico, agendaExameExame) VALUES
+('Cartão', 'NF2420250429A', 180.31, 1, 24, '2025-04-29 13:50:00', '2025-04-29 14:00:00', 8, 6, 13);
+-- Para AgendaExame (adicional): ('2025-05-06 16:00:00', ... 'realizado', 14, 7, 40) -> Exame 40 (Preço: 120.56)
+INSERT INTO Pagamento (formaPagamento, notaFiscal, valorPago, parcelas, id, dataPagamento, agendaExameDataHora, agendaExamePaciente, agendaExameMedico, agendaExameExame) VALUES
+('Dinheiro', 'NF2520250506A', 120.56, 1, 25, '2025-05-06 15:50:00', '2025-05-06 16:00:00', 14, 7, 40);
+-- Para AgendaExame (adicional): ('2025-05-07 09:30:00', ... 'realizado', 19, 8, 43) -> Exame 43 (Preço: 81.15)
+INSERT INTO Pagamento (formaPagamento, notaFiscal, valorPago, parcelas, id, dataPagamento, agendaExameDataHora, agendaExamePaciente, agendaExameMedico, agendaExameExame) VALUES
+('PIX', 'NF2620250507A', 81.15, 1, 26, '2025-05-07 09:20:00', '2025-05-07 09:30:00', 19, 8, 43);
+-- Para AgendaExame (adicional): ('2025-04-12 11:00:00', ... 'realizado', 2, 5, 14) -> Exame 14 (Preço: 73.11)
+INSERT INTO Pagamento (formaPagamento, notaFiscal, valorPago, parcelas, id, dataPagamento, agendaExameDataHora, agendaExamePaciente, agendaExameMedico, agendaExameExame) VALUES
+('Cartão', 'NF2720250412A', 73.11, 1, 27, '2025-04-12 10:50:00', '2025-04-12 11:00:00', 2, 5, 14);
+-- Para AgendaExame (adicional): ('2025-05-23 13:30:00', ... 'realizado', 9, 4, 5) -> Exame 5 (Preço: 721.73)
+INSERT INTO Pagamento (formaPagamento, notaFiscal, valorPago, parcelas, id, dataPagamento, agendaExameDataHora, agendaExamePaciente, agendaExameMedico, agendaExameExame) VALUES
+('Cartão', 'NF2820250523A', 721.73, 3, 28, '2025-05-23 13:20:00', '2025-05-23 13:30:00', 9, 4, 5);
 
+-- Código pra esvaziar tudo
+-- Desabilita a verificação de chaves estrangeiras
+SET FOREIGN_KEY_CHECKS = 0;
+
+-- Lista de TRUNCATE para suas tabelas (adicione ou remova conforme sua estrutura)
+TRUNCATE TABLE Pagamento;
+TRUNCATE TABLE AgendaExame;
+TRUNCATE TABLE Venda;
+TRUNCATE TABLE Produto;
+TRUNCATE TABLE Fornecedor;
+TRUNCATE TABLE Paciente;
+TRUNCATE TABLE Exame;
+TRUNCATE TABLE Socio;
+TRUNCATE TABLE Medico;
+TRUNCATE TABLE Empregado;
+TRUNCATE TABLE Colaborador;
+-- Adicione mais tabelas aqui se houver
+
+-- Habilita novamente a verificação de chaves estrangeiras
+SET FOREIGN_KEY_CHECKS = 1;

@@ -23,7 +23,7 @@ BEGIN
 end
 
 -- Chamando a procedure
-CALL BuscarPorData('AgendaExame','dataHoraRealizacao','2025-01-10');
+CALL BuscarPorData('AgendaExame','dataHoraRealizacao','2025-06-01');
 
 -- Trigger para mudar status de agendaExame depois que adicionou em pagamento 
 
@@ -38,36 +38,6 @@ BEGIN
       AND idMedico = NEW.agendaExameMedico
       AND idExame = NEW.agendaExameExame;
 END 
-
--- Teste trigger
-
-INSERT INTO Pagamento (
-    formaPagamento,
-    notaFiscal,
-    valorPago,
-    parcelas,
-    agendaExameDataHora,
-    agendaExamePaciente,
-    agendaExameMedico,
-    agendaExameExame
-) VALUES (
-    'Pix',
-    'NF20240522001',
-    350.00,
-    1,
-    '2024-12-30 08:15:22',
-    14,
-    114,
-    5
-);
-
--- Conferindo se funcionou { Tem que retornar pago}
-SELECT status
-FROM AgendaExame
-WHERE dataHoraRealizacao = '2024-12-30 08:15:22'
-  AND idPaciente = 14
-  AND idMedico = 114
-  AND idExame = 5;
 
 -- 1. Dashboard Geral / Visão Executiva
 
@@ -254,6 +224,7 @@ FOR EACH ROW
 BEGIN
     DELETE FROM Colaborador WHERE id = OLD.id;
 END 
+
 -- Trigger para apagar colaborador quando um sócio for apagado
 
 CREATE TRIGGER trg_delete_colaborador_socio
@@ -262,3 +233,14 @@ FOR EACH ROW
 BEGIN
     DELETE FROM Colaborador WHERE id = OLD.id;
 END 
+
+-- Trigger pra atualizar o estoque
+
+CREATE TRIGGER tg_atualiza_estoque_produto_compra
+AFTER INSERT ON Venda
+FOR EACH ROW
+BEGIN
+    UPDATE Produto
+    SET quantidade = quantidade + NEW.quantidade  
+    WHERE id = NEW.idProduto;                  
+END;	
