@@ -82,4 +82,3 @@ public class PacienteRepositorio {
         return jdbcTemplate.update(sql, id);
     }
 }
-

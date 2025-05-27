@@ -17,7 +17,7 @@ public class Paciente {
     private String telefone2;
     private String email;
     private String nomeMae;
-    private Paciente pacienteIndicador;
+    private Long pacienteIndicadorId;
 
     // Getters e Setters
 
@@ -125,12 +125,12 @@ public class Paciente {
         this.nomeMae = nomeMae;
     }
 
-    public Paciente getPacienteIndicador() {
-        return pacienteIndicador;
+    // New Getter and Setter for pacienteIndicadorId
+    public Long getPacienteIndicador() {
+        return pacienteIndicadorId;
     }
 
-    public void setPacienteIndicador(Paciente pacienteIndicador) {
-        this.pacienteIndicador = pacienteIndicador;
+    public void setPacienteIndicador(Long pacienteIndicadorId) {
+        this.pacienteIndicadorId = pacienteIndicadorId;
     }
-    
 }
