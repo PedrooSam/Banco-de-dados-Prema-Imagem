@@ -1,74 +1,59 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-
+import { AgendamentoTable } from '../components/agendamentosDia/agendamentoTable';
+import { QuickAccess } from "../components/acessoRapido/acessoRapidoTable";
+import { Carrossel } from "../components/menuDashboards/carrossel"
 
 export default function Home() {
-  
   const [agendamentos, setAgendamentos] = useState([]);
-  console.log("Home");
 
   useEffect(() => {
-    console.log("useEffect");
-    fetch('http://localhost:8080/agenda-exames')
-      .then(res => res.json())
-      .then(async data => {
-        console.log("Resposta da API:", data);
-        const agendamentosComDetalhes = await Promise.all(
-          data.map(async (agendamento) => {
-            try {
-              // Buscar médico
-              const medicoRes = await fetch(`http://localhost:8080/medicos/${agendamento.idMedico}`);
-              const medico = await medicoRes.json();
+  const fetchAgendamentos = async () => {
+    try {
+      const res = await fetch('http://localhost:8080/agenda-exames');
+      const data = await res.json();
 
-              // Buscar paciente
-              const pacienteRes = await fetch(`http://localhost:8080/pacientes/id/${agendamento.idPaciente}`);
-              const paciente = await pacienteRes.json();
+      const agendamentosComDetalhes = await Promise.all(
+        data.map(async (agendamento) => {
+          console.log("Agendamento original da API:", agendamento);
+          try {
+            const medicoRes = await fetch(`http://localhost:8080/medicos/id/${agendamento.idMedico}`);
+            const medico = await medicoRes.json();
 
-              // Buscar exame
-              const exameRes = await fetch(`http://localhost:8080/exames/${agendamento.idExame}`);
-              const exame = await exameRes.json();
+            const pacienteRes = await fetch(`http://localhost:8080/pacientes/id/${agendamento.idPaciente}`);
+            const paciente = await pacienteRes.json();
 
-              return {
-                ...agendamento,
-                medico,
-                paciente,
-                exame,
-              };
-            } catch (err) {
-              console.error("Erro ao buscar dados relacionados:", err);
-              return {
-                ...agendamento,
-                medico: null,
-                paciente: null,
-                exame: null,
-              };
-            }
-          })
-        );
+            const exameRes = await fetch(`http://localhost:8080/exames/${agendamento.idExame}`);
+            const exame = await exameRes.json();
 
-        setAgendamentos(agendamentosComDetalhes);
-      })
-      .catch(err => console.error("Erro ao buscar agendamentos:", err));
-  }, []);
+            return { ...agendamento, medico, paciente, exame };
+          } catch (err) {
+            console.error("Erro ao buscar dados relacionados:", err);
+            return { ...agendamento, medico: null, paciente: null, exame: null };
+          }
+        })
+      );
+
+      setAgendamentos(agendamentosComDetalhes);
+    } catch (error) {
+      console.error("Erro ao buscar agendamentos:", error);
+    }
+  };
+
+  fetchAgendamentos();
+}, []);
 
 
   return (
-    <div className="p-4">
-      <h1 className="text-xl font-bold mb-4">Agendamentos de Exames</h1>
-      <ul className="space-y-3">
-        {agendamentos.map((agendamento, index) => (
-          <li key={index} className="border rounded p-4 shadow">
-            <p><strong>Data/Hora:</strong> {new Date(agendamento.dataHoraRealizacao).toLocaleString()}</p>
-            <p><strong>Médico Requisitante:</strong> {agendamento.medicoRequisitante}</p>
-            <p><strong>Status:</strong> {agendamento.status}</p>
-            <p><strong>Laudo:</strong> {agendamento.laudo || '—'}</p>
-            <p><strong>ID Paciente:</strong> {agendamento.idPaciente}</p>
-            <p><strong>ID Médico:</strong> {agendamento.idMedico}</p>
-            <p><strong>ID Exame:</strong> {agendamento.idExame}</p>
-          </li>
-        ))}
-      </ul>
+    <div>
+      <div className='w-screen mx-auto my-10'>
+        <Carrossel />
+      </div>
+      <div className="flex gap-15">
+        <AgendamentoTable agendamentos={agendamentos} />
+        <QuickAccess />
+      </div>
     </div>
   );
 }
