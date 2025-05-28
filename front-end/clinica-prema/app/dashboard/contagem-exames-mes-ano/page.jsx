@@ -11,6 +11,21 @@ import { format } from "date-fns"
 import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis, Tooltip, Legend } from 'recharts';
 import { ChartContainer, ChartTooltip, ChartTooltipContent, ChartLegend, ChartLegendContent } from "@/components/ui/chart";
 
+// Mover a definição de 'meses' para fora do componente
+const meses = [
+  { value: "01", label: "Janeiro" },
+  { value: "02", label: "Fevereiro" },
+  { value: "03", label: "Março" },
+  { value: "04", label: "Abril" },
+  { value: "05", label: "Maio" },
+  { value: "06", label: "Junho" },
+  { value: "07", label: "Julho" },
+  { value: "08", label: "Agosto" },
+  { value: "09", label: "Setembro" },
+  { value: "10", label: "Outubro" },
+  { value: "11", label: "Novembro" },
+  { value: "12", label: "Dezembro" },
+];
 
 export default function ContagemExamesMesAnoPage() {
   const [anoSelecionado, setAnoSelecionado] = useState(new Date().getFullYear().toString())
@@ -20,41 +35,44 @@ export default function ContagemExamesMesAnoPage() {
   const [dadosGrafico, setDadosGrafico] = useState([]);
 
   const anos = Array.from({ length: 10 }, (_, i) => (new Date().getFullYear() - 5 + i).toString());
-  const meses = [
-    { value: "01", label: "Janeiro" },
-    { value: "02", label: "Fevereiro" },
-    { value: "03", label: "Março" },
-    { value: "04", label: "Abril" },
-    { value: "05", label: "Maio" },
-    { value: "06", label: "Junho" },
-    { value: "07", label: "Julho" },
-    { value: "08", label: "Agosto" },
-    { value: "09", label: "Setembro" },
-    { value: "10", label: "Outubro" },
-    { value: "11", label: "Novembro" },
-    { value: "12", label: "Dezembro" },
-  ];
+  // 'meses' não é mais definido aqui
 
   // Simulação de busca de dados
   useEffect(() => {
-    setLoadingDados(true);
+    // setLoadingDados(true); // Removido por enquanto para focar na lógica de dados
     // Simula uma chamada de API
+    // No futuro, aqui você chamaria:
+    // fetch(`/api/dashboard/contagem-exames/${anoSelecionado}/${mesSelecionado}`)
+    //   .then(response => response.json())
+    //   .then(data => {
+    //     setTotalExames(data); // data é o Long retornado pelo backend
+    //     const mesLabelAtual = meses.find(m => m.value === mesSelecionado)?.label || "";
+    //     // Adapta dadosGrafico para usar o total do mês/ano selecionado
+    //     setDadosGrafico([{ name: `${mesLabelAtual.substring(0,3)}/${anoSelecionado}`, total: data }]);
+    //     setLoadingDados(false);
+    //   })
+    //   .catch(error => {
+    //     console.error("Erro ao buscar dados:", error);
+    //     setTotalExames(0);
+    //     setDadosGrafico([]);
+    //     setLoadingDados(false);
+    //   });
+
+    // Mantendo a simulação por enquanto, mas adaptando a lógica para o novo gráfico
+    setLoadingDados(true);
     setTimeout(() => {
-      // Lógica para simular a contagem de exames baseada no mês e ano
       const examesSimulados = Math.floor(Math.random() * (300 - 50 + 1)) + 50;
       const fatorMes = parseInt(mesSelecionado);
       const fatorAno = parseInt(anoSelecionado) % 10;
-      setTotalExames(examesSimulados + (fatorMes * 10) + (fatorAno * 5));
+      const totalCalculado = examesSimulados + (fatorMes * 10) + (fatorAno * 5);
+      setTotalExames(totalCalculado);
 
-      // Simular dados para o gráfico (exames por mês no ano selecionado)
-      const dadosMensais = meses.map(mes => ({
-        name: mes.label.substring(0, 3), // Usar abreviação do mês
-        total: Math.floor(Math.random() * (250 - 20 + 1)) + 20 + (parseInt(mes.value) * 5) + (fatorAno * 3), // Variação simulada
-      }));
-      setDadosGrafico(dadosMensais);
+      const mesLabelAtual = meses.find(m => m.value === mesSelecionado)?.label || "";
+      // O gráfico agora mostrará uma única barra para o mês/ano selecionado
+      setDadosGrafico([{ name: `${mesLabelAtual.substring(0, 3)}/${anoSelecionado.substring(2,4)}`, total: totalCalculado }]);
       setLoadingDados(false);
     }, 500);
-  }, [anoSelecionado, mesSelecionado]);
+  }, [anoSelecionado, mesSelecionado]); // 'meses' removido do array de dependências
 
   const mesLabel = meses.find(m => m.value === mesSelecionado)?.label || "";
 
@@ -142,9 +160,11 @@ export default function ContagemExamesMesAnoPage() {
             <CardHeader>
               <CardTitle className="text-xl flex items-center text-green-700">
                 <BarChart3 className="h-6 w-6 mr-2" />
-                Distribuição Mensal de Exames em {anoSelecionado}
+                Total de Exames para {mesLabel} de {anoSelecionado}
               </CardTitle>
-              <CardDescription>Contagem de exames realizados em cada mês do ano selecionado.</CardDescription>
+              <CardDescription>
+                Visualização do total de exames realizados em {mesLabel} de {anoSelecionado}.
+              </CardDescription>
             </CardHeader>
             <CardContent>
               <ChartContainer config={{ total: { label: "Exames", color: "hsl(var(--chart-1))" } }} className="h-[300px] w-full">

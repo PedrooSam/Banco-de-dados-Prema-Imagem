@@ -5,7 +5,6 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsive
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { HomeIcon, CalendarClock, FilterIcon, AlertTriangle, CheckCircle2, ClockIcon } from 'lucide-react';
 import Link from 'next/link';
@@ -27,23 +26,22 @@ const todosExamesAgendadosMock = [
 
 const gerarHorariosDisponiveis = () => {
   const horarios = [];
-  for (let h = 7; h < 22; h++) { // Horários das 07:00 às 21:00
+  for (let h = 0; h < 24; h++) { // Horários de 00:00 a 23:00
     horarios.push({ valor: h, nome: `${String(h).padStart(2, '0')}:00` });
-    horarios.push({ valor: h + 0.5, nome: `${String(h).padStart(2, '0')}:30` });
   }
   return horarios;
 };
 
 const filtrarExamesPorHoraMock = (dia, mes, ano, horaSelecionada) => {
   if (!isValid(new Date(ano, mes, dia))) return [];
-  const horaInicio = Math.floor(horaSelecionada);
-  const minutoInicio = (horaSelecionada % 1) * 60;
-  
-  const dataHoraInicioFiltro = setMinutes(setHours(new Date(ano, mes, dia), horaInicio), minutoInicio);
-  const dataHoraFimFiltro = setMinutes(dataHoraInicioFiltro, minutoInicio + 29); // Considera um intervalo de 30min para a hora selecionada
+  const horaInicioFiltro = Math.floor(horaSelecionada); // Considera apenas a hora cheia
 
   return todosExamesAgendadosMock.filter(exame => {
-    return exame.dataHora >= dataHoraInicioFiltro && exame.dataHora <= dataHoraFimFiltro;
+    const dataExame = new Date(exame.dataHora);
+    return getYear(dataExame) === ano &&
+           getMonth(dataExame) === mes &&
+           getDate(dataExame) === dia &&
+           dataExame.getHours() === horaInicioFiltro;
   });
 };
 
@@ -54,7 +52,9 @@ export default function ExamesAgendadosHoraPage() {
   const [anoSelecionado, setAnoSelecionado] = useState(getYear(hoje));
   const [horaSelecionada, setHoraSelecionada] = useState(9); // Default 9:00
 
-  const [examesFiltrados, setExamesFiltrados] = useState([]);
+  const [contagemExames, setContagemExames] = useState(0); // Estado para a contagem
+  const [dadosGrafico, setDadosGrafico] = useState([]); // Estado para os dados do gráfico
+  const [loading, setLoading] = useState(false);
 
   const anosDisponiveis = useMemo(() => {
     const anoAtual = getYear(new Date());
@@ -78,14 +78,25 @@ export default function ExamesAgendadosHoraPage() {
   const horariosDisponiveis = useMemo(() => gerarHorariosDisponiveis(), []);
 
   useEffect(() => {
+    setLoading(true);
     // Ajustar dia se o mês/ano mudar e o dia se tornar inválido
     const ultimoDiaValido = getDate(endOfMonth(new Date(anoSelecionado, mesSelecionado, 1)));
     if (diaSelecionado > ultimoDiaValido) {
         setDiaSelecionado(ultimoDiaValido);
     }
 
-    const agendamentos = filtrarExamesPorHoraMock(diaSelecionado, mesSelecionado, anoSelecionado, horaSelecionada);
-    setExamesFiltrados(agendamentos);
+    // Simula a busca de dados do backend (que retornaria apenas a contagem)
+    // No futuro, aqui seria a chamada fetch para /api/dashboard/exames-agendados-hora/{ano}/{mes}/{dia}/{hora}
+    setTimeout(() => {
+      const agendamentos = filtrarExamesPorHoraMock(diaSelecionado, mesSelecionado, anoSelecionado, horaSelecionada);
+      setContagemExames(agendamentos.length);
+
+      // Prepara dados para o gráfico (uma única barra)
+      const horaFormatadaParaGrafico = `${String(Math.floor(horaSelecionada)).padStart(2, '0')}:00`;
+      setDadosGrafico([{ name: horaFormatadaParaGrafico, total: agendamentos.length }]);
+      setLoading(false);
+    }, 300);
+
   }, [diaSelecionado, mesSelecionado, anoSelecionado, horaSelecionada]);
 
   const dataFormatada = useMemo(() => {
@@ -161,9 +172,9 @@ export default function ExamesAgendadosHoraPage() {
                   </Select>
                 </div>
                 <div>
-                  <label htmlFor="hora" className="block text-sm font-medium text-gray-700 mb-1">Horário:</label>
-                  <Select value={horaSelecionada.toString()} onValueChange={(value) => setHoraSelecionada(parseFloat(value))}>
-                    <SelectTrigger id="hora" className="w-full bg-white"><SelectValue /></SelectTrigger>
+                  <label htmlFor="hora" className="block text-sm font-medium text-gray-700 mb-1">Horário (hora cheia):</label>
+                  <Select value={horaSelecionada.toString()} onValueChange={(value) => setHoraSelecionada(parseInt(value))}>
+                    <SelectTrigger id="hora" className="w-full bg-white"><SelectValue placeholder="Selecione um horário" /></SelectTrigger>
                     <SelectContent>
                       {horariosDisponiveis.map(h => <SelectItem key={h.valor} value={h.valor.toString()}>{h.nome}</SelectItem>)}
                     </SelectContent>
@@ -193,59 +204,42 @@ export default function ExamesAgendadosHoraPage() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="text-center py-8">
-                  <p className="text-6xl font-bold text-indigo-600">{examesFiltrados.length}</p>
-                  <p className="text-xl text-gray-600 mt-2">
-                    {examesFiltrados.length === 1 ? "exame agendado" : "exames agendados"}
-                  </p>
+                  {loading ? (
+                    <p className="text-gray-500">Carregando...</p>
+                  ) : (
+                    <>
+                      <p className="text-6xl font-bold text-indigo-600">{contagemExames}</p>
+                      <p className="text-xl text-gray-600 mt-2">
+                        {contagemExames === 1 ? "exame agendado" : "exames agendados"}
+                      </p>
+                    </>
+                  )}
                 </CardContent>
               </Card>
 
-              {examesFiltrados.length > 0 && (
-                <Card className="shadow-lg">
-                  <CardHeader className="bg-gray-50 border-b">
-                    <CardTitle className="text-lg font-semibold text-gray-700">Detalhes dos Exames Agendados</CardTitle>
-                    <CardDescription>Lista de exames para {dataFormatada} às {horaFormatada}.</CardDescription>
+              {/* Gráfico de Barras Simplificado */}
+              {!loading && dadosGrafico.length > 0 && contagemExames > 0 && (
+                <Card className="shadow-md">
+                  <CardHeader>
+                    <CardTitle className="text-lg text-indigo-700">Contagem para {horaFormatada}</CardTitle>
                   </CardHeader>
-                  <CardContent className="pt-6">
-                    <div className="overflow-x-auto rounded-md border">
-                      <Table>
-                        <TableHeader className="bg-gray-100">
-                          <TableRow>
-                            <TableHead className="font-semibold text-gray-600">Horário Exato</TableHead>
-                            <TableHead className="font-semibold text-gray-600">Tipo de Exame</TableHead>
-                            <TableHead className="font-semibold text-gray-600">Paciente</TableHead>
-                          </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                          {examesFiltrados.map((exame, index) => (
-                            <TableRow key={index} className="hover:bg-gray-50">
-                              <TableCell className="font-medium text-gray-800">{format(exame.dataHora, 'HH:mm')}</TableCell>
-                              <TableCell className="text-gray-700">
-                                <Badge variant="secondary" className="bg-indigo-100 text-indigo-700">{exame.tipoExame}</Badge>
-                              </TableCell>
-                              <TableCell className="text-gray-700">{exame.paciente}</TableCell>
-                            </TableRow>
-                          ))}
-                        </TableBody>
-                      </Table>
-                    </div>
+                  <CardContent className="h-[200px] w-full"> {/* Altura reduzida para gráfico simples */}
+                    <ResponsiveContainer width="100%" height="100%">
+                      <BarChart data={dadosGrafico} layout="vertical" margin={{ left: 10, right: 30 }}>
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <XAxis type="number" allowDecimals={false} />
+                        <YAxis dataKey="name" type="category" width={60} />
+                        <Tooltip formatter={(value) => [value, "Total Agendado"]} />
+                        <Legend />
+                        <Bar dataKey="total" fill="#4f46e5" name="Total Agendado" barSize={30} />
+                      </BarChart>
+                    </ResponsiveContainer>
                   </CardContent>
                 </Card>
               )}
 
-              {examesFiltrados.length === 0 && dataFormatada !== "Data inválida" && (
-                 <Card className="shadow-md bg-green-50 border-green-500 border-l-4">
-                    <CardContent className="pt-8 pb-8 flex flex-col items-center justify-center text-center">
-                    <CheckCircle2 className="w-16 h-16 text-green-500 mb-4" />
-                    <p className="text-xl font-semibold text-gray-700 mb-2">
-                        Nenhum exame encontrado para esta data e horário.
-                    </p>
-                    <p className="text-gray-500">
-                        Não há agendamentos correspondentes aos filtros selecionados.
-                    </p>
-                    </CardContent>
-                </Card>
-              )}
+              {/* Tabela de detalhes foi removida */}
+
             </div>
           )}
         </CardContent>

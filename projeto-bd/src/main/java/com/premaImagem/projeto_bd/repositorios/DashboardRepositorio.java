@@ -48,7 +48,7 @@ public class DashboardRepositorio {
                 "FROM AgendaExame ae " +
                 "JOIN Medico m ON ae.idMedico = m.id " +
                 "JOIN Colaborador col ON m.id = col.id " +
-                "WHERE ae.status = 'realizado' " +
+                "WHERE ae.status = 'realizado' " + // Corrigido de 'pago' para 'realizado'
                 "GROUP BY m.id, col.nome " +
                 "ORDER BY total_exames DESC";
         return jdbcTemplate.query(sql, objectArrayRowMapper);
@@ -58,13 +58,14 @@ public class DashboardRepositorio {
     public List<Object[]> examesPorPeriodoParaDataEspecifica(LocalDate dataEspecifica) {
         String sql = "SELECT " +
                 "CASE " +
-                "  WHEN HOUR(dataHoraRealizacao) BETWEEN 6 AND 11 THEN 'Manhã' " +
-                "  WHEN HOUR(dataHoraRealizacao) BETWEEN 12 AND 17 THEN 'Tarde' " +
-                "  WHEN HOUR(dataHoraRealizacao) BETWEEN 18 AND 23 THEN 'Noite' " +
-                "  ELSE 'Madrugada' END AS periodo, " +
+                "  WHEN HOUR(dataHoraRealizacao) < 6 OR HOUR(dataHoraRealizacao) >= 22 THEN 'Madrugada' " +
+                "  WHEN HOUR(dataHoraRealizacao) >= 6 AND HOUR(dataHoraRealizacao) < 12 THEN 'Manhã' " +
+                "  WHEN HOUR(dataHoraRealizacao) >= 12 AND HOUR(dataHoraRealizacao) < 18 THEN 'Tarde' " +
+                "  WHEN HOUR(dataHoraRealizacao) >= 18 AND HOUR(dataHoraRealizacao) < 22 THEN 'Noite' " +
+                "END AS periodo, " +
                 "COUNT(*) AS total_exames " +
                 "FROM AgendaExame " +
-                "WHERE status = 'realizado' " +
+                "WHERE status = \'realizado\' " + // Corrigido de volta para 'realizado'
                 "  AND DATE(dataHoraRealizacao) = ? " +
                 "GROUP BY periodo";
 
@@ -75,7 +76,7 @@ public class DashboardRepositorio {
     public Long getContagemExamesRealizadosPorMesAno(int ano, int mes) {
         String sql = "SELECT COUNT(*) AS total_exames " +
                 "FROM AgendaExame " +
-                "WHERE status = 'realizado' " +
+                "WHERE status = 'realizado' " + // Corrigido de 'pago' para 'realizado'
                 "  AND YEAR(dataHoraRealizacao) = ? " +
                 "  AND MONTH(dataHoraRealizacao) = ?";
 
