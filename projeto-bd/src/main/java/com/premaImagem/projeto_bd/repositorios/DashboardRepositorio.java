@@ -36,7 +36,7 @@ public class DashboardRepositorio {
     public List<Object[]> top10ExamesMaisRealizados() {
         String sql = "SELECT ex.nome, COUNT(ae.idExame) AS quantidade " +
                 "FROM AgendaExame ae JOIN Exame ex ON ae.idExame = ex.id " +
-                "WHERE ae.status = 'realizado' " +
+                "WHERE ae.status = 'pago' " +
                 "GROUP BY ex.nome " +
                 "ORDER BY quantidade DESC LIMIT 10";
         return jdbcTemplate.query(sql, objectArrayRowMapper);
@@ -48,7 +48,7 @@ public class DashboardRepositorio {
                 "FROM AgendaExame ae " +
                 "JOIN Medico m ON ae.idMedico = m.id " +
                 "JOIN Colaborador col ON m.id = col.id " +
-                "WHERE ae.status = 'realizado' " + // Corrigido de 'pago' para 'realizado'
+                "WHERE ae.status = 'pago' " + // Alterado de 'realizado' para 'pago'
                 "GROUP BY m.id, col.nome " +
                 "ORDER BY total_exames DESC";
         return jdbcTemplate.query(sql, objectArrayRowMapper);
@@ -65,7 +65,7 @@ public class DashboardRepositorio {
                 "END AS periodo, " +
                 "COUNT(*) AS total_exames " +
                 "FROM AgendaExame " +
-                "WHERE status = \'realizado\' " + // Corrigido de volta para 'realizado'
+                "WHERE status = 'pago' " + // Alterado de 'realizado' para 'pago'
                 "  AND DATE(dataHoraRealizacao) = ? " +
                 "GROUP BY periodo";
 
@@ -76,7 +76,7 @@ public class DashboardRepositorio {
     public Long getContagemExamesRealizadosPorMesAno(int ano, int mes) {
         String sql = "SELECT COUNT(*) AS total_exames " +
                 "FROM AgendaExame " +
-                "WHERE status = 'realizado' " + // Corrigido de 'pago' para 'realizado'
+                "WHERE status = 'pago' " + // Alterado de 'realizado' para 'pago'
                 "  AND YEAR(dataHoraRealizacao) = ? " +
                 "  AND MONTH(dataHoraRealizacao) = ?";
 
@@ -86,11 +86,11 @@ public class DashboardRepositorio {
     // 5. % de exames realizados por médico
     public List<Object[]> percentualExamesPorMedico() {
         String sql = "SELECT c.nome, " +
-                "       (COUNT(*) * 100.0 / (SELECT COUNT(*) FROM AgendaExame WHERE status = 'realizado')) AS percentual " +
-                "FROM AgendaExame a " + // Nome da tabela como no BD
+                "       (COUNT(*) * 100.0 / (SELECT COUNT(*) FROM AgendaExame WHERE status = 'pago')) AS percentual " + // Subconsulta também para 'pago'
+                "FROM AgendaExame a " +
                 "JOIN Medico m ON a.idMedico = m.id " +
                 "JOIN Colaborador c ON m.id = c.id " +
-                "WHERE a.status = 'realizado' " +
+                "WHERE a.status = 'pago' " + // Alterado de 'realizado' para 'pago'
                 "GROUP BY c.nome " +
                 "ORDER BY percentual DESC";
         return jdbcTemplate.query(sql, objectArrayRowMapper);
@@ -102,7 +102,7 @@ public class DashboardRepositorio {
                 "FROM AgendaExame a " +
                 "JOIN Medico m ON a.idMedico = m.id " +
                 "JOIN Colaborador c ON m.id = c.id " +
-                "WHERE a.status = 'realizado' " +
+                "WHERE a.status = 'pago' " + // Alterado de 'realizado' para 'pago'
                 "  AND YEAR(a.dataHoraRealizacao) = ? " +
                 "  AND MONTH(a.dataHoraRealizacao) = ? " +
                 "GROUP BY c.nome " +
@@ -117,7 +117,7 @@ public class DashboardRepositorio {
         String sql = "SELECT p.nome, COUNT(*) AS total_exames " +
                 "FROM AgendaExame a " +
                 "JOIN Paciente p ON a.idPaciente = p.id " +
-                "WHERE a.status = 'realizado' " +
+                "WHERE a.status = 'pago' " +
                 "GROUP BY p.id, p.nome " +
                 "ORDER BY total_exames DESC " +
                 "LIMIT 10";
@@ -136,7 +136,7 @@ public class DashboardRepositorio {
                 "        END AS faixa_calculada " +
                 "    FROM AgendaExame a " +
                 "    JOIN Paciente p ON a.idPaciente = p.id " +
-                "    WHERE a.status = 'realizado' " +
+                "    WHERE a.status = 'pago' " +
                 ") " +
                 "SELECT ? AS faixa_etaria_param, COUNT(*) AS total_exames " +
                 "FROM ExamesComFaixaEtaria " +
