@@ -24,6 +24,7 @@ end
 
 -- Chamando a procedure
 CALL BuscarPorData('AgendaExame','dataHoraRealizacao','2025-06-01');
+CALL BuscarPorData('Pagamento','agendaExameDataHora','2025-06-01');
 
 -- Trigger para mudar status de agendaExame depois que adicionou em pagamento 
 
@@ -47,7 +48,7 @@ SELECT
     MONTH(dataHoraRealizacao) AS mes,
     COUNT(*) AS total_exames
 FROM AgendaExame
-WHERE status = 'realizado'
+WHERE status = 'pago'
 GROUP BY ano, mes
 ORDER BY ano, mes;
 
@@ -57,7 +58,7 @@ ORDER BY ano, mes;
 SELECT e.nome, COUNT(*) AS quantidade
 FROM AgendaExame a
 JOIN Exame e ON a.idExame = e.id
-WHERE a.status = 'realizado'
+WHERE a.status = 'pago'
 GROUP BY e.nome
 ORDER BY quantidade DESC
 LIMIT 10;
@@ -67,7 +68,7 @@ SELECT m.id, c.nome, COUNT(*) AS total_exames
 FROM AgendaExame a
 JOIN Medico m ON a.idMedico = m.id
 JOIN Colaborador c ON m.id = c.id
-WHERE a.status = 'realizado'
+WHERE a.status = 'pago'
 GROUP BY m.id, c.nome
 ORDER BY total_exames DESC;
 
@@ -81,17 +82,17 @@ SELECT
     END AS periodo,
     COUNT(*) AS total_exames
 FROM AgendaExame
-WHERE status = 'realizado'
+WHERE status = 'pago'
 GROUP BY periodo;
 
 -- 3. Dashboard de Médicos
 
 -- % de exames realizados por médico
-SELECT c.nome, COUNT(*) * 100.0 / (SELECT COUNT(*) FROM AgendaExame WHERE status = 'realizado') AS percentual
+SELECT c.nome, COUNT(*) * 100.0 / (SELECT COUNT(*) FROM AgendaExame WHERE status = 'pago') AS percentual
 FROM AgendaExame a
 JOIN Medico m ON a.idMedico = m.id
 JOIN Colaborador c ON m.id = c.id
-WHERE a.status = 'realizado'
+WHERE a.status = 'pago'
 GROUP BY c.nome
 ORDER BY percentual DESC;
 
@@ -100,7 +101,7 @@ SELECT c.nome, COUNT(*) AS atendimentos
 FROM AgendaExame a
 JOIN Medico m ON a.idMedico = m.id
 JOIN Colaborador c ON m.id = c.id
-WHERE a.status = 'realizado'
+WHERE a.status = 'pago'
   AND YEAR(a.dataHoraRealizacao) = YEAR(CURDATE())
   AND MONTH(a.dataHoraRealizacao) = MONTH(CURDATE())
 GROUP BY c.nome
@@ -114,7 +115,7 @@ LIMIT 5;
 SELECT p.nome, COUNT(*) AS total_exames
 FROM AgendaExame a
 JOIN Paciente p ON a.idPaciente = p.id
-WHERE a.status = 'realizado'
+WHERE a.status = 'pago'
 GROUP BY p.id, p.nome
 ORDER BY total_exames DESC
 LIMIT 10;
@@ -130,7 +131,7 @@ SELECT
     COUNT(*) AS total_exames
 FROM AgendaExame a
 JOIN Paciente p ON a.idPaciente = p.id
-WHERE a.status = 'realizado'
+WHERE a.status = 'pago'
 GROUP BY faixa_etaria
 ORDER BY faixa_etaria;
 
@@ -147,12 +148,12 @@ LIMIT 10;
 -- Produtos mais utilizados
 SELECT
     p.nome AS produto,
-    COUNT(v.dataHoraVenda) AS vezes_vendido,
-    SUM(v.quantidade) AS quantidade_vendida
+    COUNT(v.dataHoraVenda) AS vezes_comprada,
+    SUM(v.quantidade) AS quantidade_comprada
 FROM Venda v
 JOIN Produto p ON v.idProduto = p.id
 GROUP BY p.id, p.nome
-ORDER BY quantidade_vendida DESC
+ORDER BY quantidade_comprada DESC
 LIMIT 10;
 
 -- Quantidade de produtos
@@ -166,11 +167,11 @@ ORDER BY quantidade DESC;
 
 SELECT
     f.nome AS fornecedor,
-    SUM(v.quantidade) AS total_vendido
+    SUM(v.quantidade) AS total_comprado
 FROM Venda v
 JOIN Fornecedor f ON v.idFornecedor = f.id
 GROUP BY f.id, f.nome
-ORDER BY total_vendido DESC;
+ORDER BY total_comprado DESC;
 
 
 -- 6 Agendamento
