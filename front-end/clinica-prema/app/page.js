@@ -46,7 +46,7 @@ const getTodayDateString = () => {
   return `${year}-${month}-${day}`;
 };
 
-// Updated initialDashboardCards to include all 18 items
+// Updated initialDashboardCards to include all 17 items
 const initialDashboardCards = [
   {
     id: "agendamentos",
@@ -77,16 +77,6 @@ const initialDashboardCards = [
     bgColor: "bg-blue-50 dark:bg-blue-900/20",
     href: "/pacientes",
     icon: <Users className="h-5 w-5 text-blue-600 dark:text-blue-400" />,
-  },
-  {
-    id: "faturamentoDiario",
-    title: "Faturamento Diário (Exemplo)",
-    value: "R$ 0,00",
-    change: "Dado de exemplo",
-    borderColor: "border-l-purple-500",
-    bgColor: "bg-purple-50 dark:bg-purple-900/20",
-    href: "/dashboard/faturamento",
-    icon: <DollarSign className="h-5 w-5 text-purple-600 dark:text-purple-400" />,
   },
   {
     id: "examesPorPeriodo",
