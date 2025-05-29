@@ -12,15 +12,13 @@ import {
   Search,
   Home,
   Calendar,
-  Users,
-  UserCheck,
+  Users,  UserCheck,
   Plus,
   Clock,
   CalendarDays,
   UserPlus,
   Stethoscope,
   FileText,
-  CreditCard,
   DollarSign,
   BarChart3,
   Settings,
@@ -434,13 +432,11 @@ export default function HomePage() {
     
     return agendamentosComPeriodo.filter(ag => ag.periodoComputed === periodoSelecionado);
   };
-
   const acessoRapido = [
     { title: "Agendar Exame", icon: CalendarDays, href: "/agendamentos/novo" },
     { title: "Novo Paciente", icon: UserPlus, href: "/pacientes/novo" },
     { title: "Novo Médico", icon: UserCheck, href: "/medicos/novo" },
     { title: "Novo Tipo de Exame", icon: Stethoscope, href: "/exames/novo" },
-    { title: "Registrar Pagamento", icon: CreditCard, href: "/pagamentos" },
   ];
 
   const isAgendamentosListLoading = loadingAgendaExames || loadingPacientesData || loadingExamesTiposData;

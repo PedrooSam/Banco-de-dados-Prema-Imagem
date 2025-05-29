@@ -12,26 +12,42 @@ import {
   Package
 } from "lucide-react";
 
-// Mock data simplificado - alinhado com o que o backend entregaria (nome do fornecedor, total de itens)
-const mockComprasPorFornecedor = [
-  { fornecedorNome: "MedSupply Ltda", totalItens: 1500 },
-  { fornecedorNome: "EquipMed Brasil", totalItens: 250 },
-  { fornecedorNome: "Suprimentos Médicos SA", totalItens: 800 },
-  { fornecedorNome: "Pharma Distribuidora", totalItens: 1200 },
-  { fornecedorNome: "Tech Medical", totalItens: 50 },
-  { fornecedorNome: "Laboratório Supplies", totalItens: 300 },
-];
-
 export default function ComprasFornecedorPage() {
   const [dadosFornecedor, setDadosFornecedor] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    // Simula carregamento dos dados (que viriam da API no futuro)
-    const dadosOrdenados = [...mockComprasPorFornecedor].sort((a, b) => b.totalItens - a.totalItens);
-    setDadosFornecedor(dadosOrdenados);
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch("http://localhost:8080/api/dashboard/compras-por-fornecedor");
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        // O backend retorna { fornecedor: string, totalVendido: number }
+        // Precisamos mapear para { fornecedorNome: string, totalItens: number }
+        const dadosMapeados = data.map(item => ({
+          fornecedorNome: item.fornecedor,
+          totalItens: item.totalVendido 
+        }));
+        const dadosOrdenados = [...dadosMapeados].sort((a, b) => b.totalItens - a.totalItens);
+        setDadosFornecedor(dadosOrdenados);
+        setError(null);
+      } catch (e) {
+        console.error("Falha ao buscar dados de compras por fornecedor:", e);
+        setError("Não foi possível carregar os dados. Tente novamente mais tarde.");
+        setDadosFornecedor([]); // Limpa os dados em caso de erro
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
   }, []);
 
-  const chartData = mockComprasPorFornecedor.map(item => ({
+  const chartData = dadosFornecedor.map(item => ({ // Modificado para usar dadosFornecedor do estado
     name: item.fornecedorNome,
     total: item.totalItens,
   }));
@@ -79,19 +95,26 @@ export default function ComprasFornecedorPage() {
             </CardDescription>
           </CardHeader>
           <CardContent className="h-[400px] w-full">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={chartData} layout="vertical" margin={{ right: 30 }}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis type="number" />
-                <YAxis dataKey="name" type="category" width={100} />
-                <Tooltip
-                  formatter={(value) => [value, "Total de Itens"]}
-                  cursor={{ fill: 'hsl(var(--muted))' }}
-                />
-                <Legend />
-                <Bar dataKey="total" fill="hsl(var(--primary))" name="Total de Itens Comprados" />
-              </BarChart>
-            </ResponsiveContainer>
+            {loading && <p className="text-center py-10">Carregando dados do gráfico...</p>}
+            {error && <p className="text-center py-10 text-red-600">{error}</p>}
+            {!loading && !error && dadosFornecedor.length === 0 && (
+              <p className="text-center py-10">Nenhum dado para exibir no gráfico.</p>
+            )}
+            {!loading && !error && dadosFornecedor.length > 0 && (
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={chartData} layout="vertical" margin={{ right: 30 }}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis type="number" />
+                  <YAxis dataKey="name" type="category" width={150} /* Aumentado para melhor visualização dos nomes */ />
+                  <Tooltip
+                    formatter={(value) => [value, "Total de Itens"]}
+                    cursor={{ fill: 'hsl(var(--muted))' }}
+                  />
+                  <Legend />
+                  <Bar dataKey="total" fill="hsl(var(--primary))" name="Total de Itens Comprados" />
+                </BarChart>
+              </ResponsiveContainer>
+            )}
           </CardContent>
         </Card>
 
@@ -103,11 +126,26 @@ export default function ComprasFornecedorPage() {
               Fornecedores e Total de Itens
             </CardTitle>
             <CardDescription>
-              {dadosFornecedor.length} fornecedor(es) listado(s), ordenado(s) por total de itens comprados (decrescente).
+              {loading ? "Carregando..." : 
+               error ? "Erro ao carregar" : 
+               `${dadosFornecedor.length} fornecedor(es) listado(s), ordenado(s) por total de itens comprados (decrescente).`}
             </CardDescription>
           </CardHeader>
           <CardContent>
-            {dadosFornecedor.length > 0 ? (
+            {loading && (
+              <div className="text-center py-10">
+                <Truck className="mx-auto h-12 w-12 text-gray-400 mb-4 animate-pulse" />
+                <p className="text-xl font-semibold text-gray-700">Carregando dados...</p>
+              </div>
+            )}
+            {error && (
+              <div className="text-center py-10">
+                <Truck className="mx-auto h-12 w-12 text-red-400 mb-4" />
+                <p className="text-xl font-semibold text-red-700">Erro ao carregar dados</p>
+                <p className="text-gray-500">{error}</p>
+              </div>
+            )}
+            {!loading && !error && dadosFornecedor.length > 0 ? (
               <div className="overflow-x-auto">
                 <Table>
                   <TableHeader>

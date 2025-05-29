@@ -1,46 +1,52 @@
 "use client";
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import Link from 'next/link';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { ArrowLeft, Search, Package, ChevronsUpDown, ChevronUp, ChevronDown } from 'lucide-react';
+import { ArrowLeft, Search, Package, ChevronsUpDown, ChevronUp, ChevronDown, Archive } from 'lucide-react';
 import { Bar } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ArcElement } from 'chart.js';
-
-// Mock Data para Produtos - Simplificado para nome e quantidade
-const mockProdutosEstoque = [
-  { id: 1, nome: 'Seringa Descartável 5ml', quantidade: 200 },
-  { id: 2, nome: 'Luvas Cirúrgicas (Par)', quantidade: 50 },
-  { id: 3, nome: 'Gaze Estéril (Pacote)', quantidade: 150 },
-  { id: 4, nome: 'Álcool 70% (Litro)', quantidade: 30 },
-  { id: 5, nome: 'Agulha Hipodérmica 25G', quantidade: 300 },
-  { id: 6, nome: 'Máscara N95', quantidade: 90 },
-  { id: 7, nome: 'Fio de Sutura Nylon 3-0', quantidade: 40 },
-  { id: 8, nome: 'Compressa de Algodão', quantidade: 120 },
-  { id: 9, nome: 'Cateter Intravenoso 20G', quantidade: 60 },
-  { id: 10, nome: 'Esparadrapo Micropore', quantidade: 180 },
-  { id: 11, nome: 'Soro Fisiológico 0.9% 500ml', quantidade: 100 },
-  { id: 12, nome: 'Abaixador de Língua (Pct c/100)', quantidade: 250 },
-  { id: 13, nome: 'Termômetro Digital', quantidade: 15 },
-  { id: 14, nome: 'Oxímetro de Pulso', quantidade: 8 },
-  { id: 15, nome: 'Lençol Descartável (Rolo)', quantidade: 25 },
-];
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ArcElement);
 
 export default function QuantidadeProdutosPage() {
   const [searchTerm, setSearchTerm] = useState('');
-  const [sortConfig, setSortConfig] = useState({ key: 'quantidade', direction: 'descending' }); // Ordenar por quantidade por padrão
+  const [sortConfig, setSortConfig] = useState({ key: 'quantidade', direction: 'descending' });
+  const [produtos, setProdutos] = useState([]); // Estado para dados do backend
+  const [loading, setLoading] = useState(true); // Estado de carregamento
+  const [error, setError] = useState(null); // Estado de erro
+
+  useEffect(() => {
+    const fetchProdutos = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const response = await fetch("http://localhost:8080/api/dashboard/quantidade-produtos");
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json(); // Backend retorna [{ nome: string, quantidade: number }]
+        setProdutos(data);
+      } catch (e) {
+        console.error("Falha ao buscar dados de quantidade de produtos:", e);
+        setError("Não foi possível carregar os dados. Tente novamente mais tarde.");
+        setProdutos([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProdutos();
+  }, []);
 
   const filteredAndSortedProdutos = useMemo(() => {
-    let items = mockProdutosEstoque
+    let items = produtos // Usar dados do estado 'produtos'
       .filter(produto => 
         produto.nome.toLowerCase().includes(searchTerm.toLowerCase())
-        // Removidos filtros de categoria e status
       );
 
     if (sortConfig.key) {
@@ -63,7 +69,7 @@ export default function QuantidadeProdutosPage() {
       });
     }
     return items;
-  }, [searchTerm, sortConfig]); // Removido selectedCategoria e selectedStatusEstoque das dependências
+  }, [searchTerm, sortConfig, produtos]); // Adicionado 'produtos' como dependência
 
   const requestSort = (key) => {
     let direction = 'ascending';
@@ -84,10 +90,9 @@ export default function QuantidadeProdutosPage() {
 
   // KPIs simplificados para mostrar apenas o total de tipos de itens
   const kpis = useMemo(() => {
-    const totalItens = mockProdutosEstoque.length;
-    // Removidos valorTotalEstoque, itensBaixoEstoque, itensEmAtencao
+    const totalItens = produtos.length; // Usar dados do estado 'produtos'
     return { totalItens };
-  }, [mockProdutosEstoque]);
+  }, [produtos]); // Adicionado 'produtos' como dependência
 
   // Removida a função renderStatusEstoque
 
@@ -134,8 +139,14 @@ export default function QuantidadeProdutosPage() {
             <Package className="h-5 w-5 text-indigo-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-gray-800">{kpis.totalItens}</div>
-            <p className="text-xs text-muted-foreground">Tipos diferentes de produtos cadastrados</p>
+            {loading && <p className="text-xs text-muted-foreground">Carregando...</p>}
+            {error && <p className="text-xs text-red-500">Erro ao carregar KPI</p>}
+            {!loading && !error && (
+              <>
+                <div className="text-2xl font-bold text-gray-800">{kpis.totalItens}</div>
+                <p className="text-xs text-muted-foreground">Tipos diferentes de produtos cadastrados</p>
+              </>
+            )}
           </CardContent>
         </Card>
         {/* Removidos outros KPIs */}
@@ -147,7 +158,20 @@ export default function QuantidadeProdutosPage() {
           <CardTitle className="text-xl text-gray-700">Lista de Produtos e Suas Quantidades</CardTitle>
         </CardHeader>
         <CardContent className="p-0">
-          {filteredAndSortedProdutos.length > 0 ? (
+          {loading && (
+            <div className="text-center text-gray-500 py-12">
+              <Package className="mx-auto h-12 w-12 text-gray-400 mb-4 animate-pulse" />
+              <p className="text-lg font-semibold">Carregando produtos...</p>
+            </div>
+          )}
+          {error && (
+            <div className="text-center text-red-500 py-12">
+              <Archive className="mx-auto h-12 w-12 text-red-400 mb-4" />
+              <p className="text-lg font-semibold">Erro ao carregar produtos</p>
+              <p className="text-sm">{error}</p>
+            </div>
+          )}
+          {!loading && !error && filteredAndSortedProdutos.length > 0 ? (
             <Table>
               <TableHeader>
                 <TableRow className="bg-gray-50">
@@ -180,11 +204,13 @@ export default function QuantidadeProdutosPage() {
               </TableBody>
             </Table>
           ) : (
-            <div className="text-center text-gray-500 py-12">
-              <Archive className="mx-auto h-12 w-12 text-gray-400 mb-4" />
-              <p className="text-lg font-semibold">Nenhum produto encontrado.</p>
-              <p className="text-sm">Tente ajustar os filtros ou adicione novos produtos ao inventário.</p>
-            </div>
+            !loading && !error && ( // Apenas mostrar se não estiver carregando e sem erro
+              <div className="text-center text-gray-500 py-12">
+                <Archive className="mx-auto h-12 w-12 text-gray-400 mb-4" />
+                <p className="text-lg font-semibold">Nenhum produto encontrado.</p>
+                <p className="text-sm">Não há produtos cadastrados ou eles não correspondem aos filtros aplicados.</p>
+              </div>
+            )
           )}
         </CardContent>
       </Card>

@@ -16,7 +16,7 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
-import { ArrowLeft, Package, TrendingUp, Search, ChevronsUpDown, ChevronDown, ChevronUp } from 'lucide-react';
+import { ArrowLeft, Package, TrendingUp, Search, ChevronsUpDown, ChevronDown, ChevronUp, AlertTriangle, Loader2 } from 'lucide-react';
 
 ChartJS.register(
   CategoryScale,
@@ -27,28 +27,46 @@ ChartJS.register(
   Legend
 );
 
-const mockProdutosBackend = [
-  { id: 1, nome_produto: "Seringa Descartável 5ml", vezes_vendido: 150, quantidade_total_vendida: 1200 },
-  { id: 2, nome_produto: "Luva Cirúrgica Estéril (Par)", vezes_vendido: 120, quantidade_total_vendida: 850 },
-  { id: 3, nome_produto: "Gaze Estéril 7,5x7,5cm (Pacote)", vezes_vendido: 100, quantidade_total_vendida: 950 },
-  { id: 4, nome_produto: "Álcool Etílico 70% 1L", vezes_vendido: 90, quantidade_total_vendida: 500 },
-  { id: 5, nome_produto: "Agulha Hipodérmica 25x0,7mm", vezes_vendido: 130, quantidade_total_vendida: 1100 },
-  { id: 6, nome_produto: "Máscara Cirúrgica Tripla Camada (Caixa)", vezes_vendido: 80, quantidade_total_vendida: 700 },
-  { id: 7, nome_produto: "Fio de Sutura Nylon 3-0", vezes_vendido: 50, quantidade_total_vendida: 300 },
-  { id: 8, nome_produto: "Compressa de Gaze Não Estéril (Pacote)", vezes_vendido: 70, quantidade_total_vendida: 600 },
-  { id: 9, nome_produto: "Abaixador de Língua de Madeira (Pacote)", vezes_vendido: 60, quantidade_total_vendida: 400 },
-  { id: 10, nome_produto: "Sabonete Líquido Antisséptico 500ml", vezes_vendido: 55, quantidade_total_vendida: 350 },
-];
-
 export default function ProdutosMaisUtilizadosPage() {
   const [filtroNome, setFiltroNome] = useState("");
   const [ordenacao, setOrdenacao] = useState({
-    campo: "vezes_vendido",
+    campo: "vezesVendido",
     direcao: "desc",
   });
+  const [produtos, setProdutos] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchProdutosMaisUtilizados = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const response = await fetch("http://localhost:8080/api/dashboard/top10-produtos-mais-utilizados");
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        const dadosMapeados = data.map(p => ({
+          nome_produto: p.produto,
+          vezes_vendido: p.vezesVendido,
+          quantidade_total_vendida: p.quantidadeVendida
+        }));
+        setProdutos(dadosMapeados);
+      } catch (e) {
+        console.error("Falha ao buscar produtos mais utilizados:", e);
+        setError("Não foi possível carregar os dados. Tente novamente mais tarde.");
+        setProdutos([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProdutosMaisUtilizados();
+  }, []);
 
   const produtosFiltrados = useMemo(() => {
-    let itens = mockProdutosBackend.filter(
+    let itens = produtos.filter(
       (produto) =>
         produto.nome_produto.toLowerCase().includes(filtroNome.toLowerCase())
     );
@@ -65,7 +83,7 @@ export default function ProdutosMaisUtilizadosPage() {
         ? valB.localeCompare(valA)
         : valB - valA;
     });
-  }, [filtroNome, ordenacao]);
+  }, [filtroNome, ordenacao, produtos]);
 
   const kpis = useMemo(() => {
     const totalProdutosDistintos = produtosFiltrados.length;
@@ -110,16 +128,33 @@ export default function ProdutosMaisUtilizadosPage() {
     }));
   };
 
-  useEffect(() => {
-    // No futuro, aqui seria a chamada API para buscar os dados reais.
-    // Por agora, estamos usando mockProdutosBackend diretamente.
-  }, []);
-
   const colunasTabela = [
     { label: "Nome do Produto", campo: "nome_produto" },
     { label: "Vezes Vendido", campo: "vezes_vendido" },
     { label: "Qtd. Total Vendida", campo: "quantidade_total_vendida" },
   ];
+
+  if (loading) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 p-4">
+        <Loader2 className="h-16 w-16 text-blue-600 animate-spin mb-4" />
+        <p className="text-xl text-gray-700">Carregando dados dos produtos...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 p-4 text-center">
+        <AlertTriangle className="h-16 w-16 text-red-600 mb-4" />
+        <h2 className="text-2xl font-semibold text-red-700 mb-2">Erro ao Carregar Dados</h2>
+        <p className="text-gray-600 mb-4">{error}</p>
+        <Link href="/dashboard/produtos-mais-utilizados" passHref>
+          <Button variant="outline">Tentar Novamente</Button>
+        </Link>
+      </div>
+    );
+  }
 
   return (
     <div className="container mx-auto p-4 md:p-8 bg-gray-50 min-h-screen">
@@ -139,40 +174,44 @@ export default function ProdutosMaisUtilizadosPage() {
           </Link>
         </div>
         <p className="text-lg text-gray-600">
-          Analise os produtos mais vendidos e suas quantidades para otimizar a gestão de insumos da clínica.
+          {produtos.length > 0 
+            ? "Analise os produtos mais vendidos e suas quantidades para otimizar a gestão de insumos da clínica."
+            : "Nenhum dado de produto para exibir no momento."}
         </p>
       </header>
 
       {/* KPIs */}
-      <section className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <Card className="shadow-lg border border-gray-200 rounded-lg">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 bg-gray-100 rounded-t-lg">
-            <CardTitle className="text-sm font-medium text-gray-600">Total Produtos Distintos</CardTitle>
-            <Package className="h-5 w-5 text-blue-500" />
-          </CardHeader>
-          <CardContent className="py-4">
-            <div className="text-3xl font-bold text-gray-800">{kpis.totalProdutosDistintos}</div>
-          </CardContent>
-        </Card>
-        <Card className="shadow-lg border border-gray-200 rounded-lg">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 bg-gray-100 rounded-t-lg">
-            <CardTitle className="text-sm font-medium text-gray-600">Total Unidades Vendidas</CardTitle>
-            <TrendingUp className="h-5 w-5 text-green-500" />
-          </CardHeader>
-          <CardContent className="py-4">
-            <div className="text-3xl font-bold text-gray-800">{kpis.totalUnidadesVendidas.toLocaleString()}</div>
-          </CardContent>
-        </Card>
-        <Card className="shadow-lg border border-gray-200 rounded-lg">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 bg-gray-100 rounded-t-lg">
-            <CardTitle className="text-sm font-medium text-gray-600">Produto Mais Vendido (Vezes)</CardTitle>
-            <Package className="h-5 w-5 text-purple-500" />
-          </CardHeader>
-          <CardContent className="py-4">
-            <div className="text-xl font-bold text-gray-800">{kpis.produtoMaisVendido}</div>
-          </CardContent>
-        </Card>
-      </section>
+      {produtos.length > 0 && ( // Só mostra KPIs se houver produtos
+        <section className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          <Card className="shadow-lg border border-gray-200 rounded-lg">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 bg-gray-100 rounded-t-lg">
+              <CardTitle className="text-sm font-medium text-gray-600">Total Produtos Distintos</CardTitle>
+              <Package className="h-5 w-5 text-blue-500" />
+            </CardHeader>
+            <CardContent className="py-4">
+              <div className="text-3xl font-bold text-gray-800">{kpis.totalProdutosDistintos}</div>
+            </CardContent>
+          </Card>
+          <Card className="shadow-lg border border-gray-200 rounded-lg">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 bg-gray-100 rounded-t-lg">
+              <CardTitle className="text-sm font-medium text-gray-600">Total Unidades Vendidas</CardTitle>
+              <TrendingUp className="h-5 w-5 text-green-500" />
+            </CardHeader>
+            <CardContent className="py-4">
+              <div className="text-3xl font-bold text-gray-800">{kpis.totalUnidadesVendidas.toLocaleString()}</div>
+            </CardContent>
+          </Card>
+          <Card className="shadow-lg border border-gray-200 rounded-lg">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 bg-gray-100 rounded-t-lg">
+              <CardTitle className="text-sm font-medium text-gray-600">Produto Mais Vendido (Vezes)</CardTitle>
+              <Package className="h-5 w-5 text-purple-500" />
+            </CardHeader>
+            <CardContent className="py-4">
+              <div className="text-xl font-bold text-gray-800 truncate" title={kpis.produtoMaisVendido}>{kpis.produtoMaisVendido}</div>
+            </CardContent>
+          </Card>
+        </section>
+      )}
 
       {/* Filtros e Tabela */}
       <Card className="mb-8 shadow-lg border border-gray-200 rounded-lg">
@@ -194,54 +233,54 @@ export default function ProdutosMaisUtilizadosPage() {
           </div>
 
           <div className="overflow-x-auto">
-            <Table>
-              <TableHeader>
-                <TableRow className="bg-gray-50">
-                  {colunasTabela.map(({ label, campo }) => (
-                    <TableHead key={campo} onClick={() => handleSort(campo)} className="cursor-pointer hover:bg-gray-200 transition-colors">
-                      <div className="flex items-center">
-                        {label}
-                        {ordenacao.campo === campo ? (
-                          ordenacao.direcao === "asc" ? (
-                            <ChevronUp className="ml-2 h-4 w-4" />
+            {produtosFiltrados.length > 0 ? (
+              <Table>
+                <TableHeader>
+                  <TableRow className="bg-gray-50">
+                    {colunasTabela.map(({ label, campo }) => (
+                      <TableHead 
+                        key={campo} 
+                        onClick={() => handleSort(campo)} 
+                        className="cursor-pointer hover:bg-gray-200 transition-colors py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      >
+                        <div className="flex items-center">
+                          {label}
+                          {ordenacao.campo === campo ? (
+                            ordenacao.direcao === "asc" ? <ChevronUp className="ml-1 h-4 w-4" /> : <ChevronDown className="ml-1 h-4 w-4" />
                           ) : (
-                            <ChevronDown className="ml-2 h-4 w-4" />
-                          )
-                        ) : (
-                          <ChevronsUpDown className="ml-2 h-4 w-4 text-gray-400" />
-                        )}
-                      </div>
-                    </TableHead>
-                  ))}
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {produtosFiltrados.length > 0 ? (
-                  produtosFiltrados.map((produto) => (
-                    <TableRow key={produto.id} className="hover:bg-gray-50 transition-colors">
-                      <TableCell className="font-medium py-3 px-4">{produto.nome_produto}</TableCell>
-                      <TableCell className="py-3 px-4">{produto.vezes_vendido}</TableCell>
-                      <TableCell className="py-3 px-4">{produto.quantidade_total_vendida}</TableCell>
-                    </TableRow>
-                  ))
-                ) : (
-                  <TableRow>
-                    <TableCell colSpan={colunasTabela.length} className="text-center py-10 text-gray-500">
-                      Nenhum produto encontrado com os filtros aplicados.
-                    </TableCell>
+                            <ChevronsUpDown className="ml-1 h-4 w-4 opacity-30" />
+                          )}
+                        </div>
+                      </TableHead>
+                    ))}
                   </TableRow>
-                )}
-              </TableBody>
-            </Table>
+                </TableHeader>
+                <TableBody>
+                  {produtosFiltrados.map((produto, index) => (
+                    <TableRow key={index} className="border-b hover:bg-gray-100 transition-colors">
+                      <TableCell className="py-3 px-4 font-medium text-gray-800">{produto.nome_produto}</TableCell>
+                      <TableCell className="py-3 px-4 text-gray-600 text-center">{produto.vezes_vendido.toLocaleString()}</TableCell>
+                      <TableCell className="py-3 px-4 text-gray-600 text-center">{produto.quantidade_total_vendida.toLocaleString()}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            ) : (
+              <div className="text-center text-gray-500 py-12">
+                <Search className="mx-auto h-12 w-12 text-gray-400 mb-4" />
+                <p className="text-lg font-semibold">Nenhum produto encontrado.</p>
+                <p className="text-sm">Tente refinar sua busca ou verifique se há produtos cadastrados.</p>
+              </div>
+            )}
           </div>
         </CardContent>
       </Card>
 
-      {/* Gráficos */}
-      <section className="grid grid-cols-1 gap-8">
+      {/* Gráfico de Barras */}
+      {produtosFiltrados.length > 0 && ( // Só mostra gráfico se houver produtos
         <Card className="shadow-lg border border-gray-200 rounded-lg">
           <CardHeader className="bg-gray-100 border-b border-gray-200 py-4 px-6 rounded-t-lg">
-            <CardTitle className="text-xl text-gray-700">Top 10 Produtos por Quantidade Vendida</CardTitle>
+            <CardTitle className="text-2xl text-gray-700">Top 10 Produtos por Quantidade Vendida</CardTitle>
           </CardHeader>
           <CardContent className="p-6 h-96">
             {produtosFiltrados.length > 0 ? (
@@ -266,7 +305,7 @@ export default function ProdutosMaisUtilizadosPage() {
             )}
           </CardContent>
         </Card>
-      </section>
+      )}
     </div>
   );
 }
